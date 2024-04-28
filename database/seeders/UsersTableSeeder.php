@@ -1,0 +1,50 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Employee;
+use Faker\Factory as Faker;
+
+class UsersTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $faker = Faker::create();
+
+        for ($i = 0; $i < 10; $i++) {
+            $randomNumber1 = rand(1, 6);
+            $randomNumber2 = rand(1, 6);
+            $randomNumber3 = mt_rand(1, 6);
+
+            $year = rand(2000, 2023);
+            $month = rand(1, 12);
+            $day = rand(1, 28);
+            $randomDate = sprintf('%04d-%02d-%02d', $year, $month, $day);
+
+            $employee = Employee::create([
+                'first_name' => $faker->firstName,
+                'last_name' => $faker->lastName,
+                'gender' => $faker->randomElement(['Male', 'Female']),
+                'job_title' => $faker->jobTitle,
+                'status' => $faker->randomElement(['Active', 'Inactive']),
+                'location_id' => $randomNumber1,
+                'division_id' => $randomNumber2,
+                'employment_id' => $randomNumber3,
+                'date_hired' => $randomDate,
+            ]);
+
+            User::create([
+                'name' => $faker->name,
+                'username' => $faker->userName,
+                'password' => bcrypt('password'),
+                'employee_id' => $employee->id,
+            ]);
+        }
+    }
+}
