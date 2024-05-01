@@ -6,6 +6,7 @@ import { useLeaveStore } from "@/store/leaveStore";
 import { useLeaveTypeStore } from "@/store/leaveTypeStore";
 import { ref, watch } from 'vue';
 import UploadImages from 'vue-upload-drop-images';
+import { toast } from 'vue3-toastify';
 import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 const leaveBalanceStore = useLeaveBalanceStore();
@@ -65,6 +66,11 @@ const fetch_approvers = async(employee_id, division_id) => {
     "division_id": division_id, 
     "employee_id": employee_id
   })
+  approvers.value = approvers.value.map(approver => ({
+        ...approver,
+        title: `${approver.first_name} ${approver.last_name}`
+    }));
+    console.log("approvers.value", approvers.value);
 };
 
 
@@ -83,10 +89,15 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  items:
+  {
+    type: Array,
+    required: true
+  },
 })
 
 const emit = defineEmits([
-  'update:isDialogVisible'
+  'update:isDialogVisible','items'
 ])
 
 const btnSaveLeave = async () => {
@@ -109,10 +120,12 @@ const btnSaveLeave = async () => {
   };
   
   const res = await leaveStore.saveLeave(data); 
-  if(!addEmp)  toast("Error please try again!")
+  if(!res)  toast("Error please try again!")
   else  {
     toast("Leave Applied")
-    isDialogVisible.value = false
+    let temp = await leaveStore.fetchLeaveByApprover();
+    emit('update:items', temp);
+    emit('update:isDialogVisible', false);
   }  
 }
 
@@ -207,7 +220,6 @@ const headers = [
     key: 'hours',
   },
 ]
-
 
 </script>
 
@@ -309,7 +321,7 @@ const headers = [
               <AppSelect
                   v-model="apply_data.approver_id"
                   label="Approvers"
-                  item-title="last_name"
+                  item-title="title"
                   item-value="id"
                   :rules="[requiredValidator]"
                   :items="approvers"

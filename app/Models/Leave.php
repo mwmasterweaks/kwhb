@@ -25,7 +25,7 @@ class Leave extends Model
     }
     public function approver()
     {
-        return $this->hasOne(Employee::class, 'approver_id', 'id');
+        return $this->hasOne(Employee::class, 'id', 'approver_id');
     }
     public function attachments()
     {

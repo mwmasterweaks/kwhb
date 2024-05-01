@@ -110,15 +110,42 @@
             <template #item.date_to="{ item }">
               {{ $formatDate(item.raw.date_to) }} 
             </template>
+            <template #item.assignedTo="{ item }">
+              {{ item.raw.approver.last_name }}
+            </template>
 
             
              <template #item.action="{ item }">
               <div class="me-n3">
-                <MoreBtn
+                <!-- <MoreBtn
                   :menu-list="moreList"
                   item-props
                   density="comfortable"
-                />
+                  @update:modelValue="moreBthClick"
+                /> -->
+
+
+                <IconBtn
+                >
+                  <VIcon icon="tabler-dots-vertical" />
+
+                  <VMenu
+                    v-if="moreList"
+                    activator="parent"
+                  >
+                    <v-list>
+                      <v-list-item>
+                        <a @click="showLeaveDetails(item.raw)" href="#">View</a>
+                      </v-list-item>
+                      <v-list-item>
+                        <a @click="showLeaveDetails(item.raw)" href="#">Edit</a>
+                      </v-list-item>
+                      <v-list-item>
+                        <a @click="updateStatus('Deleted', item.raw)" href="#">Delete</a>
+                      </v-list-item>
+                    </v-list>
+                  </VMenu>
+                </IconBtn>
               </div>
               <!--               
               <div style="display: flex;">
@@ -154,10 +181,12 @@
     <DialogLeaveDetails
       v-model:isDialogVisible="leaveDetailsVisible"
       v-model:leaveDetail="item_selected"
+      v-model:items="items"
     />
     
     <applyLeaveDialogVue
       v-model:isDialogVisible="applyLeaveVisible"
+      v-model:items="items"
     ></applyLeaveDialogVue>
 
   </div>
@@ -173,6 +202,7 @@ import { toast } from 'vue3-toastify';
 import DialogLeaveDetails from '@/pages/LeaveManagement/DialogLeaveDetails.vue';
 import { useDivisionStore } from "@/store/divisionStore";
 import { useEmploymentStore } from "@/store/employmentStore";
+import { useLeaveBalanceStore } from "@/store/leaveBalanceStore";
 import { useLeaveStore } from "@/store/leaveStore";
 import { useLeaveTypeStore } from "@/store/leaveTypeStore";
 import { useLocationStore } from "@/store/locationStore";
@@ -182,6 +212,7 @@ import applyLeaveDialogVue from "./applyLeaveDialog.vue";
 
 
 const router = useRouter()
+const leaveBalanceStore = useLeaveBalanceStore();
 const employeeStore = useEmployeeStore();
 const leaveStore = useLeaveStore();
 const divisionStore = useDivisionStore();
@@ -265,7 +296,6 @@ const filter = ref({
 })
 
 const rowClick = (e, row)=>{
-  //console.log("row",row.item);
   // employeeStore.data.employee_selected = row.item.raw;
   // // router.push("/EmployeeDetails");
   // router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
@@ -273,7 +303,6 @@ const rowClick = (e, row)=>{
 }
 
 const filter_change = debounce(async() => {
-  console.log(filter.value);
   const payload = {
     filter: {
       search_name: filter.value.search_name ? true : false,
@@ -295,17 +324,52 @@ const filter_change = debounce(async() => {
       }
     }
   }
+  console.log("payload", payload);
   items.value = await leaveStore.multipleFilter(payload);
-  //console.log("item",item);
 }, 800);
 
-const showLeaveDetails = (item)=>{
-  item_selected = item
-  console.log(item_selected);
+const showLeaveDetails = async(item)=>{
+
+  var temp = {
+    employee_id: item.employee_id,
+    leave_type_id: item.leave_type_id
+  }
+  item.leaveBalance = await leaveBalanceStore.fetchLeaveBalance(temp);
+  item.leaveBalance.leave_requested = 0;
+  item.leaveBalance.remaining_balance = 0;
+  item.leaveBalance.pending_leave = 0;
+  item.approvers = await fetchApprovers({division_id: item.employee.division_id, employee_id: item.employee_id})
+  
+  item_selected =  calculateLeave(item)
+  console.log("item_selected", item_selected);
   leaveDetailsVisible.value = true;
 }
+
+const fetchApprovers = async(item) => {
+   let approvers = await employeeStore.fetch_approvers({
+    "division_id": item.division_id, 
+    "employee_id": item.employee_id
+  })
+  return approvers;
+}
+const calculateLeave = (item) => {
+  item.leaveBalance.leave_requested = 0;
+  let leave_requested = 0
+  if(item.leave_details.length > 0)
+  {
+    
+    
+    item.leave_details.forEach(temp => {
+      leave_requested += parseFloat(temp.hour);
+    });
+    
+    item.leaveBalance.remaining_balance = item.leaveBalance.balance - leave_requested;
+    item.leaveBalance.leave_requested = leave_requested;
+  }
+  return item;
+};
+
 const updateStatus = async (status, data)=>{
-  console.log(data);
 
   var update = await leaveStore.updateRow({
     id: data.id,
@@ -313,10 +377,9 @@ const updateStatus = async (status, data)=>{
     row: "status"
   })
   items.value = await leaveStore.fetchLeaveByApprover();
-  toast("Updated!")
-  console.log(update);
-  
-}
+  toast("Updated!");
+};
+
 </script>
 <style lang="scss" scoped>
 .filter-field {

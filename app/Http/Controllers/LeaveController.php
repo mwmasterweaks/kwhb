@@ -33,9 +33,11 @@ class LeaveController extends Controller
 
     public function store(Request $request)
     {
+
         $dataResponse = new DataResponse();
         $user_cred = Auth::user();
         try {
+            DB::beginTransaction();
             $date_from = Carbon::createFromFormat('d/m/Y', $request->date_from)->format('Y-m-d');
             $date_to = Carbon::createFromFormat('d/m/Y', $request->date_to)->format('Y-m-d');
             $requestData = $request->all();
@@ -46,16 +48,17 @@ class LeaveController extends Controller
 
             //store attachments
             $files = $request->attachments;
-            for ($i = 0; $i < count($files); $i++) {
-                $attachment = new stdClass;
-                $attachment->attachment = $files[$i];
-                $attachment->path = "leave_attachments";
-                $attachment->name = "leave_attachments";
-                $attachment->source = "leave";
-                $attachment->source_id = $data->id;
-                $AttachmentController = "App\Http\Controllers\AttachmentController";
-                app($AttachmentController)->saveAttachment($attachment);
-            }
+            if ($files)
+                for ($i = 0; $i < count($files); $i++) {
+                    $attachment = new stdClass;
+                    $attachment->attachment = $files[$i];
+                    $attachment->path = "leave_attachments";
+                    $attachment->name = "leave_attachments";
+                    $attachment->source = "leave";
+                    $attachment->source_id = $data->id;
+                    $AttachmentController = "App\Http\Controllers\AttachmentController";
+                    app($AttachmentController)->saveAttachment($attachment);
+                }
 
             //store leave details
             $leave_details = $request->leave_details;
@@ -82,8 +85,11 @@ class LeaveController extends Controller
             // $dataResponse->data = $this->getLeave();
             $dataResponse->data = "data";
             $dataResponse->message = 'Success';
+            DB::commit();
             return response()->json($dataResponse, 200);
         } catch (Exception $ex) {
+
+            DB::rollBack();
             DB::table('logs')->insert([
                 'user_id' => $user_cred->id,
                 'function_name' => 'store',

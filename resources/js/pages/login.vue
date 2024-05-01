@@ -42,8 +42,8 @@ const onSubmit = async() => {
 
 <style lang="scss" scoped>
 .bg_img {
-  width: inherit;
-  height: inherit;
+  width: 100%;
+  height: 100%;
 }
 
 .welcome-title {
@@ -52,29 +52,29 @@ const onSubmit = async() => {
 </style>
 <template>
  
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
+  <VRow style=" height: 80%;">
     <VCol
-      cols="7"
-      lg="7"
+      cols="6"
+      style="  height: 100%;"
+      lg="6"
     >
       <VImg
       :src="bg_img"
+      style=""
       class="bg_img"
     /> 
     </VCol>
 
     <VCol
-      cols="5"
-      lg="5"
+      cols="6"
+      lg="4"
+      style=""
       class="auth-card-v2 d-flex align-center justify-center"
     >
       <VCard
         flat
         :max-width="700"
-        width="700px"
+        width="600px"
         class=""
       >
         <VCardText>

@@ -4,6 +4,7 @@ import { useEmployeeStore } from "@/store/employeeStore";
 import { useLeaveBalanceStore } from "@/store/leaveBalanceStore";
 import { useLeaveStore } from "@/store/leaveStore";
 import { useLeaveTypeStore } from "@/store/leaveTypeStore";
+import { toast } from 'vue3-toastify';
 import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 const leaveBalanceStore = useLeaveBalanceStore();
@@ -46,10 +47,10 @@ const btnSaveLeave = async () => {
   };
   
   const res = await leaveStore.saveLeave(data); 
-  if(!addEmp)  toast("Error please try again!")
+  if(!res)  toast("Error please try again!")
   else  {
     toast("Leave Applied")
-    isDialogVisible.value = false
+    emit('update:isDialogVisible', false);
   } 
 }
 
