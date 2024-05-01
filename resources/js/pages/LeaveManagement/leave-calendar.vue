@@ -85,6 +85,9 @@
 
         <VDivider />
 
+        <div id="calendar" style="padding: 20px;"></div>
+        <!-- <Calendar id="calendar"></Calendar> -->
+
         <!-- //EmployeeDetails-index -->
         <VDataTableServer
             :headers="tableHeaders"
@@ -120,15 +123,15 @@
 import { useEmployeeStore } from "@/store/employeeStore";
 import { useRouter } from 'vue-router';
 
-import DialogLeaveDetails from '@/pages/LeaveManagement/DialogLeaveDetails.vue';
 import { useDivisionStore } from "@/store/divisionStore";
 import { useEmploymentStore } from "@/store/employmentStore";
 import { useLeaveBalanceStore } from "@/store/leaveBalanceStore";
 import { useLeaveStore } from "@/store/leaveStore";
 import { useLocationStore } from "@/store/locationStore";
 import { debounce } from 'lodash';
-import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
+import { Calendar } from '@fullcalendar/core';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
 const router = useRouter()
 const leaveBalanceStore = useLeaveBalanceStore();
@@ -139,13 +142,43 @@ const locationStore = useLocationStore();
 const employmentStore = useEmploymentStore();
 let items = ref([]);
 let item_selected = ref({});
-const leaveDetailsVisible = ref(false)
+const leaveDetailsVisible = ref(false);
 const startDate = new Date();
 const endDate = new Date();
 onMounted( async() => {
   items.value = await leaveStore.fetchLeaveByApprover();
-  console.log(items.value);
+  console.log("onMounted fetchLeaveByApprover:", items.value);
   isHighlighted();
+
+  var resources = items.value.map(resource => ({
+    id: resource.id,
+    title: resource.employee.first_name + " " + resource.employee.last_name,
+  }));
+  var events = items.value.map(events => ({
+    resourceId: events.id,
+    title: events.leave_type.name,
+    start: events.date_from,
+    end: events.date_to
+  }));
+
+  console.log('onMounted:', events);
+  
+  let calendarEl = document.getElementById('calendar');
+  const calendar = new Calendar(calendarEl, {
+    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+    plugins: [resourceTimelinePlugin],
+    height: 600,
+    initialView: 'resourceTimelineMonth',
+    headerToolbar: {
+      left: 'prev,next',
+      center: 'title',
+      right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
+    },
+    resourceAreaHeaderContent: '',
+    resources: resources,
+    events: events,
+  });
+  calendar.render();
   //fetchLeaveByApprover
   //await divisionStore.setDivisions();
   //await locationStore.setLocations();

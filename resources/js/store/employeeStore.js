@@ -131,6 +131,7 @@ export const useEmployeeStore = defineStore('employees', {
         async fetch_approvers(param) {
           try {
             const response = await api.fetch_approvers(param);
+            console.log("fetch approvers: ", response);
             return response.data;
           } catch (error) {
               console.log("Error fetching approvers:", error);
