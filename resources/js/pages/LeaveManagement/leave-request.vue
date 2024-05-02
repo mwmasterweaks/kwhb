@@ -111,7 +111,7 @@
               {{ $formatDate(item.raw.date_to) }} 
             </template>
             <template #item.assignedTo="{ item }">
-              {{ item.raw.approver.last_name }}
+              {{ item.raw.approver ? item.raw.approver.last_name  : ''}}
             </template>
 
             

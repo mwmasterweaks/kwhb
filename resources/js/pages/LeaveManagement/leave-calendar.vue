@@ -96,7 +96,7 @@
           >
           
             <template class="packingtest" v-for="header in tableHeaders" :key="header.key" #[`item.${header.key}`]="{ item }">
-              <p v-if="header.key == 'full_name'"> {{ item.raw.employee.first_name }} {{ item.raw.employee.last_name }}</p>
+              <p v-if="header.key == 'full_name'"> {{ item.raw.employee.first_name }} {{ item.raw.employee ? item.raw.employee.last_name : '' }}</p>
               <span v-else :id="'headspan' + header.key +item.raw.id"  :class="{ 'highlight': header.date == item.raw.date_from }">
                 aaaa
               </span>
@@ -129,6 +129,7 @@ import { useLeaveBalanceStore } from "@/store/leaveBalanceStore";
 import { useLeaveStore } from "@/store/leaveStore";
 import { useLocationStore } from "@/store/locationStore";
 import { debounce } from 'lodash';
+import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -145,6 +146,7 @@ let item_selected = ref({});
 const leaveDetailsVisible = ref(false);
 const startDate = new Date();
 const endDate = new Date();
+let calendar = ref(null); 
 onMounted( async() => {
   items.value = await leaveStore.fetchLeaveByApprover();
   console.log("onMounted fetchLeaveByApprover:", items.value);
@@ -161,10 +163,9 @@ onMounted( async() => {
     end: events.date_to
   }));
 
-  console.log('onMounted:', events);
   
   let calendarEl = document.getElementById('calendar');
-  const calendar = new Calendar(calendarEl, {
+  calendar.value = new Calendar(calendarEl, {
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
     plugins: [resourceTimelinePlugin],
     height: 600,
@@ -178,7 +179,7 @@ onMounted( async() => {
     resources: resources,
     events: events,
   });
-  calendar.render();
+  calendar.value.render();
   //fetchLeaveByApprover
   //await divisionStore.setDivisions();
   //await locationStore.setLocations();
@@ -384,7 +385,7 @@ const filter_change = debounce(async() => {
   const payload = {
     filter: {
       search_name: filter.value.search_name ? true : false,
-      leave_type: true,
+      leave_type: false,
       division: true,
       location: true,
       status: true,
@@ -392,7 +393,6 @@ const filter_change = debounce(async() => {
     },
     data: {
       search_name: filter.value.search_name,
-      leave_type_id: filter.value.leave_type,
       division_id: filter.value.division,
       location_id: filter.value.location,
       status: filter.value.status,
@@ -404,7 +404,39 @@ const filter_change = debounce(async() => {
   }
   console.log("payload", payload);
   items.value = await leaveStore.multipleFilter(payload);
+  refreshCalendarData();
 }, 800);
+
+const refreshCalendarData = () => {
+
+
+  if (calendar.value) {
+   
+    var resources = items.value.map(resource => ({
+      id: resource.id,
+      title: resource.employee.first_name + " " + resource.employee.last_name,
+    }));
+
+    // Map the updated items to create a new array of events
+    var newEvents = items.value.map(event => ({
+      resourceId: event.id,
+      title: event.leave_type.name,
+      start: event.date_from,
+      end: event.date_to
+    }));
+
+    // Add the new events to the calendar
+    calendar.value.removeAllEvents(); // Remove all existing events
+    calendar.value.addEventSource(newEvents);
+
+    // Set the updated resources in the calendar
+    calendar.value.setOption('resources', resources);
+  }
+  else
+  {
+    console.log("calendar not initialized");
+  }
+}
 const isHighlighted = () => {
   //console.log('headspan' + header.key + item.id);
   let spann = document.getElementById('headspandate025');
