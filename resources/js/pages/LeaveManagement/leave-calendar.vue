@@ -53,7 +53,7 @@
               density="compact"
               v-model="filter.timeFrame "
               placeholder="Time Frame "
-              :items="['Monthly','Weekly','Fortnightly']"
+              :items="[ 'Monthly', 'Weekly', 'Fortnightly' ]"
             />
            <!--  <IconBtn>
                 <VIcon icon="tabler-arrow-left" />
@@ -85,7 +85,31 @@
 
         <VDivider />
 
-        <div id="calendar" style="padding: 20px;"></div>
+        <div style="padding: 20px;">
+          <div id="calendar" style=" overflow-x: hidden;"></div>
+          <div style="width: 100%; background-color: #ebecee; padding: 20px; padding-left: 31%; font-size: small;">
+            <div style="display: flex;">
+              <ul style="line-height: 120%;">
+                <li style="color: #e35205;"><span style="color: #212121;">Annual Leave</span></li>
+                <li style="color: #9b5de5;"><span style="color: #212121;">Personal Leave</span></li>
+                <li style="color: #f15bb5;"><span style="color: #212121;">Leave Without Pay (LWOP)</span></li>
+                <li style="color: #f1b434;"><span style="color: #212121;">Compassionate Leave</span></li>
+              </ul>
+              <ul style="line-height: 120%; margin-left: 5%;">
+                <li style="color: #5c7fff;"><span style="color: #212121;">Special/Sorry Leave</span></li>
+                <li style="color: #808494;"><span style="color: #212121;">FOIL</span></li>
+                <li style="color: #e63946;"><span style="color: #212121;">Parental Leave</span></li>
+                <li style="color: #61c378;"><span style="color: #212121;">Jury Service Leave</span></li>
+              </ul>
+              <ul style="line-height: 120%; margin-left: 5%;">
+                <li style="color: #4ca6c3;"><span style="color: #212121;">Defense Reserve Leave</span></li>
+                <li style="color: #808cb8;"><span style="color: #212121;">Long Leave</span></li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+        
         <!-- <Calendar id="calendar"></Calendar> -->
 
         <!-- //EmployeeDetails-index -->
@@ -122,6 +146,7 @@
 <script setup>
 import { useEmployeeStore } from "@/store/employeeStore";
 import { useRouter } from 'vue-router';
+import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 import { useDivisionStore } from "@/store/divisionStore";
 import { useEmploymentStore } from "@/store/employmentStore";
@@ -129,7 +154,6 @@ import { useLeaveBalanceStore } from "@/store/leaveBalanceStore";
 import { useLeaveStore } from "@/store/leaveStore";
 import { useLocationStore } from "@/store/locationStore";
 import { debounce } from 'lodash';
-import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -143,6 +167,7 @@ const locationStore = useLocationStore();
 const employmentStore = useEmploymentStore();
 let items = ref([]);
 let item_selected = ref({});
+let timeFrame = ref({});
 const leaveDetailsVisible = ref(false);
 const startDate = new Date();
 const endDate = new Date();
@@ -155,6 +180,16 @@ onMounted( async() => {
   var resources = items.value.map(resource => ({
     id: resource.id,
     title: resource.employee.first_name + " " + resource.employee.last_name,
+    eventColor: resource.leave_type.name.includes('Annual') ? '#e3520580' : 
+                resource.leave_type.name.includes('Personal') ? '#9b5de580' :
+                resource.leave_type.name.includes('Leave Without Pay') ? '#f15bb580' :
+                resource.leave_type.name.includes('Compassionate') ? '#f1b43480' :
+                resource.leave_type.name.includes('Special/Sorry') ? '#5c7fff80' :
+                resource.leave_type.name.includes('FOIL') ? '#80849480' :
+                resource.leave_type.name.includes('Parental') ? '#e6394680' :
+                resource.leave_type.name.includes('Jury Service') ? '#61c37880' :
+                resource.leave_type.name.includes('Defense Reserve') ? '#4ca6c380' :
+                resource.leave_type.name.includes('Long Service') ? '#808cb880' : '#00000080'
   }));
   var events = items.value.map(events => ({
     resourceId: events.id,
@@ -169,15 +204,25 @@ onMounted( async() => {
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
     plugins: [resourceTimelinePlugin],
     height: 600,
-    initialView: 'resourceTimelineMonth',
+    initialView: 'resourceTimelineWeek',
+    slotDuration: { days:1 },
+    views: {
+      resourceTimelineFortnight: {
+        type: 'resourceTimelineWeek',
+        duration: { weeks: 2 }, // Display 2 weeks in a row
+        buttonText: 'fortnight', // Text for the button to switch to this view
+      }
+    },
+    // headerToolbar: false,
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
+      right: 'resourceTimelineWeek,resourceTimelineFortnight,resourceTimelineMonth'
     },
     resourceAreaHeaderContent: '',
     resources: resources,
     events: events,
+    weekHeaderFormat: { weekday: 'long' }
   });
   calendar.value.render();
   //fetchLeaveByApprover
