@@ -1,3 +1,4 @@
+
 export default [
   {
     title: 'Dashboard',
@@ -6,18 +7,21 @@ export default [
   },
   {
     title: 'People',
-    icon: { icon: 'tabler-users' },
+    icon: { icon: 'tabler-users', color: '#ffffff' },
      children: [
       {
-        title: 'Employees',
+        title: 'Employee',
         to: { name: 'employee' },
+        group: 'People'
       },
       {
-        title: 'Performance Reviews'
+        title: 'Performance Reviews',
+        group: 'People'
       },
       {
         title: 'Leave Management',
         to: 'LeaveManagement',
+        group: 'People'
       }
     ],
     badgeClass: 'bg-global-primary',

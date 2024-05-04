@@ -127,11 +127,16 @@
     }
 
     // 👉 Vertical nav link
+
     .nav-link {
       @extend %nav-link;
 
-      > .router-link-exact-active {
+      > .nav-link-dark {  // .router-link-exact-active
         @extend %nav-link-active;
+      }
+
+      > .nav-link-light {
+        @extend %nav-link-active-light;
       }
 
       > a {
@@ -165,6 +170,7 @@
 
       .nav-group-arrow {
         flex-shrink: 0;
+        color: #fff;
         transform-origin: center;
         transition: transform variables.$vertical-nav-nav-group-arrow-transition-duration variables.$vertical-nav-nav-group-arrow-transition-timing-function;
         will-change: transform;

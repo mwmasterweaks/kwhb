@@ -170,11 +170,11 @@ const handleNavScroll = evt => {
 
 // 👉 Vertical Nav
 .layout-vertical-nav {
-  background-color: #000829 !important;
   position: fixed;
   z-index: variables.$layout-vertical-nav-z-index;
   display: flex;
   flex-direction: column;
+  background-color: #000829 !important;
   block-size: 100%;
   inline-size: variables.$layout-vertical-nav-width;
   inset-block-start: 0;
@@ -187,6 +187,7 @@ const handleNavScroll = evt => {
     align-items: center;
 
     .header-action {
+      color: #fff;
       cursor: pointer;
     }
   }
@@ -207,8 +208,8 @@ const handleNavScroll = evt => {
   }
 
   .nav-item-title {
-    color: whitesmoke;
     overflow: hidden;
+    color: whitesmoke;
     margin-inline-end: auto;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -232,9 +233,9 @@ const handleNavScroll = evt => {
     }
   }
 }
-.logo
-{
-  width: 150px;
-  height: 90px;
+
+.logo {
+  block-size: 90px;
+  inline-size: 150px;
 }
 </style>
