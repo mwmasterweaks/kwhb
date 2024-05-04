@@ -1,11 +1,8 @@
 <script setup>
-import { useLayouts } from '@layouts'
-import { config } from '@layouts/config'
-import { can } from '@layouts/plugins/casl'
-import {
-  getComputedNavLinkToProp,
-  isNavLinkActive,
-} from '@layouts/utils'
+import { useLayouts } from "@layouts"
+import { config } from "@layouts/config"
+import { can } from "@layouts/plugins/casl"
+import { getComputedNavLinkToProp, isNavLinkActive } from "@layouts/utils"
 
 const props = defineProps({
   item: {
@@ -28,7 +25,14 @@ const hideTitleAndBadge = isVerticalNavMini(windowWidth)
     <Component
       :is="item.to ? 'RouterLink' : 'a'"
       v-bind="getComputedNavLinkToProp(item)"
-      :class="{ 'router-link-active router-link-exact-active': isNavLinkActive(item, $router) }"
+      :class="{
+        'router-link-active router-link-exact-active': isNavLinkActive(
+          item,
+          $router
+        ),
+        'nav-link-light': isNavLinkActive(item, $router) && item.group,
+        'nav-link-dark': isNavLinkActive(item, $router) && !item.group
+      }"
     >
       <Component
         :is="config.app.iconRenderer || 'div'"
