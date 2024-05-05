@@ -50,13 +50,13 @@
               :items="['all','Pending','Declined','Approved', 'Cancelled']"
               @update:modelValue="filter_change"
             />
-            <AppSelect
+            <!-- <AppSelect
               v-model="filter.timeFrame "
               class="filter-field"
               density="compact"
               placeholder="Time Frame "
               :items="[ 'Monthly', 'Weekly', 'Fortnightly' ]"
-            />
+            /> -->
             <!--
               <IconBtn>
               <VIcon icon="tabler-arrow-left" />
@@ -66,7 +66,7 @@
               </IconBtn> 
             -->
 
-            <VBtn
+            <!-- <VBtn
               :rounded="true"
               icon="tabler-arrow-left"
               variant="outlined"
@@ -79,7 +79,7 @@
               variant="outlined"
               color="secondary"
             />
-            <p>{{ filter.date_label }}</p>
+            <p>{{ filter.date_label }}</p> -->
           </div>
           <VSpacer />
         </VCardText>
@@ -134,7 +134,7 @@
         <!-- <Calendar id="calendar"></Calendar> -->
 
         <!-- //EmployeeDetails-index -->
-        <VDataTableServer
+        <!-- <VDataTableServer
           :headers="tableHeaders"
           :items="items"
           height="300"
@@ -154,13 +154,13 @@
             >
               aaaa
             </span>
-            <!--
+            
               <span v-else :class="{ 'highlight': header.date == item.raw.date_from }">
              
               </span> 
-            -->
+            
           </template>
-        </VDataTableServer>
+        </VDataTableServer> -->
       </VCard>
     </section>
     
@@ -175,7 +175,7 @@
 <script setup>
 import { useEmployeeStore } from "@/store/employeeStore"
 import { useRouter } from 'vue-router'
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
+//import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 import { useDivisionStore } from "@/store/divisionStore"
 import { useEmploymentStore } from "@/store/employmentStore"
@@ -205,7 +205,6 @@ var resources
 onMounted( async() => {
   items.value = await leaveStore.fetchLeaveByApprover()
   console.log("onMounted fetchLeaveByApprover:", items.value)
-  isHighlighted()
   fullCalendar()
 
   /* resources = items.value.map(resource => ({
@@ -492,7 +491,7 @@ const filter_change = debounce(async() => {
   console.log("payload", payload)
   items.value = await leaveStore.multipleFilter(payload)
   fullCalendar()
-  refreshCalendarData()
+  //refreshCalendarData()
 }, 800)
 
 const refreshCalendarData = () => {
@@ -585,14 +584,6 @@ const fullCalendar = () => {
   calendar.value.render()
 }
 
-const isHighlighted = () => {
-  //console.log('headspan' + header.key + item.id);
-  let spann = document.getElementById('headspandate025')
-  console.log("spann", spann)
-
-  // let parentTd = spann.parentElement;
-  // parentTd.className = "highlight";
-}
 
 const formatDate = date => {
   return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`
