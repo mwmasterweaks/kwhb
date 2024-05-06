@@ -403,4 +403,66 @@ class EmployeeController extends Controller
             return response()->json($dataResponse, 200);
         }
     }
+
+    public function fetch_widget_data()
+    {
+        $dataResponse = new DataResponse();
+        try {
+
+            $totalEmployees = Employee::count();
+            $activeEmployees = Employee::where('status', 'active')->count();
+            $offswingEmployees = Employee::where('status', 'offswing')->count();
+            $pendingEmployees = Employee::where('status', 'pending')->count();
+            $extendedLeaveEmployees = Employee::where('status', 'extended leave')->count();
+
+            $activeEmployeesP = round(($activeEmployees / $totalEmployees) * 100, 2);
+            $offswingEmployeesP = round(($offswingEmployees / $totalEmployees) * 100, 2);
+            $pendingEmployeesP = round(($pendingEmployees / $totalEmployees) * 100, 2);
+            $extendedLeaveEmployeesP = round(($extendedLeaveEmployees / $totalEmployees) * 100, 2);
+
+
+            $result = [
+                [
+                    'title' => 'Active Employees',
+                    'value' => $activeEmployees,
+                    'change' => $activeEmployeesP,
+                    'desc' => 'Active Total Employees',
+                    'icon' => 'tabler-user',
+                    'iconColor' => 'primary',
+                ],
+                [
+                    'title' => 'Offswing',
+                    'value' => $offswingEmployees,
+                    'change' => $offswingEmployeesP,
+                    'desc' => 'Fixed Period Contract',
+                    'icon' => 'tabler-user-plus',
+                    'iconColor' => 'error',
+                ],
+                [
+                    'title' => 'Pending Employees',
+                    'value' => $pendingEmployees,
+                    'change' => $pendingEmployeesP,
+                    'desc' => 'Year to Date',
+                    'icon' => 'tabler-user-check',
+                    'iconColor' => 'success',
+                ],
+                [
+                    'title' => 'Extended Leave',
+                    'value' => $extendedLeaveEmployees,
+                    'change' => $extendedLeaveEmployeesP,
+                    'desc' => 'Year to Date',
+                    'icon' => 'tabler-user-exclamation',
+                    'iconColor' => 'warning',
+                ],
+            ];
+
+            $dataResponse->data = $result;
+            $dataResponse->message = 'Success';
+            return response()->json($dataResponse, 200);
+        } catch (Exception $ex) {
+            $dataResponse->ErrorResponse($ex);
+            return response()->json($dataResponse, 200);
+            //throw $th;
+        }
+    }
 }

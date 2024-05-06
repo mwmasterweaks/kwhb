@@ -34,6 +34,7 @@ onMounted( async() => {
   if(loggedIn){
   await leaveTypeStore.setLeaveTypes();
   await employeeStore.setEmployees();
+  await employeeStore.fetchWidgetData();
   await divisionStore.setDivisions();
   await locationStore.setLocations();
   await employmentStore.setEmployments();}

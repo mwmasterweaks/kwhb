@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('update_address', [EmployeeController::class, 'update_address']);
         Route::post('fetch_approvers', [EmployeeController::class, 'fetch_approvers']);
         Route::post('fetch_employee_by_name', [EmployeeController::class, 'fetch_employee_by_name']);
+        Route::post('fetch_widget_data', [EmployeeController::class, 'fetch_widget_data']);
     });
 
     Route::group(['prefix' => 'myob'], function () {

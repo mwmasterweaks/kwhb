@@ -10,7 +10,41 @@ export const useEmployeeStore = defineStore('employees', {
     state: () => ({
       data:{
         employees:[],
-        employee_selected: {}
+        employee_selected: {},
+        widget: [
+            {
+              title: 'Active Employees',
+              value: '0',
+              change: 0,
+              desc: 'Active Total Employees',
+              icon: 'tabler-user',
+              iconColor: 'primary',
+            },
+            {
+              title: 'Offswing',
+              value: '0',
+              change: 0,
+              desc: 'Fixed Period Contract',
+              icon: 'tabler-user-plus',
+              iconColor: 'error',
+            },
+            {
+              title: ' Pending Employees',
+              value: '0',
+              change: 0,
+              desc: 'Year to Date',
+              icon: 'tabler-user-check',
+              iconColor: 'success',
+            },
+            {
+              title: 'Extended Leave',
+              value: '0',
+              change: 0,
+              desc: 'Year to Date',
+              icon: 'tabler-user-exclamation',
+              iconColor: 'warning',
+            },
+          ]
       }
     }),
     actions: {
@@ -125,7 +159,21 @@ export const useEmployeeStore = defineStore('employees', {
             const response = await api.fetch_employee_by_name(param);
             return response.data;
           } catch (error) {
-              console.log("Error fetching approvers:", error);
+              console.log("Error fetch_employee_by_name:", error);
+          }
+        },
+        async fetchWidgetData() {
+          try {
+            const response = await api.fetch_widget_data();
+            if(!response.error){
+                this.data.widget = response.data;
+                console.log("widget updated");
+                return response.data
+            }
+            else 
+                return false
+          } catch (error) {
+              console.log("Error fetch_widget_data:", error);
           }
         },
         async fetch_approvers(param) {

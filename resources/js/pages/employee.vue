@@ -8,7 +8,7 @@
       <div class="d-flex mb-6">
         <VRow>
            <template
-          v-for="(data, id) in widgetData"
+          v-for="(data, id) in employeeStore.data.widget"
           :key="id"
         >
           <VCol
@@ -240,40 +240,40 @@ import { toast } from 'vue3-toastify';
     } 
   }
   
-  const widgetData = ref([
-    {
-      title: 'Active Employees',
-      value: '250',
-      change: 15,
-      desc: 'Active Total Employees',
-      icon: 'tabler-user',
-      iconColor: 'primary',
-    },
-    {
-      title: 'Offswing',
-      value: '25',
-      change: -18,
-      desc: 'Fixed Period Contract',
-      icon: 'tabler-user-plus',
-      iconColor: 'error',
-    },
-    {
-      title: ' Pending Employees',
-      value: '5',
-      change: 98,
-      desc: 'Year to Date',
-      icon: 'tabler-user-check',
-      iconColor: 'success',
-    },
-    {
-      title: 'Extended Leave',
-      value: '3',
-      change: -4,
-      desc: 'Year to Date',
-      icon: 'tabler-user-exclamation',
-      iconColor: 'warning',
-    },
-  ])
+  // const widgetData = ref([
+  //   {
+  //     title: 'Active Employees',
+  //     value: '250',
+  //     change: 15,
+  //     desc: 'Active Total Employees',
+  //     icon: 'tabler-user',
+  //     iconColor: 'primary',
+  //   },
+  //   {
+  //     title: 'Offswing',
+  //     value: '25',
+  //     change: -18,
+  //     desc: 'Fixed Period Contract',
+  //     icon: 'tabler-user-plus',
+  //     iconColor: 'error',
+  //   },
+  //   {
+  //     title: ' Pending Employees',
+  //     value: '5',
+  //     change: 98,
+  //     desc: 'Year to Date',
+  //     icon: 'tabler-user-check',
+  //     iconColor: 'success',
+  //   },
+  //   {
+  //     title: 'Extended Leave',
+  //     value: '3',
+  //     change: -4,
+  //     desc: 'Year to Date',
+  //     icon: 'tabler-user-exclamation',
+  //     iconColor: 'warning',
+  //   },
+  // ])
 
   const rowClick = (e, row)=>{
     console.log("row",row.item);
