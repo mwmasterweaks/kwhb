@@ -1,7 +1,6 @@
 <script setup>
-import { useEmployeeStore } from "@/store/employeeStore";
-import { toast } from 'vue3-toastify';
-const employeeStore = useEmployeeStore();
+import { useEmployeeStore } from "@/store/employeeStore"
+import { toast } from 'vue3-toastify'
 
 const props = defineProps({
   data: {
@@ -9,17 +8,22 @@ const props = defineProps({
     required: true,
   },
 })
+
+const employeeStore = useEmployeeStore()
+
 let edit_fields = ref(false)
 let address = ref('')
+
 const updateRow = async (row, data)=>{
   var update = await employeeStore.updateRow({
-      id: props.data.id,
-      data,
-      row
-    })
-    toast("Updated!")
-  console.log(update);
+    id: props.data.id,
+    data,
+    row,
+  })
+  toast("Updated!")
+  console.log(update)
 }
+
 const updateAddress = async ()=>{
   const param = {
     employee_id: props.data.id,
@@ -27,21 +31,23 @@ const updateAddress = async ()=>{
     label: "home",
     address: address.value,
     is_default: true,
-    is_active: true
+    is_active: true,
   }
+
   var result = await employeeStore.updateAddress(param)
   
-  console.log(result);
+  console.log(result)
   if(!result)  toast("Error please try again!")
-      else  {
-        toast("Updated!")
-        edit_fields.value = false
-      }
+  else  {
+    toast("Updated!")
+    edit_fields.value = false
+  }
 }
+
 onMounted(() => {
   //console.log(props.data);
   if (props.data.address.length > 0) {
-    address.value = props.data.address[0].address;
+    address.value = props.data.address[0].address
   } 
 })
 </script>
@@ -58,14 +64,16 @@ onMounted(() => {
           />
           <b>Personal Details</b>
         </span>
-        <span class="cursor-pointer" @click="edit_fields = !edit_fields">
+        <span
+          class="cursor-pointer"
+          @click="edit_fields = !edit_fields"
+        >
           <VIcon
             icon="tabler-pencil"
             size="25"
             class="me-2"
           />
         </span>
-         
       </p>
       <VList class="card-list text-medium-emphasis">
         <VListItem>
@@ -89,11 +97,10 @@ onMounted(() => {
               <AppTextField
                 v-model="props.data.last_name"
                 :rules="[requiredValidator]"
-                @keyup.enter="updateRow('last_name', props.data.last_name)"
                 placeholder="Doe"
+                @keyup.enter="updateRow('last_name', props.data.last_name)"
               />
             </span>
-            
           </VListItemTitle>
         </VListItem>
         <VListItem>
@@ -175,7 +182,6 @@ onMounted(() => {
                 @change="updateRow('dob', props.data.dob)"
               />
             </span>
-            
           </VListItemTitle>
         </VListItem>
         <VListItem>
@@ -188,19 +194,21 @@ onMounted(() => {
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Address:</span>
-            <span v-if="!edit_fields"> <p style="white-space:pre-wrap;">{{ address }}</p> </span>
+            <span v-if="!edit_fields"> <p style="white-space: pre-wrap;">{{ address }}</p> </span>
             <span v-else>
               
               <Autocomplete 
                 v-model="address"
-                @update:modelValue="updateAddress()" 
+                @update:modelValue="updateAddress" 
               />
-              <!-- <AppTextField
+              <!--
+                <AppTextField
                 v-model="props.data.address"
                 :rules="[requiredValidator]"
                 placeholder="address"
                 @keyup.enter="updateRow('address', props.data.address)"
-              /> -->
+                /> 
+              -->
             </span>
           </VListItemTitle>
         </VListItem>
