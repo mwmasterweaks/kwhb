@@ -22,7 +22,8 @@ const label = computed(() => useAttrs().label)
     <VLabel
       v-if="label"
       :for="elementId"
-      class="mb-1 text-body-2 text-high-emphasis"
+      class="mb-1 text-body-2 text-high-emphasis font-weight-medium"
+      style="color: #333954 !important; font-size: medium !important;"
       :text="label"
     />
     <VTextField

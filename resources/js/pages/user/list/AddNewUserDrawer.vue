@@ -1,13 +1,9 @@
 <script setup>
-import { useDivisionStore } from "@/store/divisionStore";
-import { useEmploymentStore } from "@/store/employmentStore";
-import { useLocationStore } from "@/store/locationStore";
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
+import { useDivisionStore } from "@/store/divisionStore"
+import { useEmploymentStore } from "@/store/employmentStore"
+import { useLocationStore } from "@/store/locationStore"
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
-
-  const divisionStore = useDivisionStore();
-  const locationStore = useLocationStore();
-  const employmentStore = useEmploymentStore();
 
 const props = defineProps({
   isDrawerOpen: {
@@ -21,6 +17,10 @@ const emit = defineEmits([
   'userData',
 ])
 
+const divisionStore = useDivisionStore()
+const locationStore = useLocationStore()
+const employmentStore = useEmploymentStore()
+
 const isFormValid = ref(false)
 const refForm = ref()
 const firstName = ref('')
@@ -33,16 +33,17 @@ const access = ref()
 const access_list = ref()
 const status = ref()
 const dateHired = ref('')
+
 access_list.value = [
-  {name: "USER", id: "1"},
-  {name: "LINE MANAGER", id: "2"},
-  {name: "GENERAL MANAGER", id: "3"},
-  {name: "HR", id: "4"},
-  {name: "FINANCE", id: "5"},
-  {name: "CEO", id: "6"},
-  {name: "BOARD", id: "7"},
-  {name: "APPLICANT", id: "8"},
-];
+  { name: "USER", id: "1" },
+  { name: "LINE MANAGER", id: "2" },
+  { name: "GENERAL MANAGER", id: "3" },
+  { name: "HR", id: "4" },
+  { name: "FINANCE", id: "5" },
+  { name: "CEO", id: "6" },
+  { name: "BOARD", id: "7" },
+  { name: "APPLICANT", id: "8" },
+]
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -57,15 +58,15 @@ const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       emit('userData', {
-        first_name:firstName.value,
-        last_name:lastName.value,
-        location_id:location.value,
-        division_id:division.value,
-        job_title:jobTitle.value,
-        employment_id:employment.value,
-        role_id:access.value,
-        status:status.value,
-        date_hired:dateHired.value,
+        first_name: firstName.value,
+        last_name: lastName.value,
+        location_id: location.value,
+        division_id: division.value,
+        job_title: jobTitle.value,
+        employment_id: employment.value,
+        role_id: access.value,
+        status: status.value,
+        date_hired: dateHired.value,
       })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -104,13 +105,12 @@ const handleDrawerModelValueUpdate = val => {
             @submit.prevent="onSubmit"
           >
             <VRow>
-             
               <VCol cols="12">
                 <AppTextField
                   v-model="firstName"
                   :rules="[requiredValidator]"
                   label="First Name"
-                  placeholder="John"
+                  placeholder="Belinda Coles"
                 />
               </VCol>
               <VCol cols="12">
@@ -118,7 +118,7 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="lastName"
                   :rules="[requiredValidator]"
                   label="Last Name"
-                  placeholder="Doe"
+                  placeholder="Katherine"
                 />
               </VCol>
 
@@ -126,7 +126,7 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="location"
                   label="Location"
-                  placeholder="Select Location"
+                  placeholder="Katherine"
                   item-title="name"
                   item-value="id"
                   :rules="[requiredValidator]"
@@ -138,7 +138,7 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="division"
                   label="Division"
-                  placeholder="Select Division"
+                  placeholder="Program"
                   item-title="name"
                   item-value="id"
                   :rules="[requiredValidator]"
@@ -151,15 +151,15 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="jobTitle"
                   :rules="[requiredValidator]"
                   label="Job Title"
-                  placeholder="hr personnel"
+                  placeholder="Physiotherapist"
                 />
               </VCol>
 
-               <VCol cols="12">
+              <VCol cols="12">
                 <AppSelect
                   v-model="employment"
                   label="Employment"
-                  placeholder="Select employment"
+                  placeholder="Volunteer"
                   item-title="name"
                   item-value="id"
                   :rules="[requiredValidator]"
@@ -171,7 +171,7 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="access"
                   label="Access"
-                  placeholder="Select Access"
+                  placeholder="User"
                   item-title="name"
                   item-value="id"
                   :rules="[requiredValidator]"
@@ -183,9 +183,9 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="status"
                   label="Status"
-                  placeholder="Select Status"
+                  placeholder="Active"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' }, { title: 'Pending', value: 'pending' }]"
+                  :items="[{ title: 'Active', value: 'active' }, { title: 'Offswing', value: 'offswing' }, { title: 'Pending', value: 'pending' }, { title: 'Extended Leave', value: 'extended leave' }, { title: 'Inactive', value: 'inactive' }]"
                 />
               </VCol>
 
@@ -193,7 +193,7 @@ const handleDrawerModelValueUpdate = val => {
                 <AppDateTimePicker
                   v-model="dateHired"
                   label="Date Hired"
-                  placeholder="Select date"
+                  placeholder="28/02/2024"
                   :config="{dateFormat: 'd/m/Y' }"
                 />
               </VCol>
@@ -203,11 +203,11 @@ const handleDrawerModelValueUpdate = val => {
                   type="submit"
                   class="me-3"
                 >
-                  Submit
+                  Add
                 </VBtn>
                 <VBtn
                   type="reset"
-                  variant="outlined"
+                  variant="tonal"
                   color="secondary"
                   @click="closeNavigationDrawer"
                 >

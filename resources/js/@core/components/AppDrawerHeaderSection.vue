@@ -11,7 +11,10 @@ const emit = defineEmits(['cancel'])
 
 <template>
   <div class="px-5 py-3 d-flex align-center">
-    <h3 class="font-weight-medium text-xl">
+    <h3
+      class="font-weight-bold text-lg"
+      style="color: #333954 !important;"
+    >
       {{ props.title }}
     </h3>
     <VSpacer />
