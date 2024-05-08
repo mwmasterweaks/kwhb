@@ -1,10 +1,7 @@
 <script setup>
-
-import { useEmployeeStore } from "@/store/employeeStore";
-import { useLocationStore } from "@/store/locationStore";
-import { toast } from 'vue3-toastify';
-const employeeStore = useEmployeeStore();
-const locationStore = useLocationStore();
+import { useEmployeeStore } from "@/store/employeeStore"
+import { useLocationStore } from "@/store/locationStore"
+import { toast } from 'vue3-toastify'
 
 const props = defineProps({
   data: {
@@ -13,23 +10,28 @@ const props = defineProps({
   },
 })
 
+const employeeStore = useEmployeeStore()
+const locationStore = useLocationStore()
+
 let edit_fields = ref(false)
+let edit_password = ref(false)
+
 const updateRow = async (row, data)=>{
 
-var update = await employeeStore.updateRow({
+  var update = await employeeStore.updateRow({
     id: props.data.id,
     data,
-    row
+    row,
   })
-   toast("Updated!")
-console.log(update);
+  toast("Updated!")
+  console.log(update)
 }
 </script>
 
 <template>
   <VCard class="mb-4">
     <VCardText>
-      <p class="text-lg" >
+      <p class="text-lg">
         <b>Employee</b>
       </p>
       <VList class="card-list text-medium-emphasis">
@@ -106,7 +108,10 @@ console.log(update);
         <span>
           <b>Contact</b>
         </span>
-        <span class="cursor-pointer" @click="edit_fields = !edit_fields">
+        <span
+          class="cursor-pointer"
+          @click="edit_fields = !edit_fields"
+        >
           <VIcon
             icon="tabler-pencil"
             size="25"
@@ -167,20 +172,97 @@ console.log(update);
           <VListItemTitle>
             <span class="font-weight-medium me-1">Location:</span>
             <span v-if="!edit_fields">{{ props.data.location.name }}</span>
-             <AppSelect
-                v-else
-                v-model="props.data.location_id"
-                placeholder="Select Location"
-                item-title="name"
-                item-value="id"
-                :rules="[requiredValidator]"
-                :items="locationStore.data.locations"
-                @update:modelValue="updateRow('location_id', props.data.location_id)"
-              />
+            <AppSelect
+              v-else
+              v-model="props.data.location_id"
+              placeholder="Select Location"
+              item-title="name"
+              item-value="id"
+              :rules="[requiredValidator]"
+              :items="locationStore.data.locations"
+              @update:modelValue="updateRow('location_id', props.data.location_id)"
+            />
           </VListItemTitle>
         </VListItem>
       </VList>
-
+      <VDivider class="mt-8" />
+      <VList class="card-list text-medium-emphasis mt-4">
+        <VListItem>
+          <template #prepend>
+            <VIcon
+              icon="tabler-lock"
+              size="20"
+              class="me-2"
+            />
+          </template>
+          <VListItemTitle>
+            <span
+              v-if="!edit_password"
+              class="font-weight-medium me-1"
+            >Password:</span>
+            <span
+              v-if="edit_password"
+              class="font-weight-medium me-1"
+            >New Password:</span>
+            <span v-if="!edit_password">********</span>
+            <AppTextField
+              v-else
+              v-model="props.data.work_phone"
+              :rules="[requiredValidator]"
+              @keyup.enter="updateRow('work_phone', props.data.work_phone)"
+            />
+          </VListItemTitle>
+        </VListItem>
+        <VListItem>
+          <template #prepend>
+            <VIcon
+              v-if="edit_password"
+              icon="tabler-lock"
+              size="20"
+              class="me-2"
+            />
+          </template>
+          <VListItemTitle>
+            <span
+              v-if="edit_password"
+              class="font-weight-medium me-1"
+            >Re-enter Password:</span>
+            <AppTextField
+              v-if="edit_password"
+              v-model="props.data.work_phone"
+              :rules="[requiredValidator]"
+              @keyup.enter="updateRow('work_phone', props.data.work_phone)"
+            />
+          </VListItemTitle>
+        </VListItem>
+      </VList>
+      <VBtn
+        v-if="!edit_password"
+        color="secondary"
+        variant="outlined"
+        class="mt-1 mr-3"
+        @click="edit_password = !edit_password"
+      >
+        Reset Password
+      </VBtn>
+      <VBtn
+        v-if="edit_password"
+        color="secondary"
+        variant="outlined"
+        class="mt-4 mr-3"
+        @click="edit_password = !edit_password"
+      >
+        Cancel
+      </VBtn>
+      <VBtn
+        v-if="edit_password"
+        color="primary"
+        variant="tonal"
+        class="mt-4"
+        @click="edit_password = !edit_password"
+      >
+        Save
+      </VBtn>
     </VCardText>
   </VCard>
 </template>
