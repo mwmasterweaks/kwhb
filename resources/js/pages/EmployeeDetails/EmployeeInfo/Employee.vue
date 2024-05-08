@@ -207,9 +207,7 @@ const updateRow = async (row, data)=>{
             <span v-if="!edit_password">********</span>
             <AppTextField
               v-else
-              v-model="props.data.work_phone"
               :rules="[requiredValidator]"
-              @keyup.enter="updateRow('work_phone', props.data.work_phone)"
             />
           </VListItemTitle>
         </VListItem>
@@ -229,9 +227,9 @@ const updateRow = async (row, data)=>{
             >Re-enter Password:</span>
             <AppTextField
               v-if="edit_password"
-              v-model="props.data.work_phone"
+              v-model="props.data.password"
               :rules="[requiredValidator]"
-              @keyup.enter="updateRow('work_phone', props.data.work_phone)"
+              @keyup.enter="updateRow('password', props.data.password)"
             />
           </VListItemTitle>
         </VListItem>
@@ -259,7 +257,7 @@ const updateRow = async (row, data)=>{
         color="primary"
         variant="tonal"
         class="mt-4"
-        @click="edit_password = !edit_password"
+        @click="updateRow('password', props.data.password); edit_password = !edit_password"
       >
         Save
       </VBtn>

@@ -196,10 +196,14 @@ class EmployeeController extends Controller
         $user_cred = Auth::user();
         $dataResponse = new DataResponse();
         try {
-            $tbl = Employee::where("id", $request->id);
-            $oldData = $tbl->select($request->row)->get();
-            $update = $tbl->update([$request->row => $request->data]);
-            $newData = $tbl->select($request->row)->get();
+            if ($request->row = 'password') {
+                $this->reset_password($request->id, $request->data);
+            } else {
+                $tbl = Employee::where("id", $request->id);
+                $oldData = $tbl->select($request->row)->get();
+                $update = $tbl->update([$request->row => $request->data]);
+                $newData = $tbl->select($request->row)->get();
+            }
 
             DB::table('logs')->insert([
                 //'user_id' => 1,
@@ -463,6 +467,18 @@ class EmployeeController extends Controller
             $dataResponse->ErrorResponse($ex);
             return response()->json($dataResponse, 200);
             //throw $th;
+        }
+    }
+
+    public function reset_password($employee_id, $password)
+    {
+        try {
+            User::where('employee_id', $employee_id)
+                ->update(['password' => bcrypt($password)]);
+
+            return 'updated';
+        } catch (Exception $ex) {
+            return 'error';
         }
     }
 }
