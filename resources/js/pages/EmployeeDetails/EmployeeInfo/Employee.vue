@@ -12,6 +12,7 @@ const props = defineProps({
 
 const employeeStore = useEmployeeStore()
 const locationStore = useLocationStore()
+const isPasswordVisible = ref(false)
 
 let edit_fields = ref(false)
 let edit_password = ref(false)
@@ -207,7 +208,10 @@ const updateRow = async (row, data)=>{
             <span v-if="!edit_password">********</span>
             <AppTextField
               v-else
-              :rules="[requiredValidator]"
+              v-model="props.data.password1"
+              :type="isPasswordVisible ? 'text' : 'password'"
+              :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+              @click:append-inner="isPasswordVisible = !isPasswordVisible"
             />
           </VListItemTitle>
         </VListItem>
@@ -228,12 +232,20 @@ const updateRow = async (row, data)=>{
             <AppTextField
               v-if="edit_password"
               v-model="props.data.password"
-              :rules="[requiredValidator]"
+              :type="isPasswordVisible ? 'text' : 'password'"
+              :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+              @click:append-inner="isPasswordVisible = !isPasswordVisible"
               @keyup.enter="updateRow('password', props.data.password)"
             />
           </VListItemTitle>
         </VListItem>
       </VList>
+      <div
+        v-if="props.data.password1 != props.data.password"
+        style="color: red; font-size: small;"
+      >
+        Passwords do not match!
+      </div>
       <VBtn
         v-if="!edit_password"
         color="secondary"
