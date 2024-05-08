@@ -11,8 +11,8 @@ import {
   makeVInputProps,
 } from 'vuetify/lib/components/VInput/VInput'
 
-import { filterInputAttrs } from 'vuetify/lib/util/helpers'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
+import { filterInputAttrs } from 'vuetify/lib/util/helpers'
 
 const props = defineProps({
   autofocus: Boolean,
@@ -117,7 +117,8 @@ const elementId = computed(() => {
     <!-- v-input -->
     <VLabel
       v-if="fieldProps.label"
-      class="mb-1 text-body-2 text-high-emphasis"
+      class="mb-1 text-body-2 text-high-emphasis font-weight-medium"
+      style="color: #333954 !important; font-size: medium !important;"
       :for="elementId"
       :text="fieldProps.label"
     />
