@@ -1,8 +1,11 @@
-import axios from '@axios'
+import axios from '@axios';
 
 export default {
-  async fetchEmployees(){
-    return await axios.get('/api/employee').then(response => response.data)
+  async fetchEmployees(params){
+    let page =1;
+    if(params)
+     page = params.page
+    return await axios.post(`/api/employee/fetch_employees?page=${page}`, params).then(response => response.data)
   },
   async addEmployee(param){
     return await axios.post('/api/employee', param).then(response => response.data)
@@ -33,5 +36,8 @@ export default {
   },
   async fetch_widget_data(){
     return await axios.post('api/employee/fetch_widget_data').then(response => response.data)
+  },
+  async multipleFilter(payload){
+    return await axios.post('/api/employee/multiple_filter', payload).then((response) => response.data)
   },
 }

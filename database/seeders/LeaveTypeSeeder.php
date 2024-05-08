@@ -36,7 +36,7 @@ class LeaveTypeSeeder extends Seeder
                 DB::table('leave_balances')->insert([
                     'employee_id' => $employee->id,
                     'leave_type_id' => $leaveType->id,
-                    'balance' => rand(4, 10),
+                    'balance' => rand(5, 20),
                     'availed' => rand(0, 5),
                     'enroll_year' => date('Y'),
                     'created_at' => now(),

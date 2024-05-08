@@ -64,9 +64,13 @@
               sm="4"
             >
               <div class="app-select flex-grow-1">
-                <VAutocomplete
-                  label="Select Role"
-                  :items="['role1', 'role2', 'role3', 'role4', 'role5', 'role6']"
+                <AppSelect
+                  v-model="filter.role"
+                  placeholder="Select Role"
+                  item-title="name"
+                  item-value="id"
+                  :items=" ['all', ...roleStore.data.roles]"
+                   @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -75,9 +79,13 @@
               sm="4"
             >
               <div class="app-select flex-grow-1">
-                <VAutocomplete
-                  label="Search Division"
-                  :items="['division1', 'division2', 'division3', 'division4', 'division5', 'division6']"
+                <AppSelect
+                  v-model="filter.division"
+                  placeholder="Select Division"
+                  item-title="name"
+                  item-value="id"
+                  :items="['all', ...divisionStore.data.divisions]"
+                   @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -86,9 +94,11 @@
               sm="4"
             >
               <div class="app-select flex-grow-1">
-                <VAutocomplete
-                  label="Select Status"
-                  :items="['status1', 'status2', 'status3', 'status4', 'status5', 'status6']"
+                 <AppSelect
+                  v-model="filter.status"
+                  placeholder="Select Status"
+                  :items="['all', ...employeeStore.data.statuses]"
+                   @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -103,6 +113,7 @@
             <AppSelect
               :model-value="itemsPerPage"
               :items="[
+                { value: 5, title: '5' },
                 { value: 10, title: '10' },
                 { value: 25, title: '25' },
                 { value: 50, title: '50' },
@@ -122,6 +133,7 @@
                 v-model="searchQuery"
                 placeholder="Search"
                 density="compact"
+                @input="search_change"
               />
             </div>
 
@@ -147,7 +159,7 @@
               prepend-icon="tabler-plus"
               @click="isAddNewUserDrawerVisible = true"
             >
-              Add New User
+              Add new user
             </VBtn>
           </div>
         </VCardText>
@@ -156,12 +168,15 @@
 
         <!-- //EmployeeDetails-index -->
         <VDataTableServer
+          :items-per-page="itemsPerPage"
+          :page="page"
+          :items="items"
+          :items-length="totalEmployees"
           :headers="headers"
           :header-props="{ class: 'custom-header-style' }"
-          :items="items"
-          :items-per-page="10"
-          height="300"
+          :search="searchQuery"
           @click:row="rowClick"
+          @update:options="updateOptions"
         >
           <template #item.employee="{ item }">
             <div>
@@ -209,7 +224,43 @@
               {{ item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1) }}
             </div>
           </template>
-          <template #bottom />
+           <template #bottom>
+          <VDivider />
+          <div class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3">
+            <p class="text-sm text-disabled mb-0">
+              Showing 1/10
+            </p>
+
+            <VPagination
+              v-model="page"
+              :total-visible="6"
+              :length="Math.ceil(totalEmployees / itemsPerPage)"
+              
+            >
+              <template #prev="slotProps">
+                <VBtn
+                  variant="tonal"
+                  color="default"
+                  v-bind="slotProps"
+                  :icon="false"
+                >
+                  Previous
+                </VBtn>
+              </template>
+
+              <template #next="slotProps">
+                <VBtn
+                  variant="tonal"
+                  color="default"
+                  v-bind="slotProps"
+                  :icon="false"
+                >
+                  Next
+                </VBtn>
+              </template>
+            </VPagination>
+          </div>
+        </template>
         </VDataTableServer>
       </VCard>
       <AddNewUserDrawer
@@ -222,19 +273,19 @@
 
 
 <script setup>
-import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue'
-import JsonCSV from 'vue-json-csv'
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
-
-import { useEmployeeStore } from "@/store/employeeStore"
-
-import { useRouter } from 'vue-router'
-
-import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
-import { useDivisionStore } from "@/store/divisionStore"
-import { useEmploymentStore } from "@/store/employmentStore"
-import { useLocationStore } from "@/store/locationStore"
-import { toast } from 'vue3-toastify'
+import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue';
+import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder';
+import { useDivisionStore } from "@/store/divisionStore";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { useEmploymentStore } from "@/store/employmentStore";
+import { useLocationStore } from "@/store/locationStore";
+import { useRoleStore } from "@/store/roleStore";
+//import { paginationMeta } from '@api-utils/paginationMeta';
+import { debounce } from 'lodash';
+import JsonCSV from 'vue-json-csv';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 
 const router = useRouter()
@@ -242,20 +293,38 @@ const employeeStore = useEmployeeStore()
 const divisionStore = useDivisionStore()
 const locationStore = useLocationStore()
 const employmentStore = useEmploymentStore()
+const roleStore = useRoleStore();
 var data_to_export = ref([])
 let items = ref([])
+const itemsData= ref({})
+const searchQuery = ref('');
+
+// Data table options
+const itemsPerPage = ref(5)
+const totalEmployees = ref(0)
+const page = ref(1)
+const sortBy = ref()
+const orderBy = ref()
+
+const updateOptions = async  options =>  {
+  itemsPerPage.value = options.itemsPerPage
+  page.value = options.page
+  sortBy.value = options.sortBy[0]?.key
+  orderBy.value = options.sortBy[0]?.order
+  //items.value  = await employeeStore.setEmployees({page:newValue})
+}
+const filter = ref({
+  role: 'Select Role',
+  division: 'Select Division',
+  status: 'Select Status',
+
+})
 
 onMounted( async() => {
-  await employeeStore.setEmployees()
-
-  //await divisionStore.setDivisions();
-  //await locationStore.setLocations();
-  //await employmentStore.setEmployments(); 
-    
-  items.value = employeeStore.data.employees
-
+  
   exportData()
 })
+
 
 const headers = [
   {
@@ -299,6 +368,36 @@ const headers = [
 
 const isAddNewUserDrawerVisible = ref(false)
 
+// const reloadTable = async() => {
+//   itemsData.value = await employeeStore.setEmployees({page:page.value, itemsPerPage: newValue, search: searchQuery.value})
+//   items.value = itemsData.value.data;
+// }
+
+async function reloadTable() {
+  itemsData.value = await employeeStore.setEmployees({page: page.value, itemsPerPage: itemsPerPage.value, search: searchQuery.value});
+  items.value = itemsData.value.data;
+  itemsPerPage.value = itemsData.value.per_page;
+  totalEmployees.value = itemsData.value.total;
+}
+watch(page, async (newValue) => {
+  if(newValue != null){
+    await reloadTable();
+  }
+}, { immediate: true });
+
+watch(itemsPerPage, async (newValue) => {
+  if(newValue != null){
+    page.value = 1;
+    await reloadTable();
+  }
+}, { immediate: true });
+
+const search_change = debounce(async() => {
+  page.value = 1;
+  await reloadTable();
+  items.value = await leaveStore.multipleFilter(payload);
+}, 800);
+
 const addNewUser = async userData => {
   const initials = userData.first_name.charAt(0).toUpperCase() + userData.last_name.charAt(0).toUpperCase()
 
@@ -315,41 +414,6 @@ const addNewUser = async userData => {
     isAddNewUserDrawerVisible.value = false
   } 
 }
-  
-// const widgetData = ref([
-//   {
-//     title: 'Active Employees',
-//     value: '250',
-//     change: 15,
-//     desc: 'Active Total Employees',
-//     icon: 'tabler-user',
-//     iconColor: 'primary',
-//   },
-//   {
-//     title: 'Offswing',
-//     value: '25',
-//     change: -18,
-//     desc: 'Fixed Period Contract',
-//     icon: 'tabler-user-plus',
-//     iconColor: 'error',
-//   },
-//   {
-//     title: ' Pending Employees',
-//     value: '5',
-//     change: 98,
-//     desc: 'Year to Date',
-//     icon: 'tabler-user-check',
-//     iconColor: 'success',
-//   },
-//   {
-//     title: 'Extended Leave',
-//     value: '3',
-//     change: -4,
-//     desc: 'Year to Date',
-//     icon: 'tabler-user-exclamation',
-//     iconColor: 'warning',
-//   },
-// ])
 
 const rowClick = (e, row)=>{
   console.log("row", row.item)
@@ -377,6 +441,7 @@ const exportData = () => {
 
 const getBackgroundColor = (item, value) => {
   if (item.raw.user.roles.length > 0 && value == 'employee') {
+    //console.log("role", item.raw.user.roles[0].name);
     switch (item.raw.user.roles[0].name) {
     case 'Administrator':
       return '#f9dccd'
@@ -408,7 +473,10 @@ const getBackgroundColor = (item, value) => {
     case 'Pending':
       return '#e5eaff'
     case 'Extended Leave':
-      return '#fdf3de'
+    case 'Extended leave':
+      return '#FDF3DE'
+    case 'Terminated':
+      return '#FBDFE1'
     default:
       return '#cccccc'
     }
@@ -452,7 +520,10 @@ const getTextColor = (item, value) => {
     case 'Pending':
       return '#5c7fff'
     case 'Extended Leave':
+    case 'Extended leave':
       return '#f1b434'
+    case 'Terminated':
+      return '#E7404C'
     default:
       return '#363636'
     }
@@ -460,4 +531,21 @@ const getTextColor = (item, value) => {
 
   return '#363636'
 }
+
+const filter_change = debounce(async() => {
+  const payload = {
+    filter: {
+      role: true,
+      division: true,
+      status: true,
+    },
+    data: {
+      role_id: filter.value.role,
+      division_id: filter.value.division,
+      status: filter.value.status,
+    }
+  }
+  console.log("payload", payload);
+  items.value = await employeeStore.multipleFilter(payload);
+}, 800);
 </script>

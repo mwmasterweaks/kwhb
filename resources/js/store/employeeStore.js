@@ -45,6 +45,14 @@ export const useEmployeeStore = defineStore('employees', {
           iconColor: 'warning',
         },
       ],
+      statuses: [
+        { title: 'Active', value: 'active' }, 
+        { title: 'Offswing', value: 'offswing' }, 
+        { title: 'Pending', value: 'pending' }, 
+        { title: 'Extended Leave', value: 'extended leave' }, 
+        { title: 'Inactive', value: 'inactive' },
+        { title: 'Terminated', value: 'terminated' }, 
+      ]
     },
   }),
   actions: {
@@ -153,28 +161,6 @@ export const useEmployeeStore = defineStore('employees', {
         console.error("Error fetching employees:", error)
       }
     },
-    async updateBankInfo(param) {
-      try {
-        const response = await api.updateBankInfo(param)
-
-        this.data.employee_selected.bank_info = response.data
-        if(!response.error)
-          return response.data
-        else 
-          return false
-      } catch (error) {
-        console.error("Error fetching employees:", error)
-      }
-    },
-    async fetch_employee_by_name(param) {
-      try {
-        const response = await api.fetch_employee_by_name(param)
-        
-        return response.data
-      } catch (error) {
-        console.log("Error fetch_employee_by_name:", error)
-      }
-    },
     async fetchWidgetData() {
       try {
         const response = await api.fetch_widget_data()
@@ -201,17 +187,45 @@ export const useEmployeeStore = defineStore('employees', {
         console.log("Error fetching approvers:", error)
       }
     },
-    async setEmployees() {
+    async setEmployees(params) {
       const authStore = useAuthStore()
       try {
-        const response = await api.fetchEmployees()
+        const response = await api.fetchEmployees(params)
 
         console.log("setEmployees", response)
-        this.data.employees = response
+        this.data.employees = response.data
+        return response;
       } catch (error) {
-        authStore.logout()
+        //authStore.logout()
 
         console.log("Error fetching employees:", error)
+      }
+    },
+    async multipleFilter(payload) {
+      const response = await api.multipleFilter(payload);
+      console.log("multipleFilter", response);
+      return response.data;
+    },
+    async updateBankInfo (param) {
+
+      try {
+        const response = await api.updateBankInfo(param)
+
+        this.data.employee_selected.bank_info = response.data
+        if(!response.error)
+          return response.data
+        else 
+          return false
+      } catch (error) {
+        console.error("Error fetching employees:", error)
+      }
+    },
+    async fetch_employee_by_name(param) {
+      try {
+        const response = await api.fetch_employee_by_name(param)
+        return response.data
+      } catch (error) {
+        console.log("Error fetch_employee_by_name:", error)
       }
     },
         

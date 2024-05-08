@@ -36,7 +36,7 @@ class EmployeeController extends Controller
         $tbl = Employee::with([
             'user.roles', 'division', 'employment', 'bank_info', 'address',
             'location', 'emergency_contact', 'medical', 'profile_image'
-        ])->get();
+        ])->paginate(5);
         return $tbl;
     }
     public function create()
@@ -44,6 +44,23 @@ class EmployeeController extends Controller
         //
     }
 
+
+    public function fetch_employees(Request $request)
+    {
+        $itemsPerPage = $request->itemsPerPage;
+        $search = $request->search;
+        $tbl = Employee::with([
+            'user.roles', 'division', 'employment', 'bank_info', 'address',
+            'location', 'emergency_contact', 'medical', 'profile_image'
+        ]);
+        if ($search != null || $search != "") {
+            $tbl->where(function ($query1) use ($search) {
+                $query1->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%');
+            });
+        }
+        return response()->json($tbl->paginate($itemsPerPage));
+    }
 
     public function store(Request $request)
     {
@@ -467,6 +484,43 @@ class EmployeeController extends Controller
             $dataResponse->ErrorResponse($ex);
             return response()->json($dataResponse, 200);
             //throw $th;
+        }
+    }
+
+    public function multipleFilter(Request $request)
+    {
+        $dataResponse = new DataResponse();
+        try {
+
+            $filter = (object) $request->filter;
+            $data = (object) $request->data;
+            $tbl = Employee::with([
+                'user.roles', 'division', 'employment', 'bank_info', 'address',
+                'location', 'emergency_contact', 'medical', 'profile_image'
+            ]);
+            if ($filter->role)
+                if ($data->role_id != "all")
+                    if ($data->role_id != "Select Role")
+                        $tbl->whereHas('user.roles', function ($query) use ($data) {
+                            $query->where('id', $data->role_id);
+                        });
+            if ($filter->division)
+                if ($data->division_id != "all")
+                    if ($data->division_id != "Select Division")
+                        $tbl->where("division_id", $data->division_id);
+            if ($filter->status)
+                if ($data->status != "all")
+                    if ($data->status != "Select Status")
+                        $tbl->where("status", $data->status);
+
+
+
+            $dataResponse->data = $tbl->get();
+            $dataResponse->message = 'Success';
+            return response()->json($dataResponse, 200);
+        } catch (Exception $ex) {
+            $dataResponse->ErrorResponse($ex);
+            return response()->json($dataResponse, 500);
         }
     }
 

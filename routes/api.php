@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LeaveBalanceController;
+use App\Http\Controllers\RoleController;
 use App\Myob\Services\Employee\EmployeeServices;
 
 
@@ -47,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('location', LocationController::class);
     Route::resource('employment', EmploymentController::class);
     Route::resource('bank_info', BankInformationController::class);
+    Route::resource('role', RoleController::class);
 
 
     Route::group(['prefix' => 'leave_balance'], function () {
@@ -65,6 +67,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('fetch_approvers', [EmployeeController::class, 'fetch_approvers']);
         Route::post('fetch_employee_by_name', [EmployeeController::class, 'fetch_employee_by_name']);
         Route::post('fetch_widget_data', [EmployeeController::class, 'fetch_widget_data']);
+        Route::post('multiple_filter', [EmployeeController::class, 'multipleFilter']);
+        Route::post('fetch_employees', [EmployeeController::class, 'fetch_employees']);
     });
 
     Route::group(['prefix' => 'myob'], function () {

@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\Role;
+use App\Models\UserRole;
 use Faker\Factory as Faker;
 
 class UsersTableSeeder extends Seeder
@@ -17,9 +19,9 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 10; $i++) {
-            $randomNumber1 = rand(1, 6);
-            $randomNumber2 = rand(1, 6);
+        for ($i = 0; $i < 100; $i++) {
+            $randomNumber1 = rand(1, 2);
+            $randomNumber2 = rand(2, 3);
             $randomNumber3 = mt_rand(1, 6);
 
             $year = rand(2000, 2023);
@@ -32,7 +34,7 @@ class UsersTableSeeder extends Seeder
                 'last_name' => $faker->lastName,
                 'gender' => $faker->randomElement(['Male', 'Female']),
                 'job_title' => $faker->jobTitle,
-                'status' => $faker->randomElement(['Active', 'Inactive']),
+                'status' => $faker->randomElement(['active', 'pending', 'offswing', 'extended leave', 'terminated']),
                 'location_id' => $randomNumber1,
                 'division_id' => $randomNumber2,
                 'employment_id' => $randomNumber3,
@@ -44,6 +46,13 @@ class UsersTableSeeder extends Seeder
                 'username' => $faker->userName,
                 'password' => bcrypt('password'),
                 'employee_id' => $employee->id,
+            ]);
+        }
+        $users = User::all();
+        foreach ($users as $user) {
+            UserRole::create([
+                'user_id' => $user->id,
+                'role_id' => rand(1, 6)
             ]);
         }
     }

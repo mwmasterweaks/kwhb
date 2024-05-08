@@ -4,6 +4,7 @@ import { useEmployeeStore } from "@/store/employeeStore";
 import { useEmploymentStore } from "@/store/employmentStore";
 import { useLeaveTypeStore } from "@/store/leaveTypeStore";
 import { useLocationStore } from "@/store/locationStore";
+import { useRoleStore } from "@/store/roleStore";
 import ScrollToTop from '@core/components/ScrollToTop.vue';
 import { useThemeConfig } from '@core/composable/useThemeConfig';
 import { hexToRgb } from '@layouts/utils';
@@ -27,6 +28,7 @@ handleSkinChanges()
 const leaveTypeStore = useLeaveTypeStore();
 const employeeStore = useEmployeeStore();
 const divisionStore = useDivisionStore();
+const roleStore = useRoleStore();
 const locationStore = useLocationStore();
 const employmentStore = useEmploymentStore();
 onMounted( async() => {
@@ -36,6 +38,7 @@ onMounted( async() => {
   await employeeStore.setEmployees();
   await employeeStore.fetchWidgetData();
   await divisionStore.setDivisions();
+  await roleStore.setRoles();
   await locationStore.setLocations();
   await employmentStore.setEmployments();}
 })

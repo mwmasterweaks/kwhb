@@ -1,8 +1,10 @@
 <script setup>
-import { useDivisionStore } from "@/store/divisionStore"
-import { useEmploymentStore } from "@/store/employmentStore"
-import { useLocationStore } from "@/store/locationStore"
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { useDivisionStore } from "@/store/divisionStore";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { useEmploymentStore } from "@/store/employmentStore";
+import { useLocationStore } from "@/store/locationStore";
+import { useRoleStore } from "@/store/roleStore";
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 
 
 const props = defineProps({
@@ -18,8 +20,10 @@ const emit = defineEmits([
 ])
 
 const divisionStore = useDivisionStore()
+const roleStore = useRoleStore();
 const locationStore = useLocationStore()
 const employmentStore = useEmploymentStore()
+const employeeStore = useEmployeeStore()
 
 const isFormValid = ref(false)
 const refForm = ref()
@@ -30,20 +34,9 @@ const division = ref()
 const jobTitle = ref('')
 const employment = ref()
 const access = ref()
-const access_list = ref()
 const status = ref()
 const dateHired = ref('')
 
-access_list.value = [
-  { name: "USER", id: "1" },
-  { name: "LINE MANAGER", id: "2" },
-  { name: "GENERAL MANAGER", id: "3" },
-  { name: "HR", id: "4" },
-  { name: "FINANCE", id: "5" },
-  { name: "CEO", id: "6" },
-  { name: "BOARD", id: "7" },
-  { name: "APPLICANT", id: "8" },
-]
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -175,7 +168,7 @@ const handleDrawerModelValueUpdate = val => {
                   item-title="name"
                   item-value="id"
                   :rules="[requiredValidator]"
-                  :items="access_list"
+                  :items="roleStore.data.roles"
                 />
               </VCol>
 
@@ -185,7 +178,7 @@ const handleDrawerModelValueUpdate = val => {
                   label="Status"
                   placeholder="Active"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'Active', value: 'active' }, { title: 'Offswing', value: 'offswing' }, { title: 'Pending', value: 'pending' }, { title: 'Extended Leave', value: 'extended leave' }, { title: 'Inactive', value: 'inactive' }]"
+                  :items="employeeStore.data.statuses"
                 />
               </VCol>
 
