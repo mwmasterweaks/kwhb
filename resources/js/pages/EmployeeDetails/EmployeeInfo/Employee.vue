@@ -13,6 +13,7 @@ const props = defineProps({
 const employeeStore = useEmployeeStore()
 const locationStore = useLocationStore()
 const isPasswordVisible = ref(false)
+const isPasswordVisible2 = ref(false)
 
 let edit_fields = ref(false)
 let edit_password = ref(false)
@@ -209,9 +210,9 @@ const updateRow = async (row, data)=>{
             <AppTextField
               v-else
               v-model="props.data.password1"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-              @click:append-inner="isPasswordVisible = !isPasswordVisible"
+              :type="isPasswordVisible2 ? 'text' : 'password'"
+              :append-inner-icon="isPasswordVisible2 ? 'tabler-eye-off' : 'tabler-eye'"
+              @click:append-inner="isPasswordVisible2 = !isPasswordVisible2"
             />
           </VListItemTitle>
         </VListItem>
