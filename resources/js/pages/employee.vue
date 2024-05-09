@@ -70,7 +70,7 @@
                   item-title="name"
                   item-value="id"
                   :items=" ['all', ...roleStore.data.roles]"
-                   @update:modelValue="filter_change"
+                  @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -85,7 +85,7 @@
                   item-title="name"
                   item-value="id"
                   :items="['all', ...divisionStore.data.divisions]"
-                   @update:modelValue="filter_change"
+                  @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -94,11 +94,11 @@
               sm="4"
             >
               <div class="app-select flex-grow-1">
-                 <AppSelect
+                <AppSelect
                   v-model="filter.status"
                   placeholder="Select Status"
                   :items="['all', ...employeeStore.data.statuses]"
-                   @update:modelValue="filter_change"
+                  @update:modelValue="filter_change"
                 />
               </div>
             </VCol>
@@ -225,43 +225,45 @@
               {{ item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1) }}
             </div>
           </template>
-           <template #bottom>
-          <VDivider />
-          <div class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3">
-            <p class="text-sm text-disabled mb-0">
-              Showing 1/10
-            </p>
+          <template #bottom>
+            <VDivider />
+            <div class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3">
+              <p
+                class="text-sm text-disabled mb-0"
+                style="color: #999 !important;"
+              >
+                {{ generateRangeText(page, totalEmployees, itemsPerPage) }}
+              </p>
 
-            <VPagination
-              v-model="page"
-              :total-visible="6"
-              :length="Math.ceil(totalEmployees / itemsPerPage)"
-              
-            >
-              <template #prev="slotProps">
-                <VBtn
-                  variant="tonal"
-                  color="default"
-                  v-bind="slotProps"
-                  :icon="false"
-                >
-                  Previous
-                </VBtn>
-              </template>
+              <VPagination
+                v-model="page"
+                :total-visible="6"
+                :length="Math.ceil(totalEmployees / itemsPerPage)"
+              >
+                <template #prev="slotProps">
+                  <VBtn
+                    variant="tonal"
+                    color="default"
+                    v-bind="slotProps"
+                    :icon="false"
+                  >
+                    Previous
+                  </VBtn>
+                </template>
 
-              <template #next="slotProps">
-                <VBtn
-                  variant="tonal"
-                  color="default"
-                  v-bind="slotProps"
-                  :icon="false"
-                >
-                  Next
-                </VBtn>
-              </template>
-            </VPagination>
-          </div>
-        </template>
+                <template #next="slotProps">
+                  <VBtn
+                    variant="tonal"
+                    color="default"
+                    v-bind="slotProps"
+                    :icon="false"
+                  >
+                    Next
+                  </VBtn>
+                </template>
+              </VPagination>
+            </div>
+          </template>
         </VDataTableServer>
       </VCard>
       <AddNewUserDrawer
@@ -274,19 +276,20 @@
 
 
 <script setup>
-import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue';
-import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder';
-import { useDivisionStore } from "@/store/divisionStore";
-import { useEmployeeStore } from "@/store/employeeStore";
-import { useEmploymentStore } from "@/store/employmentStore";
-import { useLocationStore } from "@/store/locationStore";
-import { useRoleStore } from "@/store/roleStore";
+import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue'
+import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
+import { useDivisionStore } from "@/store/divisionStore"
+import { useEmployeeStore } from "@/store/employeeStore"
+import { useEmploymentStore } from "@/store/employmentStore"
+import { useLocationStore } from "@/store/locationStore"
+import { useRoleStore } from "@/store/roleStore"
+
 //import { paginationMeta } from '@api-utils/paginationMeta';
-import { debounce } from 'lodash';
-import JsonCSV from 'vue-json-csv';
-import { useRouter } from 'vue-router';
-import { toast } from 'vue3-toastify';
-import { VDataTableServer } from 'vuetify/labs/VDataTable';
+import { debounce } from 'lodash'
+import JsonCSV from 'vue-json-csv'
+import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
+import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 
 const router = useRouter()
@@ -294,11 +297,11 @@ const employeeStore = useEmployeeStore()
 const divisionStore = useDivisionStore()
 const locationStore = useLocationStore()
 const employmentStore = useEmploymentStore()
-const roleStore = useRoleStore();
+const roleStore = useRoleStore()
 var data_to_export = ref([])
 let items = ref([])
 const itemsData= ref({})
-const searchQuery = ref('');
+const searchQuery = ref('')
 
 // Data table options
 const itemsPerPage = ref(5)
@@ -312,8 +315,10 @@ const updateOptions = async  options =>  {
   page.value = options.page
   sortBy.value = options.sortBy[0]?.key
   orderBy.value = options.sortBy[0]?.order
+
   //items.value  = await employeeStore.setEmployees({page:newValue})
 }
+
 const filter = ref({
   role: 'Select Role',
   division: 'Select Division',
@@ -375,29 +380,29 @@ const isAddNewUserDrawerVisible = ref(false)
 // }
 
 async function reloadTable() {
-  itemsData.value = await employeeStore.setEmployees({page: page.value, itemsPerPage: itemsPerPage.value, search: searchQuery.value});
-  items.value = itemsData.value.data;
-  itemsPerPage.value = itemsData.value.per_page;
-  totalEmployees.value = itemsData.value.total;
+  itemsData.value = await employeeStore.setEmployees({ page: page.value, itemsPerPage: itemsPerPage.value, search: searchQuery.value })
+  items.value = itemsData.value.data
+  itemsPerPage.value = itemsData.value.per_page
+  totalEmployees.value = itemsData.value.total
 }
-watch(page, async (newValue) => {
+watch(page, async newValue => {
   if(newValue != null){
-    await reloadTable();
+    await reloadTable()
   }
-}, { immediate: true });
+}, { immediate: true })
 
-watch(itemsPerPage, async (newValue) => {
+watch(itemsPerPage, async newValue => {
   if(newValue != null){
-    page.value = 1;
-    await reloadTable();
+    page.value = 1
+    await reloadTable()
   }
-}, { immediate: true });
+}, { immediate: true })
 
 const search_change = debounce(async() => {
-  page.value = 1;
-  await reloadTable();
-  items.value = await leaveStore.multipleFilter(payload);
-}, 800);
+  page.value = 1
+  await reloadTable()
+  items.value = await leaveStore.multipleFilter(payload)
+}, 800)
 
 const addNewUser = async userData => {
   const initials = userData.first_name.charAt(0).toUpperCase() + userData.last_name.charAt(0).toUpperCase()
@@ -544,9 +549,39 @@ const filter_change = debounce(async() => {
       role_id: filter.value.role,
       division_id: filter.value.division,
       status: filter.value.status,
-    }
+    },
   }
-  console.log("payload", payload);
-  items.value = await employeeStore.multipleFilter(payload);
-}, 800);
+
+  console.log("payload", payload)
+  items.value = await employeeStore.multipleFilter(payload)
+}, 800)
+
+const generateRangeText = (pageNumber, totalNumberOfRows, rowsPerPage) => {
+  const startIndex = (pageNumber - 1) * rowsPerPage + 1
+  let endIndex = pageNumber * rowsPerPage
+  if (endIndex > totalNumberOfRows) {
+    endIndex = totalNumberOfRows
+  }
+
+  const rowsOnLastPage = totalNumberOfRows % rowsPerPage || rowsPerPage
+
+  let rangeText
+  if (totalNumberOfRows === 0) {
+    rangeText = "No entries"
+  } else if (pageNumber === 1 && endIndex === totalNumberOfRows) {
+    rangeText = `Showing all of ${totalNumberOfRows} entries`
+  } else if (pageNumber === 1) {
+    rangeText = `Showing ${startIndex} to ${endIndex} of ${totalNumberOfRows} entries`
+  } else if (endIndex === totalNumberOfRows) {
+    if (rowsOnLastPage === 1) {
+      rangeText = `Showing last entry of ${totalNumberOfRows} entries`
+    } else {
+      rangeText = `Showing ${startIndex} to ${endIndex} of ${totalNumberOfRows} entries`
+    }
+  } else {
+    rangeText = `Showing ${startIndex} to ${endIndex} of ${totalNumberOfRows} entries`
+  }
+
+  return rangeText
+}
 </script>
