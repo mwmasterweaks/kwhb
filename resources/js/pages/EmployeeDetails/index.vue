@@ -1,11 +1,12 @@
 <script setup>
-import { useEmployeeStore } from "@/store/employeeStore";
-import { useRouter } from 'vue-router';
+import { useEmployeeStore } from "@/store/employeeStore"
+import { computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
-import EmployeeInfo from '@/pages/EmployeeDetails/EmployeeInfo/index.vue';
-import LeaveInfo from '@/pages/EmployeeDetails/Leave/index.vue';
-import PayInfo from '@/pages/EmployeeDetails/Pay/index.vue';
-import UserProfileHeader from '@/pages/EmployeeDetails/UserProfileHeader.vue';
+import EmployeeInfo from '@/pages/EmployeeDetails/EmployeeInfo/index.vue'
+import LeaveInfo from '@/pages/EmployeeDetails/Leave/index.vue'
+import PayInfo from '@/pages/EmployeeDetails/Pay/index.vue'
+import UserProfileHeader from '@/pages/EmployeeDetails/UserProfileHeader.vue'
 
 
 //const employeeStore = useEmployeeStore();
@@ -25,40 +26,45 @@ import UserProfileHeader from '@/pages/EmployeeDetails/UserProfileHeader.vue';
 // console.log("route.params.tab", route.params.tab)
 
 
-const routeTab = ref('EmployeeInfo')
-
-const activeTab = computed({
-  get: () => routeTab,
-  set: () => routeTab,
-})
+// const routeTab = ref('EmployeeInfo')
 
 // tabs
+
+const router = useRouter()
+const employeeStore = useEmployeeStore()
+
+const activeTab = computed({
+  get: () => employeeStore.data.routeTab,
+  set: value => { employeeStore.setActiveTab(value) },
+})
+
+watch(activeTab, (newValue, oldValue) => {
+  console.log('activeTab changed from', oldValue, 'to', newValue)
+})
+
 const tabs = [
   {
-    title: 'EmployeeInfo',
+    title: 'Employee Info',
     icon: 'tabler-user-check',
     tab: 'EmployeeInfo',
   },
   {
     title: 'Pay',
-    icon: 'tabler-users', 
+    icon: 'tabler-credit-card', 
     tab: 'Pay',
   },
   {
     title: 'Leave',
-    icon: 'tabler-layout-grid',
+    icon: 'tabler-calendar',
     tab: 'Leave',
   },
 ]
 
-  const router = useRouter()
-  const employeeStore = useEmployeeStore();
-  console.log(employeeStore.data.employee_selected.first_name);
-  if(employeeStore.data.employee_selected.first_name == null)
-  {
-    router.push("employee")
-  }
-
+console.log(employeeStore.data.employee_selected.first_name)
+if(employeeStore.data.employee_selected.first_name == null)
+{
+  router.push("employee")
+}
 </script>
 
 <template>
@@ -66,12 +72,14 @@ const tabs = [
     <UserProfileHeader class="mb-5" />
     <VTabs
       v-model="activeTab"
-      class="v-tabs-pill"
+      class="v-tabs"
+      color="#051c73"
     >
       <VTab
         v-for="item in tabs"
         :key="item.icon"
-        :value=item.tab
+        :value="item.tab"
+        class="font-weight-bold"
       >
         <VIcon
           size="20"
@@ -83,7 +91,7 @@ const tabs = [
     </VTabs>
 
     <VWindow
-      v-model="routeTab"
+      v-model="activeTab"
       class="mt-5 disable-tab-transition"
     >
       <VWindowItem value="EmployeeInfo">
@@ -97,7 +105,13 @@ const tabs = [
       <VWindowItem value="Leave">
         <LeaveInfo />
       </VWindowItem>
-
     </VWindow>
   </div>
 </template>
+
+<style lang="scss">
+.custom-active-tab {
+  background-color: #007bff !important; /* Set your desired background color */
+  color: #fff !important; /* Set your desired text color */
+}
+</style>

@@ -455,7 +455,7 @@ class EmployeeController extends Controller
                     'title' => 'Offswing',
                     'value' => $offswingEmployees,
                     'change' => $offswingEmployeesP,
-                    'desc' => 'Fixed Period Contract',
+                    'desc' => 'Fixed Period Contractors',
                     'icon' => 'tabler-user-plus',
                     'iconColor' => 'error',
                 ],
