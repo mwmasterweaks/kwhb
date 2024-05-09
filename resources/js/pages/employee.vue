@@ -215,6 +215,7 @@
           <template #item.status="{ item }">
             <div
               style="border-radius: 5px;
+                font-weight: 600;
                 text-align: center;"
               :style="{ 
                 background: getBackgroundColor(item, 'status'),

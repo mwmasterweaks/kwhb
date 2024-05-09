@@ -11,6 +11,7 @@ export const useEmployeeStore = defineStore('employees', {
     data: {
       employees: [],
       employee_selected: {},
+      routeTab: 'EmployeeInfo', 
       widget: [
         {
           title: 'Active Employees',
@@ -24,7 +25,7 @@ export const useEmployeeStore = defineStore('employees', {
           title: 'Offswing',
           value: '0',
           change: 0,
-          desc: 'Fixed Period Contract',
+          desc: 'Fixed Period Contractors',
           icon: 'tabler-user-plus',
           iconColor: 'error',
         },
@@ -55,7 +56,14 @@ export const useEmployeeStore = defineStore('employees', {
       ]
     },
   }),
+  getters: {
+    activeTab: state => state.data.routeTab,
+  },
   actions: {
+    async setActiveTab(tab) {
+      console.log('emp store - set active tab', tab)
+      this.data.routeTab = tab
+    },
     async addEmployee(employee) {
       try {
         const response = await api.addEmployee(employee)
