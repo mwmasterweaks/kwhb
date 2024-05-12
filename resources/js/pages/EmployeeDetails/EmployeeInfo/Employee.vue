@@ -60,7 +60,7 @@ const updateRow = async (row, data)=>{
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Role:</span>
-            <span> RAN </span>
+            <span> {{ props.data.user.roles[0].name }} </span>
           </VListItemTitle>
         </VListItem>
         <VListItem>

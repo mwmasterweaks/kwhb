@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('source');
             $table->integer('source_id');
             $table->string('file_name');
-            $table->string('extention_name');
+            $table->string('extension_name');
             $table->timestamps();
         });
     }

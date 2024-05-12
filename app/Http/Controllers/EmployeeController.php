@@ -9,6 +9,7 @@ use App\Models\UserRole;
 use App\Models\EmergencyContact;
 use App\Models\MedicalHistory;
 use App\Models\Address;
+use App\Models\Attachment;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use App\Helpers\DataResponse;
@@ -35,7 +36,7 @@ class EmployeeController extends Controller
     {
         $tbl = Employee::with([
             'user.roles', 'division', 'employment', 'bank_info', 'address',
-            'location', 'emergency_contact', 'medical', 'profile_image'
+            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
         ])->paginate(5);
         return $tbl;
     }
@@ -51,7 +52,7 @@ class EmployeeController extends Controller
         $search = $request->search;
         $tbl = Employee::with([
             'user.roles', 'division', 'employment', 'bank_info', 'address',
-            'location', 'emergency_contact', 'medical', 'profile_image'
+            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
         ]);
         if ($search != null || $search != "") {
             $tbl->where(function ($query1) use ($search) {
@@ -151,6 +152,9 @@ class EmployeeController extends Controller
             $input = $request->all();
 
             $cmd->fill($input)->save();
+
+
+
             $logTo = $cmd;
             DB::table('logs')->insert([
                 'user_id' => $user_cred->id,
@@ -408,7 +412,7 @@ class EmployeeController extends Controller
 
             $data = Employee::with([
                 'user.roles', 'division', 'employment', 'bank_info', 'address',
-                'location', 'emergency_contact', 'medical', 'profile_image'
+                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
             ])
                 ->where(function ($query) use ($request) {
                     $query->where('first_name', 'like', '%' . $request->name . '%')
@@ -496,7 +500,7 @@ class EmployeeController extends Controller
             $data = (object) $request->data;
             $tbl = Employee::with([
                 'user.roles', 'division', 'employment', 'bank_info', 'address',
-                'location', 'emergency_contact', 'medical', 'profile_image'
+                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
             ]);
             if ($filter->role)
                 if ($data->role_id != "all")
@@ -533,6 +537,54 @@ class EmployeeController extends Controller
             return 'updated';
         } catch (Exception $ex) {
             return 'error';
+        }
+    }
+
+    public function update_attachment(Request $request)
+    {
+        $user_cred = Auth::user();
+        $dataResponse = new DataResponse();
+        try {
+            if ($request->attachment_id > 0) {
+                $attachment = Attachment::find($request->attachment_id);
+            } else {
+                $attachment = new Attachment();
+            }
+
+            $attachment->id = $request->attachment_id;
+            $attachment->attachment = $request->image_url;
+            $attachment->path = $request->image;
+            $attachment->name = $request->image;
+            $attachment->source = "employee";
+            $attachment->source_id = $request->emp_id;
+            $AttachmentController = "App\Http\Controllers\AttachmentController";
+            app($AttachmentController)->saveAttachment($attachment);
+
+            DB::table('logs')->insert([
+                'user_id' => $user_cred->id,
+                'function_name' => 'update_attachment',
+                'log_type' => 'Message',
+                'action' => 'Update Attachment ID ' . $request->attachment_id,
+                'ip_address' => Helper::instance()->getIp(),
+                'data' => "Updated attachment ID " . $request->attachment_id,
+                'created_at' => Carbon::now(),
+            ]);
+
+            $dataResponse->data = $this->getEmployees();
+            $dataResponse->message = 'Success';
+            return response()->json($dataResponse, 200);
+        } catch (\Exception $ex) {
+            DB::table('logs')->insert([
+                'user_id' => $user_cred->id,
+                'function_name' => 'update_attachment',
+                'log_type' => 'Error',
+                'action' => 'Update Attachment',
+                'ip_address' => Helper::instance()->getIp(),
+                'data' => $ex->getMessage(),
+                'created_at' => Carbon::now(),
+            ]);
+            $dataResponse->errorResponse($ex->getMessage());
+            return response()->json($dataResponse, 500);
         }
     }
 }
