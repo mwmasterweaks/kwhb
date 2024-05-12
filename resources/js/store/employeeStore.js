@@ -53,7 +53,7 @@ export const useEmployeeStore = defineStore('employees', {
         { title: 'Extended Leave', value: 'extended leave' }, 
         { title: 'Inactive', value: 'inactive' },
         { title: 'Terminated', value: 'terminated' }, 
-      ]
+      ],
     },
   }),
   getters: {
@@ -202,7 +202,8 @@ export const useEmployeeStore = defineStore('employees', {
 
         console.log("setEmployees", response)
         this.data.employees = response.data
-        return response;
+        
+        return response
       } catch (error) {
         //authStore.logout()
 
@@ -210,9 +211,11 @@ export const useEmployeeStore = defineStore('employees', {
       }
     },
     async multipleFilter(payload) {
-      const response = await api.multipleFilter(payload);
-      console.log("multipleFilter", response);
-      return response.data;
+      const response = await api.multipleFilter(payload)
+
+      console.log("multipleFilter", response)
+      
+      return response.data
     },
     async updateBankInfo (param) {
 
@@ -231,11 +234,28 @@ export const useEmployeeStore = defineStore('employees', {
     async fetch_employee_by_name(param) {
       try {
         const response = await api.fetch_employee_by_name(param)
+        
         return response.data
       } catch (error) {
         console.log("Error fetch_employee_by_name:", error)
       }
     },
-        
+    async updateAttachment (param) {
+      try {
+        const response = await api.update_attachment(param)
+
+        console.log("update attachment", response)
+        if(!response.error){
+          this.data.employees = response.data
+          
+          return response.data
+        }
+        else 
+          return false
+                
+      } catch (error) {
+        console.error("Error adding attachment:", error)
+      }
+    },
   },
 })

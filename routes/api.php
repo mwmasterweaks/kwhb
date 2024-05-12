@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
@@ -69,6 +70,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('fetch_widget_data', [EmployeeController::class, 'fetch_widget_data']);
         Route::post('multiple_filter', [EmployeeController::class, 'multipleFilter']);
         Route::post('fetch_employees', [EmployeeController::class, 'fetch_employees']);
+        Route::post('update_attachment', [EmployeeController::class, 'update_attachment']);
     });
 
     Route::group(['prefix' => 'myob'], function () {

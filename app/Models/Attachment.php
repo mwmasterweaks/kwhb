@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attachment extends Model
 {
-    protected $fillable = ['source', 'source_id', 'file_name', 'extention_name'];
+    protected $fillable = ['source', 'source_id', 'file_name', 'extension_name'];
     use HasFactory;
 }
