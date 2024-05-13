@@ -9,29 +9,8 @@ import PayInfo from '@/pages/EmployeeDetails/Pay/index.vue'
 import UserProfileHeader from '@/pages/EmployeeDetails/UserProfileHeader.vue'
 
 
-//const employeeStore = useEmployeeStore();
-
-// console.log(employeeStore.data.employee_selected);
-// import { useRoute } from 'vue-router';
-
-// definePage({
-//   meta: {
-//     navActiveLink: 'EmployeeDetails',
-//     key: 'tab',
-//   },
-// })
-
-// const route = useRoute('EmployeeDetails')
-
-// console.log("route.params.tab", route.params.tab)
-
-
-// const routeTab = ref('EmployeeInfo')
-
-// tabs
-
 const router = useRouter()
-const employeeStore = useEmployeeStore()
+const employeeStore = useEmployeeStore();
 
 const activeTab = computed({
   get: () => employeeStore.data.routeTab,
@@ -59,12 +38,11 @@ const tabs = [
     tab: 'Leave',
   },
 ]
-
-console.log(employeeStore.data.employee_selected.first_name)
-if(employeeStore.data.employee_selected.first_name == null)
-{
-  router.push("employee")
-}
+// if(!profileTabData.value)
+// {
+//   console.log("No employee selected");
+//   router.push("employee")
+// }
 </script>
 
 <template>

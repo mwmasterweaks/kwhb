@@ -1,17 +1,24 @@
 <script setup>
-import { app } from "@/main"
-import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
-import { useEmployeeStore } from "@/store/employeeStore"
-import { toast } from 'vue3-toastify'
+import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder';
+import { useEmployeeStore } from "@/store/employeeStore";
+import { getCurrentInstance } from 'vue';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
+const app = getCurrentInstance().appContext.app;
+const router = useRouter()
 const employeeStore = useEmployeeStore()
 const profileHeaderData = ref()
 const upload_image = ref(null)
 const profile_upload_image = ref(null)
 const loading = ref(false)
-const attachment_path = ref(app.config.globalProperties.$attachment_path)
-
+const attachment_path = app.config.globalProperties.$attachment_path;
 profileHeaderData.value = employeeStore.data.employee_selected
+if(!profileHeaderData.value.first_name)
+{
+  console.log("No employee selected");
+  router.push("employee")
+}
 console.log('profile', profileHeaderData.value)
 
 const initials = computed(() => {
@@ -22,9 +29,9 @@ const initials = computed(() => {
 })
 
 const form = ref({
-  image_url: profileHeaderData.value.cover_image ? attachment_path.value + "cover_image/" +  profileHeaderData.value.cover_image.file_name : null,
+  image_url: profileHeaderData.value.cover_image ? attachment_path + "cover_image/" +  profileHeaderData.value.cover_image.file_name : null,
   image_data: null,
-  profile_image_url: profileHeaderData.value.profile_image ? attachment_path.value + "profile_image/" +  profileHeaderData.value.profile_image.file_name
+  profile_image_url: profileHeaderData.value.profile_image ? attachment_path + "profile_image/" +  profileHeaderData.value.profile_image.file_name
     : ProfilePlaceHolder(initials.value),
   profile_image_data: null,
   job_title: profileHeaderData.value.job_title ?? '',
@@ -33,6 +40,7 @@ const form = ref({
   work_email: profileHeaderData.value.work_email ?? '',
 })
 
+console.log(form.value);
 const triggerSelectImage = type => {
   if (type == 'cover') {
     upload_image.value.click()
@@ -74,7 +82,7 @@ const onSelectFile = type => {
   }
 }
 
-const cancelBtn = type => {
+const cancelBtn = (type) => {
   console.log('cancelBtn', type)
   if (type == 'cover') {
     form.value.image_data = ''
@@ -93,7 +101,7 @@ const cancelBtn = type => {
   }
 }
 
-const saveBtn = async type => {
+const saveBtn = async (type) => {
   console.log('saveBtn', type)
   var attachment_id = null
   var image_url = null
@@ -132,6 +140,10 @@ const saveBtn = async type => {
     loading.value = false
   }
 }
+
+const formatEmployeeNumber = (num) => {
+   return String(num).padStart(5, '0');
+}
 </script>
 
 <template>
@@ -155,7 +167,7 @@ const saveBtn = async type => {
             <span
               class="top-right px-5 py-1"
               style="position: absolute; top: 0; right: 0; border-radius: 0 0 0 5px; background-color: #ffffff80; color: #000;"
-            >Employee # 0001</span>
+            >Employee # {{ formatEmployeeNumber(profileHeaderData?.id) }}</span>
             <span
               class="bottom-right-icon mr-3 mb-3 pa-1"
               style="position: absolute; right: 0; bottom: 0; border-radius: 5px; background-color: #ffffff60; color: #000;"
@@ -183,7 +195,7 @@ const saveBtn = async type => {
               <VAvatar
                 rounded
                 size="120"
-                :image="form.profile_image_url ? form.profile_image_url : $attachment_path + 'profile_image/' + 'default.png'"
+                :image="profileHeaderData.profile_image ? form.profile_image_url : $attachment_path + 'profile_image/' + 'default.png'"
                 class="user-profile-avatar mx-auto"
               />
               <VIcon

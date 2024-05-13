@@ -422,12 +422,9 @@ const addNewUser = async userData => {
 }
 
 const rowClick = (e, row)=>{
-  console.log("row", row.item)
   employeeStore.data.employee_selected = row.item.raw
-
-  // router.push("/EmployeeDetails");
+  console.log("employee_selected :", employeeStore.data.employee_selected );
   router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
-    
 }
 
 const exportData = () => {
@@ -441,7 +438,7 @@ const exportData = () => {
     access: item.user && item.user.roles && item.user.roles.length > 0 ? item.user.roles[0].name : '',
     status: item.status,
   }))
-  console.log('export data', data_to_export)
+  //console.log('export data', data_to_export)
 
 }
 

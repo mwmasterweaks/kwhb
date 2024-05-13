@@ -60,7 +60,7 @@ const updateRow = async (row, data)=>{
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Role:</span>
-            <span> {{ props.data.user.roles[0].name }} </span>
+            <span v-if="props.data.user"> {{ props.data.user.roles[0].name }} </span>
           </VListItemTitle>
         </VListItem>
         <VListItem>
@@ -73,7 +73,7 @@ const updateRow = async (row, data)=>{
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Manager:</span>
-            <span> {{ props.data.manager.first_name + " " + props.data.manager.last_name }}</span>
+            <span v-if="props.data.manager"> {{ props.data.manager.first_name + " " + props.data.manager.last_name }}</span>
           </VListItemTitle>
         </VListItem>
         <VListItem>
@@ -86,7 +86,7 @@ const updateRow = async (row, data)=>{
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Division:</span>
-            <span>{{ props.data.division.name }} </span>
+            <span v-if="props.data.division">{{ props.data.division.name }} </span>
           </VListItemTitle>
         </VListItem>
         
@@ -175,7 +175,7 @@ const updateRow = async (row, data)=>{
               class="me-2"
             />
           </template>
-          <VListItemTitle>
+          <VListItemTitle v-if="props.data.location">
             <span class="font-weight-medium me-1">Location:</span>
             <span v-if="!edit_fields">{{ props.data.location.name }}</span>
             <AppSelect

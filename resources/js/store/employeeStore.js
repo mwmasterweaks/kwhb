@@ -174,7 +174,6 @@ export const useEmployeeStore = defineStore('employees', {
         const response = await api.fetch_widget_data()
         if(!response.error){
           this.data.widget = response.data
-          console.log("widget updated")
           
           return response.data
         }
@@ -199,8 +198,6 @@ export const useEmployeeStore = defineStore('employees', {
       const authStore = useAuthStore()
       try {
         const response = await api.fetchEmployees(params)
-
-        console.log("setEmployees", response)
         this.data.employees = response.data
         
         return response
