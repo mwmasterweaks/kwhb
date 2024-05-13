@@ -39,6 +39,10 @@ class Employee extends Model
     {
         return $this->hasOne(Attachment::class, "source_id", "id")->where("name", "profile_image");
     }
+    public function cover_image()
+    {
+        return $this->hasOne(Attachment::class, "source_id", "id")->where("name", "cover_image");
+    }
     public function division()
     {
         return $this->belongsTo(Division::class);

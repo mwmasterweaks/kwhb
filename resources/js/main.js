@@ -22,6 +22,7 @@ const googleMapApi = import.meta.env.VITE_GOOGLE_MAP_API
 
 
 const script = document.createElement('script')
+
 script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapApi}&libraries=places`
 script.defer = true
 script.async = true
@@ -29,24 +30,27 @@ script.async = true
 document.head.appendChild(script)
 
 loadFonts()
+
 const toast_options = {}
 
 // Create vue app
 const app = createApp(App)
 
 //app.prototype.$attachment_path = "http://127.0.0.1:8000/attachments/";
-app.config.globalProperties.$attachment_path = "http://127.0.0.1:8000/attachments/";
+app.config.globalProperties.$attachment_path = "http://127.0.0.1:8000/attachments/"
 
 // Use plugins
-app.use(dateFormatter);
+app.use(dateFormatter)
 app.use(vuetify)
 app.use(createPinia())
 app.use(router)
 app.use(layoutsPlugin)
-app.component('VueDatePicker', VueDatePicker);
+app.component('VueDatePicker', VueDatePicker)
 app.use(Vue3Toasity, toast_options)
 
 
 
 // Mount vue app
 app.mount('#app')
+
+export { app }

@@ -176,12 +176,12 @@ class AttachmentController extends Controller
             $path = public_path() . "/attachments/" . $data->path . "/" . $fileName;
 
             file_put_contents($path, $decoded);
-            $attachment = new Attachment();
+            $attachment = $data->id > 0 ? Attachment::find($data->id) : new Attachment();
             $attachment->name = $data->name;
             $attachment->source = $data->source;
             $attachment->source_id = $data->source_id;
             $attachment->file_name = $fileName;
-            $attachment->extention_name = $extension;
+            $attachment->extension_name = $extension;
 
             $attachment->save();
             return "saved";
