@@ -73,7 +73,7 @@ const updateRow = async (row, data)=>{
           </template>
           <VListItemTitle>
             <span class="font-weight-medium me-1">Manager:</span>
-            <span> (manager name)</span>
+            <span> {{ props.data.manager.first_name + " " + props.data.manager.last_name }}</span>
           </VListItemTitle>
         </VListItem>
         <VListItem>
@@ -90,19 +90,23 @@ const updateRow = async (row, data)=>{
           </VListItemTitle>
         </VListItem>
         
-        <VListItem>
+        <!--
+          <VListItem>
           <template #prepend>
-            <VIcon
-              icon="tabler-color-filter"
-              size="20"
-              class="me-2"
-            />
+          <VIcon
+          icon="tabler-color-filter"
+          size="20"
+          class="me-2"
+          />
           </template>
+          
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Group:</span>
-            <span>(group name)</span>
+          <span class="font-weight-medium me-1">Group:</span>
+          <span>(group name)</span>
           </VListItemTitle>
-        </VListItem>
+          
+          </VListItem>
+        -->
       </VList>
       <br>
 

@@ -50,6 +50,25 @@ onMounted(() => {
     address.value = props.data.address[0].address
   } 
 })
+
+const age = computed(() => {
+  const dob = props.data.dob
+  if (!dob) return '' // Handle case where DOB is not provided
+
+  const dobDate = new Date(dob)
+  const currentDate = new Date()
+  const ageDiff = currentDate.getFullYear() - dobDate.getFullYear()
+
+  // Adjust age if birthday hasn't occurred yet this year
+  if (
+    currentDate.getMonth() < dobDate.getMonth() ||
+    (currentDate.getMonth() === dobDate.getMonth() && currentDate.getDate() < dobDate.getDate())
+  ) {
+    return ageDiff - 1
+  }
+
+  return ageDiff
+})
 </script>
 
 <template>
@@ -182,6 +201,19 @@ onMounted(() => {
                 @change="updateRow('dob', props.data.dob)"
               />
             </span>
+          </VListItemTitle>
+        </VListItem>
+        <VListItem>
+          <template #prepend>
+            <VIcon
+              icon="tabler-minus-vertical"
+              size="20"
+              class="me-2"
+            />
+          </template>
+          <VListItemTitle>
+            <span class="font-weight-medium me-1">Age:</span>
+            <span>{{ age }} </span>
           </VListItemTitle>
         </VListItem>
         <VListItem>
