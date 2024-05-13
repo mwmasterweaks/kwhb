@@ -141,7 +141,7 @@ const saveBtn = async type => {
         <VCard v-if="profileHeaderData">
           <div
             :class="form.image_url ? 'cover-photo' : 'cover-photo-wrapper'"
-            style="block-size: 250px;"
+            style=" position: relative;block-size: 250px;"
             :style="
               form.image_url
                 ? { backgroundImage: 'url(' + form.image_url + ')'}
@@ -152,14 +152,21 @@ const saveBtn = async type => {
                 }
             "
           >
-            <span class="top-right px-5 py-1">Member # 0001</span>
-            <VIcon
+            <span
+              class="top-right px-5 py-1"
+              style="position: absolute; top: 0; right: 0; border-radius: 0 0 0 5px; background-color: #ffffff80; color: #000;"
+            >Employee # 0001</span>
+            <span
               class="bottom-right-icon mr-3 mb-3 pa-1"
-              icon="tabler-pencil"
-              color="#000"
-              size="25"
-              @click="triggerSelectImage('cover')"
-            />
+              style="position: absolute; right: 0; bottom: 0; border-radius: 5px; background-color: #ffffff60; color: #000;"
+            >
+              <VIcon
+                icon="tabler-pencil"
+                color="#000"
+                size="20"
+                @click="triggerSelectImage('cover')"
+              /></span>
+            
             <input
               ref="upload_image"
               type="file"
@@ -172,29 +179,22 @@ const saveBtn = async type => {
           </div>
 
           <VCardText class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-5">
-            <div class="d-flex h-0">
-              <!--
-                <VAvatar
-                rounded
-                size="120"
-                image="http://localhost:5173/resources/images/avatars/avatar-1.png"
-                class="user-profile-avatar mx-auto"
-                /> 
-              -->
+            <div class="d-flex h-0 position-relative">
               <VAvatar
                 rounded
                 size="120"
                 :image="form.profile_image_url ? form.profile_image_url : $attachment_path + 'profile_image/' + 'default.png'"
                 class="user-profile-avatar mx-auto"
               />
+              <VIcon
+                size="24"
+                icon="tabler-pencil"
+                color="black"
+                class="position-absolute mt-n11"
+                style="margin-left: 90px;"
+                @click="triggerSelectImage('profile')"
+              />
             </div>
-            <VIcon
-              size="24"
-              icon="tabler-pencil"
-              color="primary"
-              class="position-absolute bottom-0 end-0 mb-n4 mr-n4"
-              @click="triggerSelectImage('profile')"
-            />
             <input
               ref="profile_upload_image"
               type="file"

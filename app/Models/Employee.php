@@ -55,4 +55,8 @@ class Employee extends Model
     {
         return $this->belongsTo(Location::class);
     }
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }
