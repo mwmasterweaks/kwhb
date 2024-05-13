@@ -11,7 +11,7 @@ class Employee extends Model
         'first_name', 'last_name', 'gender', 'pronouns', 'indigenous',
         'personal_phone', 'personal_email', 'work_phone', 'work_email', 'job_title',
         'status', 'address', 'abn', 'tax_number', 'dob',
-        'date_hired', 'location_id', 'division_id', 'employment_id'
+        'date_hired', 'location_id', 'division_id', 'employment_id', 'manager_id'
     ];
     use HasFactory;
 
