@@ -36,7 +36,7 @@ class EmployeeController extends Controller
     {
         $tbl = Employee::with([
             'user.roles', 'division', 'employment', 'bank_info', 'address',
-            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
+            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image', 'manager'
         ])->paginate(5);
         return $tbl;
     }
@@ -52,7 +52,7 @@ class EmployeeController extends Controller
         $search = $request->search;
         $tbl = Employee::with([
             'user.roles', 'division', 'employment', 'bank_info', 'address',
-            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
+            'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image', 'manager'
         ]);
         if ($search != null || $search != "") {
             $tbl->where(function ($query1) use ($search) {
@@ -74,6 +74,7 @@ class EmployeeController extends Controller
 
             $requestData = $request->all();
             $requestData['date_hired'] = $dateHired;
+            $requestData['manager_id'] = 9;
 
             $data = Employee::create($requestData);
 
@@ -412,7 +413,7 @@ class EmployeeController extends Controller
 
             $data = Employee::with([
                 'user.roles', 'division', 'employment', 'bank_info', 'address',
-                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
+                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image', 'manager'
             ])
                 ->where(function ($query) use ($request) {
                     $query->where('first_name', 'like', '%' . $request->name . '%')
@@ -500,7 +501,7 @@ class EmployeeController extends Controller
             $data = (object) $request->data;
             $tbl = Employee::with([
                 'user.roles', 'division', 'employment', 'bank_info', 'address',
-                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image'
+                'location', 'emergency_contact', 'medical', 'profile_image', 'cover_image', 'manager'
             ]);
             if ($filter->role)
                 if ($data->role_id != "all")

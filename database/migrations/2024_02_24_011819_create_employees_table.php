@@ -38,6 +38,8 @@ return new class extends Migration
             $table->foreign('division_id')->references('id')->on('divisions');
             $table->unsignedBigInteger('employment_id');
             $table->foreign('employment_id')->references('id')->on('employments');
+            $table->unsignedBigInteger('manager_id');
+            $table->foreign('manager_id')->references('id')->on('employees');
 
             $table->timestamps();
         });
