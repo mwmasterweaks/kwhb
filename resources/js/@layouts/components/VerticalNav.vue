@@ -126,7 +126,7 @@ const handleNavScroll = evt => {
             v-show="!isCollapsed && !hideTitleAndIcon"
             class="header-action"
             v-bind="config.icons.verticalNavPinned"
-            @click="isCollapsed = !isCollapsed"
+            @click="isCollapsed = !isCollapsed, isHovered = false"
           />
         </template>
         <template v-else>

@@ -204,7 +204,7 @@ export const useEmployeeStore = defineStore('employees', {
         this.data.employees = response.data
         return response;
       } catch (error) {
-        //authStore.logout()
+        authStore.logout()
 
         console.log("Error fetching employees:", error)
       }
