@@ -194,6 +194,15 @@ export const useEmployeeStore = defineStore('employees', {
         console.log("Error fetching approvers:", error)
       }
     },
+    async fetch_line_managers(param) {
+      try {
+        const response = await api.fetch_line_managers(param)
+        
+        return response.data
+      } catch (error) {
+        console.log("Error fetch_line_managers:", error)
+      }
+    },
     async setEmployees(params) {
       const authStore = useAuthStore()
       try {

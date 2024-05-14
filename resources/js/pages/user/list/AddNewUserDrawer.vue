@@ -31,6 +31,8 @@ const firstName = ref('')
 const lastName = ref('')
 const location = ref()
 const division = ref()
+const manager = ref()
+const managers = ref([])
 const jobTitle = ref('')
 const employment = ref()
 const access = ref()
@@ -47,6 +49,17 @@ const closeNavigationDrawer = () => {
   })
 }
 
+const fetchLineManager = async() => {
+  managers.value = await employeeStore.fetch_line_managers({division_id: division.value })
+ 
+  managers.value = managers.value.map(approver => ({
+        ...approver,
+        title: `${approver.first_name} ${approver.last_name}`
+    }));
+    manager.value = null;
+    console.log("managers.value", managers.value);
+}
+
 const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
@@ -55,6 +68,7 @@ const onSubmit = () => {
         last_name: lastName.value,
         location_id: location.value,
         division_id: division.value,
+        manager_id: manager.value,
         job_title: jobTitle.value,
         employment_id: employment.value,
         role_id: access.value,
@@ -136,6 +150,19 @@ const handleDrawerModelValueUpdate = val => {
                   item-value="id"
                   :rules="[requiredValidator]"
                   :items="divisionStore.data.divisions"
+                  @update:modelValue="fetchLineManager"
+                />
+              </VCol>
+
+              <VCol cols="12" v-if="managers.length > 0">
+                <AppSelect
+                  v-model="manager"
+                  label="Manager"
+                  placeholder="Program"
+                  item-title="title"
+                  item-value="id"
+                  :rules="[requiredValidator]"
+                  :items="managers"
                 />
               </VCol>
 

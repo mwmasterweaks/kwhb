@@ -32,6 +32,9 @@ export default {
   async fetch_approvers(param){
     return await axios.post('/api/employee/fetch_approvers', param).then(response => response.data)
   },
+  async fetch_line_managers(param){
+    return await axios.post('/api/employee/fetch_line_managers', param).then(response => response.data)
+  },
   async fetch_employee_by_name(param){
     return await axios.post('/api/employee/fetch_employee_by_name', param).then(response => response.data)
   },

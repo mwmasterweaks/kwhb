@@ -74,7 +74,6 @@ class EmployeeController extends Controller
 
             $requestData = $request->all();
             $requestData['date_hired'] = $dateHired;
-            $requestData['manager_id'] = 9;
 
             $data = Employee::create($requestData);
 
@@ -391,9 +390,31 @@ class EmployeeController extends Controller
 
             $data = Employee::where("division_id", $division_id)
                 ->whereHas('user.roles', function ($query) {
-                    $query->where('id', 2); //2 = line manager
+                    $query->whereIn('id', [2, 3]);
                 })
                 ->where('id', '!=', $employee_id)
+                ->get();
+
+            $dataResponse->data = $data;
+            $dataResponse->message = 'Success';
+            return response()->json($dataResponse, 200);
+        } catch (\Exception $ex) {
+            $dataResponse->ErrorResponse($ex);
+            return response()->json($dataResponse, 200);
+        }
+    }
+    public function fetch_line_managers(Request $request)
+    {
+        $user_cred = Auth::user();
+        $dataResponse = new DataResponse();
+        try {
+            $division_id = $request->division_id;
+
+
+            $data = Employee::where("division_id", $division_id)
+                ->whereHas('user.roles', function ($query) {
+                    $query->whereIn('id', [2, 3]);
+                })
                 ->get();
 
             $dataResponse->data = $data;

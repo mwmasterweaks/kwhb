@@ -2,7 +2,7 @@
 import { useEmployeeStore } from "@/store/employeeStore";
 import { toast } from 'vue3-toastify';
 import AddNewBankDrawer from "./AddNewBankDrawer.vue";
-import TaxFileNumber from './TaxFileNumber.vue';
+//import TaxFileNumber from './TaxFileNumber.vue';
 
 
 const employeeStore = useEmployeeStore();
@@ -179,7 +179,7 @@ const updateBankInfo = async (item) => {
       cols="12"
       md="6"
     >
-      <TaxFileNumber :data="profileTabData" />
+      <!-- <TaxFileNumber :data="profileTabData" /> -->
     </VCol>
   </VRow> 
 </template>
