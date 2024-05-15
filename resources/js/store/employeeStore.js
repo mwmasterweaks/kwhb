@@ -19,7 +19,7 @@ export const useEmployeeStore = defineStore('employees', {
           change: 0,
           desc: 'Active Total Employees',
           icon: 'tabler-user',
-          iconColor: 'primary',
+          iconColor: '#62c379',
         },
         {
           title: 'Offswing',
@@ -27,7 +27,7 @@ export const useEmployeeStore = defineStore('employees', {
           change: 0,
           desc: 'Fixed Period Contractors',
           icon: 'tabler-user-plus',
-          iconColor: 'error',
+          iconColor: '#9c60e5',
         },
         {
           title: ' Pending Employees',
@@ -35,7 +35,7 @@ export const useEmployeeStore = defineStore('employees', {
           change: 0,
           desc: 'Year to Date',
           icon: 'tabler-user-check',
-          iconColor: 'success',
+          iconColor: '#e35306',
         },
         {
           title: 'Extended Leave',
@@ -43,15 +43,15 @@ export const useEmployeeStore = defineStore('employees', {
           change: 0,
           desc: 'Year to Date',
           icon: 'tabler-user-exclamation',
-          iconColor: 'warning',
+          iconColor: '#e63c49',
         },
       ],
       statuses: [
         { title: 'Active', value: 'active' }, 
-        { title: 'Offswing', value: 'offswing' }, 
-        { title: 'Pending', value: 'pending' }, 
         { title: 'Extended Leave', value: 'extended leave' }, 
         { title: 'Inactive', value: 'inactive' },
+        { title: 'Offswing', value: 'offswing' }, 
+        { title: 'Pending', value: 'pending' }, 
         { title: 'Terminated', value: 'terminated' }, 
       ],
     },
@@ -207,6 +207,7 @@ export const useEmployeeStore = defineStore('employees', {
       const authStore = useAuthStore()
       try {
         const response = await api.fetchEmployees(params)
+
         this.data.employees = response.data
         
         return response

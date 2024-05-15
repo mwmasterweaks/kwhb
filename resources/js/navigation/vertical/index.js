@@ -8,21 +8,21 @@ export default [
   {
     title: 'People',
     icon: { icon: 'tabler-users', color: '#ffffff' },
-     children: [
+    children: [
       {
         title: 'Employee',
         to: { name: 'employee' },
-        group: 'People'
+        group: 'People',
       },
       {
         title: 'Performance Reviews',
-        group: 'People'
+        group: 'People',
       },
       {
         title: 'Leave Management',
         to: 'LeaveManagement',
-        group: 'People'
-      }
+        group: 'People',
+      },
     ],
     badgeClass: 'bg-global-primary',
   },
