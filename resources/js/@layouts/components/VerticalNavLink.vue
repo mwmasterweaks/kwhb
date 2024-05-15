@@ -63,6 +63,13 @@ const hideTitleAndBadge = isVerticalNavMini(windowWidth)
         >
           {{ item.badgeContent }}
         </Component>
+        <Component
+          :is="config.app.iconRenderer || 'div'"
+          v-show="!hideTitleAndBadge"
+          v-bind="config.icons.chevronRight"
+          key="arrow"
+          class="nav-group-arrow"
+        />
       </TransitionGroup>
     </Component>
   </li>

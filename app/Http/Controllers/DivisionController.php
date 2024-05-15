@@ -19,7 +19,7 @@ class DivisionController extends Controller
     }
     public function index()
     {
-        $tbl = Division::all();
+        $tbl = Division::orderBy('name', 'asc')->get();
         return response()->json($tbl);
     }
 

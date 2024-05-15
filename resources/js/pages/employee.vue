@@ -30,7 +30,7 @@
                           <span
                             class="text-base "
                             :class="data.change > 0 ? 'text-success' : 'text-error'"
-                          >({{ data.change }}%)</span>
+                          >({{ data.change > 0 ? '+' + data.change : (data.change == 0 ? data.change : '-' + data.change) }}%)</span>
                         </h4>
                       </div>
                       <span class="text-sm">{{ data.desc }}</span>
@@ -304,7 +304,7 @@ const itemsData= ref({})
 const searchQuery = ref('')
 
 // Data table options
-const itemsPerPage = ref(5)
+const itemsPerPage = ref(25)
 const totalEmployees = ref(0)
 const page = ref(1)
 const sortBy = ref()
@@ -418,16 +418,18 @@ const addNewUser = async userData => {
   else  {
     toast("Added!")
     isAddNewUserDrawerVisible.value = false
+    await reloadTable()
   } 
 }
 
 const rowClick = (e, row)=>{
   employeeStore.data.employee_selected = row.item.raw
-  console.log("employee_selected :", employeeStore.data.employee_selected );
+  console.log("employee_selected :", employeeStore.data.employee_selected )
   router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
 }
 
 const exportData = () => {
+  console.log(items)
   data_to_export = items.value.map(item => ({
     first_name: item.first_name,
     last_name: item.last_name,
@@ -438,6 +440,7 @@ const exportData = () => {
     access: item.user && item.user.roles && item.user.roles.length > 0 ? item.user.roles[0].name : '',
     status: item.status,
   }))
+
   //console.log('export data', data_to_export)
 
 }

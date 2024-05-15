@@ -475,7 +475,7 @@ class EmployeeController extends Controller
                     'change' => $activeEmployeesP,
                     'desc' => 'Active Total Employees',
                     'icon' => 'tabler-user',
-                    'iconColor' => 'primary',
+                    'iconColor' => '#62c379',
                 ],
                 [
                     'title' => 'Offswing',
@@ -483,7 +483,7 @@ class EmployeeController extends Controller
                     'change' => $offswingEmployeesP,
                     'desc' => 'Fixed Period Contractors',
                     'icon' => 'tabler-user-plus',
-                    'iconColor' => 'error',
+                    'iconColor' => '#9c60e5',
                 ],
                 [
                     'title' => 'Pending Employees',
@@ -491,7 +491,7 @@ class EmployeeController extends Controller
                     'change' => $pendingEmployeesP,
                     'desc' => 'Year to Date',
                     'icon' => 'tabler-user-check',
-                    'iconColor' => 'success',
+                    'iconColor' => '#e35306',
                 ],
                 [
                     'title' => 'Extended Leave',
@@ -499,7 +499,7 @@ class EmployeeController extends Controller
                     'change' => $extendedLeaveEmployeesP,
                     'desc' => 'Year to Date',
                     'icon' => 'tabler-user-exclamation',
-                    'iconColor' => 'warning',
+                    'iconColor' => '#e63c49',
                 ],
             ];
 

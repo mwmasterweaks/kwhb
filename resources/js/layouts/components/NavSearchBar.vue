@@ -1,7 +1,7 @@
 <script setup>
-import Shepherd from 'shepherd.js'
 import axios from '@axios'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
+import Shepherd from 'shepherd.js'
 
 const { appContentLayoutNav } = useThemeConfig()
 
@@ -184,7 +184,7 @@ const LazyAppBarSearch = defineAsyncComponent(() => import('@core/components/App
       @click="Shepherd.activeTour?.cancel()"
     >
       <span class="me-3">Search</span>
-      <span class="meta-key">&#8984;K</span>
+      <!-- <span class="meta-key">&#8984;K</span> -->
     </span>
   </div>
 

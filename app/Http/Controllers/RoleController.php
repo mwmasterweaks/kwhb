@@ -12,7 +12,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $tbl = Role::all();
+        $tbl = Role::orderBy('name', 'asc')->get();
         return response()->json($tbl);
     }
 
