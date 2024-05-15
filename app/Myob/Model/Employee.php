@@ -4,6 +4,9 @@ namespace App\Myob\Model;
 
 use App\Myob\Http\MyobAuthMiddleware as http;
 use App\Myob\Http\MyobSettings;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
 class Employee
 {
@@ -57,9 +60,20 @@ class Employee
 		try {
 			$setting = new MyobSettings();
 			$http = new http($setting);
+
+			$http->refreshToken();
+
 			$httpClient = $http->getHttpClient();
-			$ret = $httpClient->get('/Contact/Employee');
-			return response()->json($ret);
+
+			$endpoint = $setting->getEndpointURI('Contact/Employee');
+			$ret = $httpClient->get($endpoint);
+
+			if ($ret->getStatusCode() == 200) {
+				$data = json_decode($ret->getBody(), true);
+				return response()->json($data);
+			} else {
+				return response()->json(['error' => 'Failed to fetch employees'], $ret->getStatusCode());
+			}
 		} catch (Exception $ex) {
 			return response()->json(['error' => $ex->getMessage()], 500);
 		}

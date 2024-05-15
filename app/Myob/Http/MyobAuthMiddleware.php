@@ -63,10 +63,42 @@ class MyobAuthMiddleware
 		];
 		$this->httpClient = new HttpClient([
 			'base_uri' => $this->settings->uri,
-			$headers
+			'headers' => $headers
 		]);
 
 		return $this->httpClient;
+	}
+
+	public function refreshToken()
+	{
+		$httpClient = new HttpClient();
+		$response = $httpClient->post($this->settings->token_uri, [
+			'form_params' => [
+				'grant_type'    => 'refresh_token',
+				'client_id'     => $this->settings->key,
+				'client_secret' => $this->settings->client_secret,
+				'refresh_token' => $this->settings->refresh_token,
+				'scope'         => 'CompanyFile'
+			],
+		]);
+
+		if ($response->getStatusCode() == 200) {
+			$data = json_decode($response->getBody(), true);
+			$this->settings->code = $data['access_token'];
+			$this->settings->refresh_token = $data['refresh_token'];
+			$this->httpClient = new HttpClient([
+				'base_uri' => $this->settings->uri,
+				'headers'  => [
+					'x-myobapi-key'     => $this->settings->key,
+					'x-myobapi-version' => $this->settings->version,
+					'Accept-Encoding'   => 'gzip,deflate',
+					'x-myobapi-cftoken' => $this->settings->cftoken,
+					'Authorization'     => "Bearer " . $this->settings->code,
+				],
+			]);
+		} else {
+			throw new Exception('Failed to refresh token');
+		}
 	}
 
 	// /**
