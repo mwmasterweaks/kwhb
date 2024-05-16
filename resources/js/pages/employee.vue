@@ -226,23 +226,31 @@
             </div>
           </template>
           <template #item.action="{ item }">
-            <IconBtn
-                >
-                  <VIcon icon="tabler-dots-vertical" />
+            <IconBtn>
+              <VIcon icon="tabler-dots-vertical" />
 
-                  <VMenu
-                    activator="parent"
-                  >
-                    <v-list>
-                      <v-list-item>
-                        <a href="#" @click="viewClick(item.raw)">View</a>
-                      </v-list-item>
-                      <v-list-item>
-                        <a href="#">Edit</a>
-                      </v-list-item>
-                    </v-list>
-                  </VMenu>
-                </IconBtn>
+              <VMenu
+                activator="parent"
+                location="left"
+              >
+                <VList>
+                  <VListItem>
+                    <a
+                      href="#"
+                      style="margin-right: 50px; color: #818493;"
+                      @click="viewClick(item.raw)"
+                    >View</a>
+                  </VListItem>
+                  <VListItem>
+                    <a
+                      href="#"
+                      style="margin-right: 50px; color: #818493;"
+                      @click="editClick(item.raw)"
+                    >Edit</a>
+                  </VListItem>
+                </VList>
+              </VMenu>
+            </IconBtn>
           </template>
           <template #bottom>
             <VDivider />
@@ -255,6 +263,7 @@
               </p>
 
               <VPagination
+                v-if="totalEmployees > itemsPerPage"
                 v-model="page"
                 :total-visible="6"
                 :length="Math.ceil(totalEmployees / itemsPerPage)"
@@ -319,7 +328,7 @@ const employmentStore = useEmploymentStore()
 const roleStore = useRoleStore()
 var data_to_export = ref([])
 let items = ref([])
-const triggerWatch = ref(true);
+const triggerWatch = ref(true)
 const itemsData= ref({})
 const searchQuery = ref('')
 
@@ -390,10 +399,10 @@ const headers = [
     title: 'Status',
     key: 'status',
   },
-   {
+  {
     title: '',
     key: 'action',
-  }
+  },
 ]
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -416,13 +425,13 @@ watch(page, async newValue => {
 }, { immediate: true })
 
 watch(itemsPerPage, async newValue => {
-  console.log("triggerWatch.value", triggerWatch.value);
+  console.log("triggerWatch.value", triggerWatch.value)
   if (newValue !== null && triggerWatch.value) {
-    triggerWatch.value = false;
+    triggerWatch.value = false
     page.value = 1
     await reloadTable()
 
-    triggerWatch.value = true;
+    triggerWatch.value = true
   }
 }, { immediate: true })
 
@@ -453,13 +462,21 @@ const addNewUser = async userData => {
 const rowClick = (e, row)=>{
   if(e.target.nodeName != "svg"){
     employeeStore.data.employee_selected = row.item.raw
+
     //console.log("employee_selected :", employeeStore.data.employee_selected )
     router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
   }
 }
-const viewClick = (item)=>{
-    employeeStore.data.employee_selected = item
-    router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
+
+const viewClick = item => {
+  console.log("hello")
+  employeeStore.data.employee_selected = item
+  router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
+}
+
+const editClick = item => {
+  employeeStore.data.employee_selected = item
+  isAddNewUserDrawerVisible = true
 }
 
 const exportData = () => {
@@ -573,7 +590,8 @@ const getTextColor = (item, value) => {
 }
 
 const filter_change = debounce(async() => { //dari
-  triggerWatch.value = false;
+  triggerWatch.value = false
+
   const payload = {
     filter: {
       role: true,
@@ -592,9 +610,9 @@ const filter_change = debounce(async() => { //dari
   items.value = itemsData.value
   itemsPerPage.value = itemsData.value.length
   totalEmployees.value = itemsData.value.length
-   setTimeout(() => {
-    triggerWatch.value = true;
-  }, 500); 
+  setTimeout(() => {
+    triggerWatch.value = true
+  }, 500) 
 }, 800)
 
 const generateRangeText = (pageNumber, totalNumberOfRows, rowsPerPage) => {

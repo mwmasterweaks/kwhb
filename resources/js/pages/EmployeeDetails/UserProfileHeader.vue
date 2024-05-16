@@ -1,22 +1,23 @@
 <script setup>
-import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder';
-import { useEmployeeStore } from "@/store/employeeStore";
-import { getCurrentInstance } from 'vue';
-import { useRouter } from 'vue-router';
-import { toast } from 'vue3-toastify';
+import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
+import { useEmployeeStore } from "@/store/employeeStore"
+import { getCurrentInstance } from 'vue'
+import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
-const app = getCurrentInstance().appContext.app;
+const app = getCurrentInstance().appContext.app
 const router = useRouter()
 const employeeStore = useEmployeeStore()
 const profileHeaderData = ref()
 const upload_image = ref(null)
 const profile_upload_image = ref(null)
 const loading = ref(false)
-const attachment_path = app.config.globalProperties.$attachment_path;
+const attachment_path = app.config.globalProperties.$attachment_path
+
 profileHeaderData.value = employeeStore.data.employee_selected
 if(!profileHeaderData.value.first_name)
 {
-  console.log("No employee selected");
+  console.log("No employee selected")
   router.push("employee")
 }
 console.log('profile', profileHeaderData.value)
@@ -40,7 +41,8 @@ const form = ref({
   work_email: profileHeaderData.value.work_email ?? '',
 })
 
-console.log(form.value);
+console.log(form.value)
+
 const triggerSelectImage = type => {
   if (type == 'cover') {
     upload_image.value.click()
@@ -82,7 +84,7 @@ const onSelectFile = type => {
   }
 }
 
-const cancelBtn = (type) => {
+const cancelBtn = type => {
   console.log('cancelBtn', type)
   if (type == 'cover') {
     form.value.image_data = ''
@@ -101,7 +103,7 @@ const cancelBtn = (type) => {
   }
 }
 
-const saveBtn = async (type) => {
+const saveBtn = async type => {
   console.log('saveBtn', type)
   var attachment_id = null
   var image_url = null
@@ -141,8 +143,8 @@ const saveBtn = async (type) => {
   }
 }
 
-const formatEmployeeNumber = (num) => {
-   return String(num).padStart(5, '0');
+const formatEmployeeNumber = num => {
+  return String(num).padStart(5, '0')
 }
 </script>
 
@@ -273,12 +275,52 @@ const formatEmployeeNumber = (num) => {
                     Cancel
                   </VBtn>
                 </div>
-                <VBtn
-                  prepend-icon="tabler-check"
-                  color="success"
+                
+                <VMenu
+                  location="bottom"
+                  offset-y
+                  transition="scale-transition"
                 >
-                  Active
-                </VBtn>
+                  <template #activator="{ props }">
+                    <VBtn
+                      append-icon="tabler-chevron-down"
+                      color="success"
+                      class="date-picker-btn"
+                      v-bind="props"
+                    >
+                      Active
+                    </VBtn>
+                  </template>
+                  <!--
+                    <VList>
+                    <VListItem>
+                    <a
+                    href="#"
+                    style="margin-right: 50px; color: #818493;"
+                    @click="viewClick(item.raw)"
+                    >View</a>
+                    </VListItem>
+                    <VListItem>
+                    <a
+                    href="#"
+                    style="margin-right: 50px; color: #818493;"
+                    >Edit</a> 
+                    </VListItem>
+                    </VList> 
+                  -->
+                  <VContainer>
+                    <VRow justify="space-around">
+                      <VDateTimePicker show-adjacent-months />
+                    </VRow>
+                  </VContainer>
+                </VMenu>
+                <template>
+                  <VContainer>
+                    <VRow justify="space-around">
+                      <VDateTimePicker show-adjacent-months />
+                    </VRow>
+                  </VContainer>
+                </template>
               </div>
             </div>
           </VCardText>
