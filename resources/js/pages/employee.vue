@@ -225,6 +225,25 @@
               {{ item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1) }}
             </div>
           </template>
+          <template #item.action="{ item }">
+            <IconBtn
+                >
+                  <VIcon icon="tabler-dots-vertical" />
+
+                  <VMenu
+                    activator="parent"
+                  >
+                    <v-list>
+                      <v-list-item>
+                        <a href="#" @click="viewClick(item.raw)">View</a>
+                      </v-list-item>
+                      <v-list-item>
+                        <a href="#">Edit</a>
+                      </v-list-item>
+                    </v-list>
+                  </VMenu>
+                </IconBtn>
+          </template>
           <template #bottom>
             <VDivider />
             <div class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3">
@@ -300,6 +319,7 @@ const employmentStore = useEmploymentStore()
 const roleStore = useRoleStore()
 var data_to_export = ref([])
 let items = ref([])
+const triggerWatch = ref(true);
 const itemsData= ref({})
 const searchQuery = ref('')
 
@@ -370,6 +390,10 @@ const headers = [
     title: 'Status',
     key: 'status',
   },
+   {
+    title: '',
+    key: 'action',
+  }
 ]
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -392,9 +416,13 @@ watch(page, async newValue => {
 }, { immediate: true })
 
 watch(itemsPerPage, async newValue => {
-  if(newValue != null){
+  console.log("triggerWatch.value", triggerWatch.value);
+  if (newValue !== null && triggerWatch.value) {
+    triggerWatch.value = false;
     page.value = 1
     await reloadTable()
+
+    triggerWatch.value = true;
   }
 }, { immediate: true })
 
@@ -423,9 +451,15 @@ const addNewUser = async userData => {
 }
 
 const rowClick = (e, row)=>{
-  employeeStore.data.employee_selected = row.item.raw
-  console.log("employee_selected :", employeeStore.data.employee_selected )
-  router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
+  if(e.target.nodeName != "svg"){
+    employeeStore.data.employee_selected = row.item.raw
+    //console.log("employee_selected :", employeeStore.data.employee_selected )
+    router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
+  }
+}
+const viewClick = (item)=>{
+    employeeStore.data.employee_selected = item
+    router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
 }
 
 const exportData = () => {
@@ -538,7 +572,8 @@ const getTextColor = (item, value) => {
   return '#363636'
 }
 
-const filter_change = debounce(async() => {
+const filter_change = debounce(async() => { //dari
+  triggerWatch.value = false;
   const payload = {
     filter: {
       role: true,
@@ -553,7 +588,13 @@ const filter_change = debounce(async() => {
   }
 
   console.log("payload", payload)
-  items.value = await employeeStore.multipleFilter(payload)
+  itemsData.value = await employeeStore.multipleFilter(payload)
+  items.value = itemsData.value
+  itemsPerPage.value = itemsData.value.length
+  totalEmployees.value = itemsData.value.length
+   setTimeout(() => {
+    triggerWatch.value = true;
+  }, 500); 
 }, 800)
 
 const generateRangeText = (pageNumber, totalNumberOfRows, rowsPerPage) => {
