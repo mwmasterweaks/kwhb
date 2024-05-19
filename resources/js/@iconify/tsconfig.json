@@ -9,7 +9,10 @@
         "strict": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "types": [
+            "vuetify"
+        ],
     },
     "exclude": [
         "./*.js"

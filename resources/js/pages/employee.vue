@@ -142,12 +142,11 @@
               variant="tonal"
               color="primary"
               prepend-icon="tabler-screen-share"
-              @click.stop="exportData"
             >
               <JsonCSV
                 id="expdata"
                 class="btn btn-default"
-                :data="data_to_export"
+                :data="dataToExport"
                 name="filename.csv"
               >
                 Export
@@ -173,21 +172,53 @@
           :items="items"
           :items-length="totalEmployees"
           :headers="headers"
-          :header-props="{ class: 'custom-header-style' }"
           :search="searchQuery"
+          style="color: #333954 !important; font-family: Arial, Helvetica, sans-serif; font-size: medium;"
           @click:row="rowClick"
           @update:options="updateOptions"
         >
+          <template #headers="{ headers }">
+            <tr>
+              <template
+                v-for="column in headers"
+                :key="column.id"
+              >
+                <th
+                  v-for="item in column"
+                  :key="item.title"
+                  class="custom-header"
+                >
+                  <span @click="toggleSort(item)">
+                    <span>{{ item.title }}</span>
+                    <template v-if="isSorted(item)">
+                      <VIcon
+                        v-if="sortDesc"
+                        style="margin-left: 5px; font-size: medium;"
+                      >
+                        tabler-chevron-down
+                      </VIcon>
+                      <VIcon
+                        v-else
+                        style="margin-left: 5px; font-size: medium;"
+                      >
+                        tabler-chevron-up
+                      </VIcon>
+                    </template>
+                  </span>
+                </th>
+              </template>
+            </tr>
+          </template>
           <template #item.employee="{ item }">
-            <div>
+            <div style="padding: 7px;">
               <div
                 style="display: flex;
-                  width: 45%;
+                  width: 45px;
                   align-items: center;
                   justify-content: center;
                   border-radius: 50px;
                   aspect-ratio: 1;
-                  font-weight: bold;"
+                  font-weight: 800;"
                 :style="{ 
                   background: getBackgroundColor(item, 'employee'),
                   color: getTextColor(item, 'employee')
@@ -214,7 +245,10 @@
           </template>
           <template #item.status="{ item }">
             <div
-              style="border-radius: 5px;
+              style="
+                padding-right: 7px;
+                padding-left: 7px;
+                border-radius: 5px;
                 font-weight: 600;
                 text-align: center;"
               :style="{ 
@@ -326,7 +360,11 @@ const divisionStore = useDivisionStore()
 const locationStore = useLocationStore()
 const employmentStore = useEmploymentStore()
 const roleStore = useRoleStore()
-var data_to_export = ref([])
+var dataToExport = ref([])
+var exportItems = ref([])
+var sortDesc = ref(false)
+var sortBy = ref(null)
+var sortIcon = 'tabler-chevron-up'
 let items = ref([])
 const triggerWatch = ref(true)
 const itemsData= ref({})
@@ -336,7 +374,6 @@ const searchQuery = ref('')
 const itemsPerPage = ref(25)
 const totalEmployees = ref(0)
 const page = ref(1)
-const sortBy = ref()
 const orderBy = ref()
 
 const updateOptions = async  options =>  {
@@ -356,52 +393,71 @@ const filter = ref({
 })
 
 onMounted( async() => {
-  
-  exportData()
+  reloadTable()
 })
 
 
 const headers = [
   {
+    id: 0,
     title: 'Employee',
     key: 'employee',
+    sortable: true,
   },
   {
+    id: 1,
     title: 'First Name',
     key: 'first_name',
+    sortable: true,
   },
   {
+    id: 2,
     title: 'Last Name',
     key: 'last_name',
+    sortable: true,
   },
   {
+    id: 3,
     title: 'Location',
     key: 'location.name',
     class: 'font-weight-bold',
+    sortable: true,
   },
   {
+    id: 4,
     title: 'Division',
     key: 'division.name',
+    sortable: true,
   },
   {
+    id: 5,
     title: 'Job Title',
     key: 'job_title',
+    sortable: true,
   },
   {
+    id: 6,
     title: 'Employment',
     key: 'employment.name',
+    sortable: true,
   },
   {
+    id: 7,
     title: 'Access',
     key: 'access',
+    sortable: true,
   },
   {
+    id: 8,
     title: 'Status',
     key: 'status',
+    sortable: true,
   },
   {
+    id: 9,
     title: '',
     key: 'action',
+    sortable: true,
   },
 ]
 
@@ -434,6 +490,14 @@ watch(itemsPerPage, async newValue => {
     triggerWatch.value = true
   }
 }, { immediate: true })
+
+watch(items, async newValue => {
+  if(newValue != null){
+    exportItems = newValue
+  } else exportItems = items.value
+
+  exportData()
+})
 
 const search_change = debounce(async() => {
   page.value = 1
@@ -480,8 +544,7 @@ const editClick = item => {
 }
 
 const exportData = () => {
-  console.log(items)
-  data_to_export = items.value.map(item => ({
+  dataToExport = exportItems.map(item => ({
     first_name: item.first_name,
     last_name: item.last_name,
     location: item.location.name,
@@ -492,7 +555,7 @@ const exportData = () => {
     status: item.status,
   }))
 
-  //console.log('export data', data_to_export)
+  console.log('data to export', dataToExport)
 
 }
 
@@ -643,4 +706,62 @@ const generateRangeText = (pageNumber, totalNumberOfRows, rowsPerPage) => {
 
   return rangeText
 }
+
+const toggleSort = column => {
+  console.log('sortBy', sortBy)
+  if (sortBy === column.key) {
+    sortDesc = !sortDesc
+    console.log('toggle sort sortDesc', sortDesc)
+  } else {
+    console.log('toggle sort sortBy', column.key)
+    sortBy = column.key
+    sortDesc = false
+  }
+
+  sortItems()
+}
+
+const isSorted = column => {
+  return sortBy === column.key
+}
+
+const sortItems = () => {
+  if (!sortBy) {
+    return
+  }
+
+  items.value.sort((a, b) => {
+    let result = 0
+    var aValue = a[sortBy]
+    var bValue = b[sortBy]
+
+    if (typeof aValue === 'string') {
+      aValue = aValue.toLowerCase()
+    }
+    if (typeof bValue === 'string') {
+      bValue = bValue.toLowerCase()
+    }
+
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      result = aValue - bValue
+    } else {
+      if (aValue < bValue) {
+        result = -1
+      } else if (aValue > bValue) {
+        result = 1
+      }
+    }
+
+    return sortDesc ? -result : result
+  })
+}
 </script>
+
+<style scoped>
+.custom-header {
+  color: #333954 !important;
+  font-family: Oswald !important;
+  font-size: large;
+  font-weight: 400 !important;
+}
+</style>
