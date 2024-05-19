@@ -1,18 +1,24 @@
 <script setup>
 import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
 import { useEmployeeStore } from "@/store/employeeStore"
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
+
+// import { VDatepicker } from 'vuetify/lib/components/VDatePicker/VDatePicker'
+
 
 const app = getCurrentInstance().appContext.app
 const router = useRouter()
 const employeeStore = useEmployeeStore()
+
+// const vDatePicker = VDatepicker()
 const profileHeaderData = ref()
 const upload_image = ref(null)
 const profile_upload_image = ref(null)
 const loading = ref(false)
 const attachment_path = app.config.globalProperties.$attachment_path
+const selectedDate = ref('2024-05-19')
 
 profileHeaderData.value = employeeStore.data.employee_selected
 if(!profileHeaderData.value.first_name)
@@ -275,7 +281,7 @@ const formatEmployeeNumber = num => {
                     Cancel
                   </VBtn>
                 </div>
-                
+
                 <VMenu
                   location="bottom"
                   offset-y
@@ -291,36 +297,8 @@ const formatEmployeeNumber = num => {
                       Active
                     </VBtn>
                   </template>
-                  <!--
-                    <VList>
-                    <VListItem>
-                    <a
-                    href="#"
-                    style="margin-right: 50px; color: #818493;"
-                    @click="viewClick(item.raw)"
-                    >View</a>
-                    </VListItem>
-                    <VListItem>
-                    <a
-                    href="#"
-                    style="margin-right: 50px; color: #818493;"
-                    >Edit</a> 
-                    </VListItem>
-                    </VList> 
-                  -->
-                  <VContainer>
-                    <VRow justify="space-around">
-                      <VDateTimePicker show-adjacent-months />
-                    </VRow>
-                  </VContainer>
+                  <VDatePicker elevation="24" />
                 </VMenu>
-                <template>
-                  <VContainer>
-                    <VRow justify="space-around">
-                      <VDateTimePicker show-adjacent-months />
-                    </VRow>
-                  </VContainer>
-                </template>
               </div>
             </div>
           </VCardText>
