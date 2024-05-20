@@ -15,6 +15,7 @@ import { createApp } from 'vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { VDatePicker } from '@vuetify/nightly/labs/VDatePicker'
 import dateFormatter from './plugins/dateFormatter'
 
 
@@ -46,6 +47,7 @@ app.use(createPinia())
 app.use(router)
 app.use(layoutsPlugin)
 app.component('VueDatePicker', VueDatePicker)
+app.component('VDatePicker', VDatePicker)
 app.use(Vue3Toasity, toast_options)
 
 

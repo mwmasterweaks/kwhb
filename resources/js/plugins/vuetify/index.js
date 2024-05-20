@@ -1,3 +1,4 @@
+import DayJsAdapter from '@date-io/dayjs'
 import { createVuetify } from 'vuetify'
 import { VBtn } from 'vuetify/components/VBtn'
 import defaults from './defaults'
@@ -11,6 +12,9 @@ import 'vuetify/styles'
 export default createVuetify({
   aliases: {
     IconBtn: VBtn,
+  },
+  date: {
+    adapter: DayJsAdapter,
   },
   defaults,
   icons,
