@@ -5,9 +5,6 @@ import { getCurrentInstance, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 
-// import { VDatepicker } from 'vuetify/lib/components/VDatePicker/VDatePicker'
-
-
 const app = getCurrentInstance().appContext.app
 const router = useRouter()
 const employeeStore = useEmployeeStore()
@@ -281,7 +278,6 @@ const formatEmployeeNumber = num => {
                     Cancel
                   </VBtn>
                 </div>
-
                 <VMenu
                   location="bottom"
                   offset-y
@@ -297,8 +293,30 @@ const formatEmployeeNumber = num => {
                       Active
                     </VBtn>
                   </template>
-                  <VDatePicker elevation="24" />
+                  <AppDatePicker v-model="selectedDate" />
+                  <!--
+                    <VDatePicker
+                    hide-actions="true"
+                    title="Select Date"
+                    header="Enter Date"
+                    /> 
+                  -->
                 </VMenu>
+                <!--
+                  <VBtn
+                  append-icon="tabler-chevron-down"
+                  color="success"
+                  class="date-picker-btn"
+                  v-bind="props"
+                  >
+                  Active
+                  <AppDatePicker
+                  v-model="selectedDate"
+                  color="success"
+                  style="display: absolute; width: 100%;"
+                  />
+                  </VBtn> 
+                -->
               </div>
             </div>
           </VCardText>
@@ -316,6 +334,10 @@ const formatEmployeeNumber = num => {
 
   .v-img__img {
     border-radius: 0.125rem;
+  }
+
+  .v-picker-title .v-date-picker-header {
+    display: none !important;
   }
 }
 </style>
