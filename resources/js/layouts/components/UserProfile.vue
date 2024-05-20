@@ -1,20 +1,33 @@
 <script setup>
-import { useAuthStore } from "@/store/authStore";
-import avatar1 from '@images/avatars/avatar-1.png';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from "@/store/authStore"
+import avatar1 from '@images/avatars/avatar-1.png'
+import { useRouter } from 'vue-router'
 
 
 
 const router = useRouter()
+
 const logout = async () => {
-  const res = await authStore.logout();
-  router.push("login");
+  const res = await authStore.logout()
+
+  router.push("login")
 }
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 </script>
 
 <template>
+  <VBadge>
+    <template #badge>
+      <span>4</span>
+    </template>
+    <VIcon
+      large
+      color="#33468d"
+      icon="tabler-bell"
+    />
+  </VBadge>
+  <span style="margin-right: 10px; margin-left: 20px; color: #33468d;font-family: Arial, Helvetica, sans-serif; font-weight: 600;">Hello John Doe</span>
   <VBadge
     dot
     location="bottom right"

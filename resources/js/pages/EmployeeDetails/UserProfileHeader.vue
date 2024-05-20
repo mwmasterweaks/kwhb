@@ -293,6 +293,11 @@ const formatEmployeeNumber = num => {
                       Active
                     </VBtn>
                   </template>
+                  <VContainer style="background: #fff;">
+                    <VRow>
+                      calendar here
+                    </VRow>
+                  </VContainer>
                   <AppDatePicker v-model="selectedDate" />
                   <!--
                     <VDatePicker
