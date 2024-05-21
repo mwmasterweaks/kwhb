@@ -107,9 +107,9 @@ const resolveCategories = val => {
 
 <template>
   <VDialog
-    max-width="600"
+    max-width="100%"
     :model-value="isLocalDialogVisible"
-    :height="$vuetify.display.smAndUp ? '550' : '100%'"
+    :height="$vuetify.display.smAndUp ? '' : '100%'"
     :fullscreen="$vuetify.display.width < 600"
     class="app-bar-search-dialog"
     @update:model-value="dialogModelValueUpdate"
@@ -245,10 +245,13 @@ const resolveCategories = val => {
                   v-for="suggestion in props.suggestions"
                   :key="suggestion.title"
                   cols="12"
-                  sm="6"
+                  sm="12"
                   class="ps-6"
                 >
-                  <p class="text-xs text-disabled text-uppercase">
+                  <p
+                    class="text-md text-disabled text-none"
+                    style="color: #655af3 !important;"
+                  >
                     {{ suggestion.title }}
                   </p>
 
@@ -277,41 +280,90 @@ const resolveCategories = val => {
         </div>
 
         <!-- 👉 No Data found -->
+        <!--
+          <div
+          v-show="!searchResults.length && searchQuery.length"
+          class="h-100"
+          >
+          <slot name="noData">
+          <VCardText class="h-100">
+          <div class="app-bar-search-suggestions d-flex flex-column align-center justify-center text-high-emphasis h-100">
+          <VIcon
+          size="75"
+          icon="tabler-file-x"
+          />
+          <div class="d-flex align-center flex-wrap justify-center gap-2 text-h6 my-3">
+          <span>No Result For </span>
+          <span>"{{ searchQuery }}"</span>
+          </div>
+          <div
+          v-if="props.noDataSuggestion"
+          class="mt-8"
+          >
+          <span class="d-flex justify-center text-disabled">Try searching for</span>
+          <h6
+          v-for="suggestion in props.noDataSuggestion"
+          :key="suggestion.title"
+          class="app-bar-search-suggestion text-sm font-weight-regular cursor-pointer mt-3"
+          @click="$emit('itemSelected', suggestion)"
+          >
+          <VIcon
+          size="20"
+          :icon="suggestion.icon"
+          class="me-3"
+          />
+          <span class="text-sm">{{ suggestion.title }}</span>
+          </h6>
+          </div>
+          </div>
+          </VCardText>
+          </slot>
+          </div> 
+        -->
+
         <div
           v-show="!searchResults.length && searchQuery.length"
           class="h-100"
         >
           <slot name="noData">
-            <VCardText class="h-100">
-              <div class="app-bar-search-suggestions d-flex flex-column align-center justify-center text-high-emphasis h-100">
-                <VIcon
-                  size="75"
-                  icon="tabler-file-x"
-                />
-                <div class="d-flex align-center flex-wrap justify-center gap-2 text-h6 my-3">
-                  <span>No Result For </span>
-                  <span>"{{ searchQuery }}"</span>
-                </div>
-                <div
-                  v-if="props.noDataSuggestion"
-                  class="mt-8"
+            <VCardText class="app-bar-search-suggestions h-100 pa-10">
+              <VRow
+                v-if="props.suggestions"
+                class="gap-y-4"
+              >
+                <VCol
+                  v-for="suggestion in props.suggestions"
+                  :key="suggestion.title"
+                  cols="12"
+                  sm="12"
+                  class="ps-6"
                 >
-                  <span class="d-flex justify-center text-disabled">Try searching for</span>
-                  <h6
-                    v-for="suggestion in props.noDataSuggestion"
-                    :key="suggestion.title"
-                    class="app-bar-search-suggestion text-sm font-weight-regular cursor-pointer mt-3"
-                    @click="$emit('itemSelected', suggestion)"
+                  <p
+                    class="text-md text-disabled text-none"
+                    style="color: #655af3 !important;"
                   >
-                    <VIcon
-                      size="20"
-                      :icon="suggestion.icon"
-                      class="me-3"
-                    />
-                    <span class="text-sm">{{ suggestion.title }}</span>
-                  </h6>
-                </div>
-              </div>
+                    {{ suggestion.title }}
+                  </p>
+
+                  <VList class="card-list">
+                    <VListItem
+                      v-for="item in suggestion.content"
+                      :key="item.title"
+                      link
+                      title="No Results Found"
+                      class="app-bar-search-suggestion"
+                      @click="$emit('itemSelected', item)"
+                    >
+                      <template #prepend>
+                        <VIcon
+                          size="20"
+                          icon="tabler-file-x"
+                        />
+                      </template>
+                    </VListItem>
+                  </VList>
+                </VCol>
+              </VRow>
             </VCardText>
           </slot>
         </div>
@@ -347,7 +399,7 @@ const resolveCategories = val => {
 
 .app-bar-search-dialog {
   .v-overlay__scrim {
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(1px);
   }
 
   .v-list-item-title {

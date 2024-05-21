@@ -14,20 +14,24 @@ const logout = async () => {
 }
 
 const authStore = useAuthStore()
+const profile = ref()
+let profile_image = ref(avatar1)
+
+onMounted(() => {
+  profile.value = getUser()
+  profile_image = '/attachments/profile_image/' + profile.value.user.employee.profile_image?.file_name
+  console.log(profile_image)
+  console.log(profile?.value)
+  console.log(profile?.value.user.name)
+})
+
+function getUser() {
+  return authStore.loadUserFromLocalStorage()
+}
 </script>
 
 <template>
-  <VBadge>
-    <template #badge>
-      <span>4</span>
-    </template>
-    <VIcon
-      large
-      color="#33468d"
-      icon="tabler-bell"
-    />
-  </VBadge>
-  <span style="margin-right: 10px; margin-left: 20px; color: #33468d;font-family: Arial, Helvetica, sans-serif; font-weight: 600;">Hello John Doe</span>
+  <span style="margin-right: 10px; color: #33468d;font-family: Arial, Helvetica, sans-serif; font-weight: 600;">{{ profile?.user.name }}</span>
   <VBadge
     dot
     location="bottom right"
@@ -41,7 +45,7 @@ const authStore = useAuthStore()
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="profile_image" /> 
 
       <!-- SECTION Menu -->
       <VMenu
@@ -66,16 +70,16 @@ const authStore = useAuthStore()
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <VImg :src="profile_image" />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ profile?.user.name }}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>{{ profile?.user.employee.job_title }}</VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />

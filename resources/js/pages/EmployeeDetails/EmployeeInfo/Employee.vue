@@ -78,14 +78,69 @@ const updateRow = async (row, data)=>{
         </VListItem>
         <VListItem>
           <template #prepend>
-            <VIcon
+            <svg
+              id="body_1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="24"
+              height="24"
+            >
+
+              <g transform="matrix(0.4528302 0 0 0.4528302 0 0)">
+                <path
+                  d="M11 4L23 4L24 8L25.934 7.965L28.438 7.938L30.934 7.9030004C 33 8 33 8 34 9C 34.07257 11.520435 34.093582 14.041706 34.063 16.563L34.063 16.563L34.049 18.717L34 24L37.875 23.938C 41.75 23.875 41.75 23.875 44 25L44 25L44 28L35 29L34.852 32.246L34.625 36.436996L34.531 38.579998L34 44C 30.785 45.607 27.564 45.057 24 45L24 45L23 49L11 49L11 36L23 36L25 40L30 41L30 28L25 29L23 33L11 33L11 20L23 20L24 24L30 24L29 13L25 13L23 17L11 17L11 4zM15 8L15 13L20 13L20 8L15 8zM15 24L15 29L20 29L20 24L15 24zM15 40L15 45L18 46L20 45L20 40L15 40z"
+                  stroke="none"
+                  fill="#8D919F"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M23 27L31 27L31 42L23 42L22 44L32 44L32 45L24 45L23 49L11 49L11 36L23 36L25 40L30 41L30 28L25 29L23 32L23 27zM15 40L15 45L18 46L20 45L20 40L15 40z"
+                  stroke="none"
+                  fill="#A8AAB5"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M29 12L31 12L31 25L22 25L21 31L14 31L13 23L12 32L23 32L23 33L11 33L11 20L23 20L24 24L30 24L29 12zM15 24L15 29L20 29L20 24L15 24z"
+                  stroke="none"
+                  fill="#A4A6B2"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M34.723 24.902L38.063 24.937L41.411 24.964L44 25L44 28L35 29L34 44L22 44L23 40L23 42L31 42L30.965 38.535L30.938 34.062L30.913 31.775C 30.91156 29.849915 30.940567 27.924171 31 26C 32 25 32 25 34.723 24.902z"
+                  stroke="none"
+                  fill="#8C909E"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M11 4L23 4L24 8L33 8L33 9L22 9L22 14L14 14L13 8L12 16L23 16L23 17L11 17L11 4zM15 8L15 13L20 13L20 8L15 8z"
+                  stroke="none"
+                  fill="#A2A5B1"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M12 37L22 37L22 39L14 39L14 46L22 46L22 48L12 48L12 37z"
+                  stroke="none"
+                  fill="#838796"
+                  fill-rule="nonzero"
+                />
+                <path
+                  d="M13 7L14 7L14 14L22 14L22 16L12 16L12 8L13 7z"
+                  stroke="none"
+                  fill="#828696"
+                  fill-rule="nonzero"
+                />
+              </g>
+            </svg>
+            <!--
+              <VIcon
               icon="tabler-binary-tree-2"
               size="20"
               class="me-2"
-            />
+              /> 
+            -->
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Division:</span>
+            <span class="font-weight-medium me-1 ml-1">Division:</span>
             <span v-if="props.data.division">{{ props.data.division.name }} </span>
           </VListItemTitle>
         </VListItem>

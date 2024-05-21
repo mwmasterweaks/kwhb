@@ -1,5 +1,5 @@
 <script setup>
-import AppSearchHeaderBg from '@images/pages/app-search-header-bg.png'
+import AppSearchHeaderBg from '@images/pages/app-search-header-bg.png';
 
 const props = defineProps({
   title: {
