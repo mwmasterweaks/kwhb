@@ -7,9 +7,6 @@ import { getCurrentInstance, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 
-// import { VDatepicker } from 'vuetify/lib/components/VDatePicker/VDatePicker'
-
-
 const app = getCurrentInstance().appContext.app
 const router = useRouter()
 const employeeStore = useEmployeeStore()
@@ -315,7 +312,6 @@ const onMenuOpen = (value) => {
                     Cancel
                   </VBtn>
                 </div>
-
                 <VMenu
                   location="bottom"
                   offset-y
@@ -383,6 +379,10 @@ const onMenuOpen = (value) => {
 
   .v-img__img {
     border-radius: 0.125rem;
+  }
+
+  .v-picker-title .v-date-picker-header {
+    display: none !important;
   }
 }
 </style>

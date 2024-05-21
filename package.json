@@ -12,6 +12,7 @@
   "dependencies": {
     "@casl/ability": "6.5.0",
     "@casl/vue": "2.2.1",
+    "@date-io/dayjs": "^3.0.0",
     "@floating-ui/dom": "1.2.7",
     "@fullcalendar/resource": "^6.1.11",
     "@fullcalendar/resource-timeline": "^6.1.11",
@@ -23,6 +24,7 @@
     "axios": "1.4.0",
     "axios-mock-adapter": "1.21.4",
     "chart.js": "4.3.0",
+    "dayjs": "^1.11.11",
     "eslint-import-resolver-alias": "^1.1.2",
     "jwt-decode": "3.1.2",
     "pinia": "2.0.35",
