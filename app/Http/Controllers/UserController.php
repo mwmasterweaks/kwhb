@@ -25,7 +25,7 @@ class UserController extends Controller
 
         $credentials = request(['username', 'password']);
         if (Auth::attempt($credentials)) {
-            $user = Auth::user()->load(["employee"]);
+            $user = Auth::user()->load(["employee.profile_image"]);
             //$employee = Employee::where("id", $user->employee_id)->first();
             if ($user->employee->status == 'active') {
                 $request->session()->regenerate();

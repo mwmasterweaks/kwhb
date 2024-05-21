@@ -1,5 +1,4 @@
 <script setup>
-import axios from '@axios'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import Shepherd from 'shepherd.js'
 
@@ -10,8 +9,41 @@ defineOptions({ inheritAttrs: false })
 // 👉 Is App Search Bar Visible
 const isAppSearchBarVisible = ref(false)
 
-// 👉 Default suggestions
 const suggestionGroups = [
+  {
+    title: 'Pages',
+    content: [
+      {
+        icon: 'tabler-chart-donut',
+        title: 'Analytics',
+        url: { name: 'dashboards-analytics' },
+      },
+    ],
+  },
+  {
+    title: 'Files',
+    content: [
+      {
+        icon: 'tabler-calendar',
+        title: 'Calendar',
+        url: { name: 'apps-calendar' },
+      },
+    ],
+  },
+  {
+    title: 'Members',
+    content: [
+      {
+        icon: 'tabler-calendar',
+        title: 'Calendar',
+        url: { name: 'apps-calendar' },
+      },
+    ],
+  },
+]
+
+// 👉 Default suggestions
+/* const suggestionGroups = [
   {
     title: 'Popular Searches',
     content: [
@@ -137,18 +169,18 @@ const noDataSuggestions = [
     icon: 'tabler-cash',
     url: { name: 'pages-pricing' },
   },
-]
+] */
 
 const searchQuery = ref('')
 const searchResult = ref([])
 const router = useRouter()
 
 // 👉 fetch search result API
-watchEffect(() => {
+/* watchEffect(() => {
   axios.get('/app-bar/search', { params: { q: searchQuery.value } }).then(response => {
     searchResult.value = response.data
   })
-})
+}) */
 
 const redirectToSuggestedOrSearchedPage = selected => {
   router.push(selected.url)
