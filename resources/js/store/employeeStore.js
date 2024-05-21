@@ -83,6 +83,28 @@ export const useEmployeeStore = defineStore('employees', {
         console.error("Error adding employee:", error)
       }
     },
+    async updateEmployee(employee) {
+      try {
+        const response = await api.updateEmployee(employee)
+
+        console.log("updateEmployee", response.data)
+
+        if(!response.error){
+          this.data.employees = response.data
+          console.log("employees updated")
+          
+          return response.data
+        }
+        else 
+          return false
+                
+      } catch (error) {
+        console.error("Error updateEmployee employee:", error)
+      }
+    },
+
+
+    
     async updateRow(data)
     {
       try {

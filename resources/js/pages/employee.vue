@@ -224,23 +224,23 @@
                   color: getTextColor(item, 'employee')
                 }"
               >
-                {{ item.raw.first_name.charAt(0).toUpperCase() + item.raw.last_name.charAt(0).toUpperCase() }}
+                {{ item.first_name.charAt(0).toUpperCase() + item.last_name.charAt(0).toUpperCase() }}
               </div>
             </div>
           </template>
           <template #item.first_name="{ item }">
             <div style="font-weight: bold;">
-              {{ item.raw.first_name }}
+              {{ item.first_name }}
             </div>
           </template>
           <template #item.last_name="{ item }">
             <div style="font-weight: bold;">
-              {{ item.raw.last_name }}
+              {{ item.last_name }}
             </div>
           </template>
           <template #item.access="{ item }">
-            <div v-if="item.raw.user.roles.length > 0">
-              {{ item.raw.user.roles[0].name }}
+            <div v-if="item.user.roles.length > 0">
+              {{ item.user.roles[0].name }}
             </div>
           </template>
           <template #item.status="{ item }">
@@ -256,7 +256,7 @@
                 color: getTextColor(item, 'status')
               }"
             >
-              {{ item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1) }}
+              {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
             </div>
           </template>
           <template #item.action="{ item }">
@@ -269,18 +269,17 @@
               >
                 <VList>
                   <VListItem>
-                    <a
-                      href="#"
-                      style="margin-right: 50px; color: #818493;"
-                      @click="viewClick(item.raw)"
-                    >View</a>
+                    <btn
+                      style="margin-right: 50px; color: #818493; cursor: pointer;"
+                      @click="viewClick(item)"
+                    >View</btn>
                   </VListItem>
                   <VListItem>
-                    <a
+                    <btn
                       href="#"
-                      style="margin-right: 50px; color: #818493;"
-                      @click="editClick(item.raw)"
-                    >Edit</a>
+                      style="margin-right: 50px; color: #818493;  cursor: pointer;"
+                      @click="editClick(item)"
+                    >Edit</btn>
                   </VListItem>
                 </VList>
               </VMenu>
@@ -332,6 +331,11 @@
         v-model:isDrawerOpen="isAddNewUserDrawerVisible"
         @user-data="addNewUser"
       />
+      <EditUserDrawer
+        v-model:isDrawerOpen="isEditUserDrawerVisible"
+        v-model:employee="editEmployee"
+        @update-data="UpdateEmployee"
+      />
     </section>
   </div>
 </template>
@@ -339,7 +343,7 @@
 
 <script setup>
 import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue'
-import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
+import EditUserDrawer from '@/pages/user/list/EditUserDrawer.vue'
 import { useDivisionStore } from "@/store/divisionStore"
 import { useEmployeeStore } from "@/store/employeeStore"
 import { useEmploymentStore } from "@/store/employmentStore"
@@ -347,10 +351,9 @@ import { useLocationStore } from "@/store/locationStore"
 import { useRoleStore } from "@/store/roleStore"
 
 //import { paginationMeta } from '@api-utils/paginationMeta';
-import { debounce } from 'lodash'
+import _, { debounce } from 'lodash'
 import JsonCSV from 'vue-json-csv'
 import { useRouter } from 'vue-router'
-import { toast } from 'vue3-toastify'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 
@@ -369,6 +372,7 @@ let items = ref([])
 const triggerWatch = ref(true)
 const itemsData= ref({})
 const searchQuery = ref('')
+const editEmployee = ref({})
 
 // Data table options
 const itemsPerPage = ref(25)
@@ -462,6 +466,7 @@ const headers = [
 ]
 
 const isAddNewUserDrawerVisible = ref(false)
+const isEditUserDrawerVisible = ref(false)
 
 // const reloadTable = async() => {
 //   itemsData.value = await employeeStore.setEmployees({page:page.value, itemsPerPage: newValue, search: searchQuery.value})
@@ -506,6 +511,7 @@ const search_change = debounce(async() => {
 }, 800)
 
 const addNewUser = async userData => {
+  //console.log("dari siya");
   const initials = userData.first_name.charAt(0).toUpperCase() + userData.last_name.charAt(0).toUpperCase()
 
   console.log(initials)
@@ -522,10 +528,27 @@ const addNewUser = async userData => {
     await reloadTable()
   } 
 }
+const UpdateEmployee = async updateData => {
+  //const initials = userData.first_name.charAt(0).toUpperCase() + userData.last_name.charAt(0).toUpperCase()
+
+  // console.log(initials)
+  // userData.profile = ProfilePlaceHolder(initials)
+  // console.log(userData)
+
+  const updateEmp = await employeeStore.updateEmployee(userData)
+
+  items.value = updateEmp
+  if(!updateEmp)  toast("Error please try again!")
+  else  {
+    toast("Updated!")
+    isEditUserDrawerVisible.value = false
+    await reloadTable()
+  } 
+}
 
 const rowClick = (e, row)=>{
   if(e.target.nodeName != "svg"){
-    employeeStore.data.employee_selected = row.item.raw
+    employeeStore.data.employee_selected = row.item
 
     //console.log("employee_selected :", employeeStore.data.employee_selected )
     router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
@@ -539,8 +562,16 @@ const viewClick = item => {
 }
 
 const editClick = item => {
-  employeeStore.data.employee_selected = item
-  isAddNewUserDrawerVisible = true
+
+  const itemCopy = _.cloneDeep(item);
+
+  if(itemCopy.user.roles.length > 0)
+    itemCopy.access_id = itemCopy.user.roles[0].id
+  else
+    itemCopy.access_id = null;
+  editEmployee.value = itemCopy
+  console.log(editEmployee.value);
+  isEditUserDrawerVisible.value = true
 }
 
 const exportData = () => {
@@ -560,9 +591,9 @@ const exportData = () => {
 }
 
 const getBackgroundColor = (item, value) => {
-  if (item.raw.user.roles.length > 0 && value == 'employee') {
-    //console.log("role", item.raw.user.roles[0].name);
-    switch (item.raw.user.roles[0].name) {
+  if (item.user.roles.length > 0 && value == 'employee') {
+    //console.log("role", item.user.roles[0].name);
+    switch (item.user.roles[0].name) {
     case 'Administrator':
       return '#f9dccd'
     case 'Applicant':
@@ -584,8 +615,8 @@ const getBackgroundColor = (item, value) => {
     default:
       return '#cccccc'
     }
-  } else if (item.raw.status && value == 'status') {
-    switch (item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1)) {
+  } else if (item.status && value == 'status') {
+    switch (item.status.charAt(0).toUpperCase() + item.status.slice(1)) {
     case 'Active':
       return '#e6f5e9'
     case 'Offswing':
@@ -600,14 +631,15 @@ const getBackgroundColor = (item, value) => {
     default:
       return '#cccccc'
     }
-  }
-
+  } 
+ 
   return '#cccccc'
 }
 
 const getTextColor = (item, value) => {
-  if (item.raw.user.roles.length > 0 && value == 'employee') {
-    switch (item.raw.user.roles[0].name) {
+  
+  if (item.user.roles.length > 0 && value == 'employee') {
+    switch (item.user.roles[0].name) {
     case 'Administrator':
       return '#e35205'
     case 'Applicant':
@@ -631,8 +663,8 @@ const getTextColor = (item, value) => {
     default:
       return '#363636'
     } 
-  } else if (item.raw.status && value == 'status') {
-    switch (item.raw.status.charAt(0).toUpperCase() + item.raw.status.slice(1)) {
+  } else if (item.status && value == 'status') {
+    switch (item.status.charAt(0).toUpperCase() + item.status.slice(1)) {
     case 'Active':
       return '#61c378'
     case 'Offswing':
@@ -648,7 +680,7 @@ const getTextColor = (item, value) => {
       return '#363636'
     }
   }
-
+ 
   return '#363636'
 }
 

@@ -11,6 +11,9 @@ export default {
   async addEmployee(param){
     return await axios.post('/api/employee', param).then(response => response.data)
   },
+  async updateEmployee(param){
+    return await axios.post('/api/employee/' + param.id, param).then(response => response.data)
+  },
   async addBankInfo(param){
     return await axios.post('/api/bank_info', param).then(response => response.data)
   },

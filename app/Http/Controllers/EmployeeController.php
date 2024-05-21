@@ -10,6 +10,7 @@ use App\Models\EmergencyContact;
 use App\Models\MedicalHistory;
 use App\Models\Address;
 use App\Models\Attachment;
+use App\Models\EmployeeStatusHistory;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use App\Helpers\DataResponse;
@@ -70,10 +71,10 @@ class EmployeeController extends Controller
         try {
             DB::beginTransaction();
 
-            $dateHired = Carbon::createFromFormat('d/m/Y', $request->date_hired)->format('Y-m-d');
+            //$dateHired = Carbon::createFromFormat('d/m/Y', $request->date_hired)->format('Y-m-d');
 
             $requestData = $request->all();
-            $requestData['date_hired'] = $dateHired;
+            //$requestData['date_hired'] = $dateHired;
 
             $data = Employee::create($requestData);
 
@@ -145,6 +146,8 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $dataResponse = new DataResponse();
         $user_cred = Auth::user();
         try {
             $cmd  = Employee::findOrFail($id);
@@ -152,7 +155,13 @@ class EmployeeController extends Controller
             $input = $request->all();
 
             $cmd->fill($input)->save();
-
+            if ($request->role_id) {
+                DB::table('user_role')->where("user_id", $request->user_id)->delete();
+                $user_role = new UserRole;
+                $user_role->user_id = $request->user_id;
+                $user_role->role_id = $request->role_id;
+                $user_role->save();
+            }
 
 
             $logTo = $cmd;
@@ -165,7 +174,9 @@ class EmployeeController extends Controller
                 'data' => "From: " . $logFrom . "\r\nTo: " . $logTo,
                 'created_at' => Carbon::now(),
             ]);
-            return $this->getEmployees();
+            $dataResponse->data = $this->getEmployees();
+            $dataResponse->message = 'Success';
+            return response()->json($dataResponse, 200);
         } catch (Exception $ex) {
             DB::table('logs')->insert([
                 'user_id' => $user_cred->id,
@@ -176,7 +187,8 @@ class EmployeeController extends Controller
                 'data' => $ex->getMessage(),
                 'created_at' => Carbon::now(),
             ]);
-            return response()->json(['error' => $ex->getMessage()], 500);
+            $dataResponse->ErrorResponse($ex);
+            return response()->json($dataResponse, 200);
         }
     }
 
@@ -216,8 +228,26 @@ class EmployeeController extends Controller
     {
         $user_cred = Auth::user();
         $dataResponse = new DataResponse();
+
         try {
-            if ($request->row = 'password') {
+            DB::beginTransaction();
+            $oldData = "";
+            $newData = "";
+            if ($request->row == 'status') {
+                $dateSelected = Carbon::now();
+                if (isset($request->dateSelected))
+                    $dateSelected = $request->dateSelected;
+                EmployeeStatusHistory::insert([
+                    'status' => $request->data,
+                    'employee_id' => $request->id,
+                    'user_id' => $user_cred->id,
+                    'date_change' => $dateSelected,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            }
+
+            if ($request->row == 'password') {
                 $this->reset_password($request->id, $request->data);
             } else {
                 $tbl = Employee::where("id", $request->id);
@@ -240,8 +270,10 @@ class EmployeeController extends Controller
 
             $dataResponse->data = $this->getEmployees();
             $dataResponse->message = 'Success';
+            DB::commit();
             return response()->json($dataResponse, 200);
         } catch (\Exception $ex) {
+            DB::rollBack();
             DB::table('logs')->insert([
                 //'user_id' => 1,
                 'user_id' => $user_cred->id,

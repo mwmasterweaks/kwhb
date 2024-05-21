@@ -145,17 +145,17 @@
             #[`item.${header.key}`]="{ item }"
           >
             <p v-if="header.key == 'full_name'">
-              {{ item.raw.employee.first_name }} {{ item.raw.employee ? item.raw.employee.last_name : '' }}
+              {{ item.employee.first_name }} {{ item.employee ? item.employee.last_name : '' }}
             </p>
             <span
               v-else
-              :id="'headspan' + header.key +item.raw.id"
-              :class="{ 'highlight': header.date == item.raw.date_from }"
+              :id="'headspan' + header.key +item.id"
+              :class="{ 'highlight': header.date == item.date_from }"
             >
               aaaa
             </span>
             
-              <span v-else :class="{ 'highlight': header.date == item.raw.date_from }">
+              <span v-else :class="{ 'highlight': header.date == item.date_from }">
              
               </span> 
             

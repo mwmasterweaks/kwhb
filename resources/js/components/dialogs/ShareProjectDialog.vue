@@ -105,7 +105,7 @@ const membersList = [
             <VListItem v-bind="listItemProp">
               <template #prepend>
                 <VAvatar
-                  :image="item.raw.avatar"
+                  :image="item.avatar"
                   size="30"
                 />
               </template>

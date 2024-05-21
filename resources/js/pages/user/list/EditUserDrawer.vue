@@ -13,11 +13,15 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  employee: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emit = defineEmits([
   'update:isDrawerOpen',
-  'userData',
+  'updateData',
 ])
 
 const divisionStore = useDivisionStore()
@@ -28,17 +32,7 @@ const employeeStore = useEmployeeStore()
 
 const isFormValid = ref(false)
 const refForm = ref()
-const firstName = ref('')
-const lastName = ref('')
-const location = ref()
-const division = ref()
-const manager = ref()
 const managers = ref([])
-const jobTitle = ref('')
-const employment = ref()
-const access = ref()
-const status = ref()
-// const dateHired = ref('')
 
 
 // 👉 drawer close
@@ -51,29 +45,31 @@ const closeNavigationDrawer = () => {
 }
 
 const fetchLineManager = async() => {
-  managers.value = await employeeStore.fetch_line_managers({division_id: division.value })
+  managers.value = await employeeStore.fetch_line_managers({division_id: props.employee.division_id })
  
   managers.value = managers.value.map(approver => ({
         ...approver,
         title: `${approver.first_name} ${approver.last_name}`
     }));
-    manager.value = null;
+    props.employee.manager_id = null;
     console.log("managers.value", managers.value);
 }
 
 const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
-      emit('userData', {
-        first_name: firstName.value,
-        last_name: lastName.value,
-        location_id: location.value,
-        division_id: division.value,
-        manager_id: manager.value,
-        job_title: jobTitle.value,
-        employment_id: employment.value,
-        role_id: access.value,
-        status: status.value,
+      emit('updateData', {
+        id: props.employee.id,
+        user_id: props.employee.user.id,
+        first_name: props.employee.first_name,
+        last_name: props.employee.last_name,
+        location_id: props.employee.location_id,
+        division_id: props.employee.division_id,
+        manager_id: props.employee.manager_id,
+        job_title: props.employee.job_title,
+        employment_id: props.employee.employment_id,
+        role_id: props.employee.access_id,
+        status: props.employee.status,
         // date_hired: dateHired.value,
       })
       emit('update:isDrawerOpen', false)
@@ -115,7 +111,7 @@ const handleDrawerModelValueUpdate = val => {
             <VRow>
               <VCol cols="12">
                 <AppTextField
-                  v-model="firstName"
+                  v-model="employee.first_name"
                   :rules="[requiredValidator]"
                   label="First Name"
                   placeholder="Belinda Coles"
@@ -123,7 +119,7 @@ const handleDrawerModelValueUpdate = val => {
               </VCol>
               <VCol cols="12">
                 <AppTextField
-                  v-model="lastName"
+                  v-model="employee.last_name"
                   :rules="[requiredValidator]"
                   label="Last Name"
                   placeholder="Katherine"
@@ -132,7 +128,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppSelect
-                  v-model="location"
+                  v-model="employee.location_id"
                   label="Location"
                   placeholder="Katherine"
                   item-title="name"
@@ -144,7 +140,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppSelect
-                  v-model="division"
+                  v-model="employee.division_id"
                   label="Division"
                   placeholder="Program"
                   item-title="name"
@@ -157,7 +153,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12" v-if="managers.length > 0">
                 <AppSelect
-                  v-model="manager"
+                  v-model="employee.manager_id"
                   label="Manager"
                   placeholder="Program"
                   item-title="title"
@@ -169,7 +165,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppTextField
-                  v-model="jobTitle"
+                  v-model="employee.job_title"
                   :rules="[requiredValidator]"
                   label="Job Title"
                   placeholder="Physiotherapist"
@@ -178,7 +174,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppSelect
-                  v-model="employment"
+                  v-model="employee.employment_id"
                   label="Employment"
                   placeholder="Volunteer"
                   item-title="name"
@@ -190,7 +186,7 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppSelect
-                  v-model="access"
+                  v-model="employee.access_id"
                   label="Access"
                   placeholder="User"
                   item-title="name"
@@ -202,11 +198,11 @@ const handleDrawerModelValueUpdate = val => {
 
               <VCol cols="12">
                 <AppSelect
-                  v-model="status"
+                  v-model="employee.status"
                   label="Status"
                   placeholder="Active"
                   :rules="[requiredValidator]"
-                  :items="['pending']"
+                  :items="employeeStore.data.statuses"
                 />
               </VCol>
 
@@ -224,7 +220,7 @@ const handleDrawerModelValueUpdate = val => {
                   type="submit"
                   class="me-3"
                 >
-                  Add
+                  Update
                 </VBtn>
                 <VBtn
                   type="reset"

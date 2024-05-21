@@ -1,6 +1,8 @@
 <script setup>
 import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
 import { useEmployeeStore } from "@/store/employeeStore"
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 import { getCurrentInstance, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
@@ -18,7 +20,12 @@ const upload_image = ref(null)
 const profile_upload_image = ref(null)
 const loading = ref(false)
 const attachment_path = app.config.globalProperties.$attachment_path
-const selectedDate = ref('2024-05-19')
+// const selectedDate = ref('2024-05-19')
+const selectedDate = ref();
+const statusSelected = ref();
+const datePickerRef = ref(null);
+const isMenuOpen = ref(false);
+
 
 profileHeaderData.value = employeeStore.data.employee_selected
 if(!profileHeaderData.value.first_name)
@@ -149,9 +156,36 @@ const saveBtn = async type => {
   }
 }
 
+const updateRow = async (row, data)=>{
+  var update = await employeeStore.updateRow({
+    id: profileHeaderData.value.id,
+    data,
+    dateSelected: selectedDate.value,
+    row,
+  })
+  toast("Updated!")
+  console.log(update)
+}
+
 const formatEmployeeNumber = num => {
   return String(num).padStart(5, '0')
 }
+
+
+const onMenuOpen = (value) => {
+  console.log(value);
+  if (value) {
+    setTimeout(async () => {
+      await nextTick();
+      console.log(datePickerRef.value);
+      const datePickerElement = datePickerRef.value.$el.querySelector('.dp__flex_display');
+       console.log(datePickerElement);
+      if (datePickerElement) {
+        datePickerElement.classList.remove('dp__flex_display');
+      }
+    }, 100); // Adjust the delay as needed
+  }
+};
 </script>
 
 <template>
@@ -286,6 +320,9 @@ const formatEmployeeNumber = num => {
                   location="bottom"
                   offset-y
                   transition="scale-transition"
+                  :close-on-content-click="false"
+                  v-model="isMenuOpen"
+                  @update:modelValue="onMenuOpen"
                 >
                   <template #activator="{ props }">
                     <VBtn
@@ -297,8 +334,38 @@ const formatEmployeeNumber = num => {
                       Active
                     </VBtn>
                   </template>
-                  <VDatePicker elevation="24" />
+                 <VCard>
+                    <VRow class="pa-1  ma-2">
+                      <VCol cols="12">
+                        <VueDatePicker v-model="selectedDate" inline auto-apply ref="datePickerRef"/>
+                      </VCol>
+                    </VRow>
+                    
+                    <VDivider />
+                     <AppSelect
+                      class="pa-3 ma-2"
+                      v-model="statusSelected"
+                      placeholder="Active"
+                      :items="employeeStore.data.statuses"
+                    />
+                   <VRow class="pa-3  ma-2">
+                    <VCol cols="9">
+                      Active Until: {{ $formatDate(selectedDate) }}
+                    </VCol>
+                    <VCol cols="2">
+                      <VBtn
+                        variant="tonal"
+                        color="success"
+                        @click=" updateRow('status',statusSelected)"
+                      >
+                        Save
+                      </VBtn>
+                    </VCol>
+                    </VRow>
+                  </VCard>
+                  
                 </VMenu>
+                
               </div>
             </div>
           </VCardText>

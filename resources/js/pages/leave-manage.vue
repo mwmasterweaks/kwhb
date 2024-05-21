@@ -79,12 +79,12 @@
           @click:row="rowClick"
         >
           <template #item.access="{ item }">
-            <div v-if="item.raw.user.roles.length > 0">
-              {{ item.raw.user.roles[0].name }}
+            <div v-if="item.user.roles.length > 0">
+              {{ item.user.roles[0].name }}
             </div>
           </template>
           <template #item.full_name="{ item }">
-            {{ item.raw.employee.first_name }} {{ item.raw.employee.last_name }}
+            {{ item.employee.first_name }} {{ item.employee.last_name }}
           </template>
           <template #item.action="{ item }">
             <div style="display: flex;">
@@ -93,21 +93,21 @@
                 icon="tabler-thumb-up"
                 variant="outlined"
                 color="success"
-                @click="updateStatus('Approved', item.raw)"
+                @click="updateStatus('Approved', item)"
               />
               <VBtn
                 title="Decline"
                 icon="tabler-thumb-down"
                 variant="outlined"
                 color="error"
-                @click="updateStatus('Declined', item.raw)"
+                @click="updateStatus('Declined', item)"
               />
               <VBtn
                 title="details"
                 icon="tabler-list-details"
                 variant="outlined"
                 color="info"
-                @click="showLeaveDetails(item.raw)"
+                @click="showLeaveDetails(item)"
               />
             </div>
           </template>
@@ -199,7 +199,7 @@ const headers = [
 
 const rowClick = (e, row)=>{
   //console.log("row",row.item);
-  // employeeStore.data.employee_selected = row.item.raw;
+  // employeeStore.data.employee_selected = row.item;
   // // router.push("/EmployeeDetails");
   // router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
     

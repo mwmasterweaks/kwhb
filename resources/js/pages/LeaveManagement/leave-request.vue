@@ -97,33 +97,26 @@
             @click:row="rowClick"
           >
              <template #item.access="{ item }">
-              <div v-if="item.raw.user.roles.length > 0">
-                {{ item.raw.user.roles[0].name }}
+              <div v-if="item.user.roles.length > 0">
+                {{ item.user.roles[0].name }}
               </div>
             </template>
             <template #item.full_name="{ item }">
-              {{ item.raw.employee.first_name }} {{ item.raw.employee.last_name }}
+              {{ item.employee.first_name }} {{ item.employee.last_name }}
             </template>
             <template #item.date_from="{ item }">
-              {{ $formatDate(item.raw.date_from) }} 
+              {{ $formatDate(item.date_from) }} 
             </template>
             <template #item.date_to="{ item }">
-              {{ $formatDate(item.raw.date_to) }} 
+              {{ $formatDate(item.date_to) }} 
             </template>
             <template #item.assignedTo="{ item }">
-              {{ item.raw.approver ? item.raw.approver.last_name  : ''}}
+              {{ item.approver ? item.approver.last_name  : ''}}
             </template>
 
             
              <template #item.action="{ item }">
               <div class="me-n3">
-                <!-- <MoreBtn
-                  :menu-list="moreList"
-                  item-props
-                  density="comfortable"
-                  @update:modelValue="moreBthClick"
-                /> -->
-
 
                 <IconBtn
                 >
@@ -135,44 +128,18 @@
                   >
                     <v-list>
                       <v-list-item>
-                        <a @click="showLeaveDetails(item.raw)" href="#">View</a>
+                        <a @click="showLeaveDetails(item)" href="#">View</a>
                       </v-list-item>
                       <v-list-item>
-                        <a @click="showLeaveDetails(item.raw)" href="#">Edit</a>
+                        <a @click="showLeaveDetails(item)" href="#">Edit</a>
                       </v-list-item>
                       <v-list-item>
-                        <a @click="updateStatus('Deleted', item.raw)" href="#">Delete</a>
+                        <a @click="updateStatus('Deleted', item)" href="#">Delete</a>
                       </v-list-item>
                     </v-list>
                   </VMenu>
                 </IconBtn>
               </div>
-              <!--               
-              <div style="display: flex;">
-               <VBtn
-                  title="Approve"
-                  icon="tabler-thumb-up"
-                  variant="outlined"
-                  color="success"
-                  @click="updateStatus('Approved', item.raw)"
-                />
-               <VBtn
-                  title="Decline"
-                  icon="tabler-thumb-down"
-                  variant="outlined"
-                  color="error"
-                  @click="updateStatus('Declined', item.raw)"
-                />
-               <VBtn
-                  title="details"
-                  icon="tabler-list-details"
-                  variant="outlined"
-                  color="info"
-                  @click="showLeaveDetails(item.raw)"
-                />
-
-              </div> -->
-             
             </template>
         </VDataTableServer>
       </VCard>
@@ -296,7 +263,7 @@ const filter = ref({
 })
 
 const rowClick = (e, row)=>{
-  // employeeStore.data.employee_selected = row.item.raw;
+  // employeeStore.data.employee_selected = row.item;
   // // router.push("/EmployeeDetails");
   // router.push({ name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } })
   
