@@ -1,6 +1,8 @@
 <script setup>
+import routeItems from '@/navigation/vertical/index'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import Shepherd from 'shepherd.js'
+import { useRouter } from 'vue-router'
 
 const { appContentLayoutNav } = useThemeConfig()
 
@@ -14,9 +16,9 @@ const suggestionGroups = [
     title: 'Pages',
     content: [
       {
-        icon: 'tabler-chart-donut',
-        title: 'Analytics',
-        url: { name: 'dashboards-analytics' },
+        icon: 'tabler-users',
+        title: 'Employee',
+        to: { name: 'employee' },
       },
     ],
   },
@@ -24,9 +26,8 @@ const suggestionGroups = [
     title: 'Files',
     content: [
       {
-        icon: 'tabler-calendar',
-        title: 'Calendar',
-        url: { name: 'apps-calendar' },
+        icon: 'tabler-file-x',
+        title: 'No Files',
       },
     ],
   },
@@ -36,7 +37,7 @@ const suggestionGroups = [
       {
         icon: 'tabler-calendar',
         title: 'Calendar',
-        url: { name: 'apps-calendar' },
+        to: { name: 'apps-calendar' },
       },
     ],
   },
@@ -175,15 +176,45 @@ const searchQuery = ref('')
 const searchResult = ref([])
 const router = useRouter()
 
-// 👉 fetch search result API
-/* watchEffect(() => {
-  axios.get('/app-bar/search', { params: { q: searchQuery.value } }).then(response => {
-    searchResult.value = response.data
+const handlerAppBarSearch = searchQuery => {
+  const queryLowered = (searchQuery ?? '').toString().toLowerCase()
+  const filteredSearchData = []
+
+  routeItems.forEach(item => {
+    // Check if the parent item matches the search query
+    if (item.title.toLowerCase().includes(queryLowered)) {
+      filteredSearchData.push({ ...item, children: undefined }) // Remove children property if present
+    }
+
+    // Check if any of the children match the search query
+    if (item.children) {
+      const matchingChildren = item.children.filter(child => child.title.toLowerCase().includes(queryLowered))
+
+      matchingChildren.forEach(child => {
+        filteredSearchData.push({ ...child, group: item.title }) // Add parent title as group if necessary
+      })
+    }
   })
-}) */
+
+  return filteredSearchData
+}
+
+// 👉 fetch search result API
+watchEffect(async () => {
+  /*  axios.get('/app-bar/search', { params: { q: searchQuery.value } }).then(response => {
+    searchResult.value = response.data
+  }) */
+
+  // const { data } = await useApi(withQuery('/app-bar/search', { q: searchQuery.value }))
+
+  console.log('watch effect', searchQuery.value)
+  console.log('handlerAppBarSearch', handlerAppBarSearch(searchQuery.value))
+  searchResult.value = handlerAppBarSearch(searchQuery.value)
+})
 
 const redirectToSuggestedOrSearchedPage = selected => {
-  router.push(selected.url)
+  console.log('redirect to searched page', selected.to)
+  router.push(selected.to)
   isAppSearchBarVisible.value = false
   searchQuery.value = ''
 }
