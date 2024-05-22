@@ -1,7 +1,6 @@
 <script setup>
-
-import LeaveCalendar from '@/pages/LeaveManagement/leave-calendar.vue';
-import LeaveRequest from '@/pages/LeaveManagement/leave-request.vue';
+import LeaveCalendar from '@/pages/LeaveManagement/leave-calendar.vue'
+import LeaveRequest from '@/pages/LeaveManagement/leave-request.vue'
 
 
 //const employeeStore = useEmployeeStore();
@@ -37,17 +36,16 @@ const tabs = [
   {
     title: 'Leave Calendar',
     tab: 'LeaveCalendar',
-  }
+  },
 ]
 
-  // const router = useRouter()
-  // const employeeStore = useEmployeeStore();
-  // console.log(employeeStore.data.employee_selected.first_name);
-  // if(employeeStore.data.employee_selected.first_name == null)
-  // {
-  //   router.push("employee")
-  // }
-
+// const router = useRouter()
+// const employeeStore = useEmployeeStore();
+// console.log(employeeStore.data.employee_selected.first_name);
+// if(employeeStore.data.employee_selected.first_name == null)
+// {
+//   router.push("employee")
+// }
 </script>
 
 <template>
@@ -60,7 +58,7 @@ const tabs = [
       <VTab
         v-for="item in tabs"
         :key="item.title"
-        :value=item.tab
+        :value="item.tab"
       >
         {{ item.title }}
       </VTab>
@@ -77,7 +75,6 @@ const tabs = [
       <VWindowItem value="LeaveCalendar">
         <LeaveCalendar />
       </VWindowItem>
-
     </VWindow>
   </div>
 </template>

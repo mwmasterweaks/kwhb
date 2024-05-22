@@ -72,6 +72,8 @@ const clearSearchAndCloseDialog = () => {
 watchEffect(() => {
   if (!searchQuery.value.length)
     searchResults.value = []
+
+  console.log('results', searchQuery)
 })
 
 const getFocusOnSearchList = e => {
@@ -107,7 +109,7 @@ const resolveCategories = val => {
 
 <template>
   <VDialog
-    max-width="100%"
+    max-width="80%"
     :model-value="isLocalDialogVisible"
     :height="$vuetify.display.smAndUp ? '' : '100%'"
     :fullscreen="$vuetify.display.width < 600"
@@ -236,7 +238,7 @@ const resolveCategories = val => {
           class="h-100"
         >
           <slot name="suggestions">
-            <VCardText class="app-bar-search-suggestions h-100 pa-10">
+            <VCardText class="app-bar-search-suggestions h-100 pa-5">
               <VRow
                 v-if="props.suggestions"
                 class="gap-y-4"
@@ -326,7 +328,7 @@ const resolveCategories = val => {
           class="h-100"
         >
           <slot name="noData">
-            <VCardText class="app-bar-search-suggestions h-100 pa-10">
+            <VCardText class="app-bar-search-suggestions h-100 pa-5">
               <VRow
                 v-if="props.suggestions"
                 class="gap-y-4"
