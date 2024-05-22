@@ -26,7 +26,6 @@ const props = defineProps({
         </span>
         <span class="cursor-pointer" @click="edit_fields = !edit_fields">
           <VBtn
-            prepend-icon="tabler-plus"
             variant="outlined"
             color="secondary"
             @click="isAddNewBankDrawerVisible = true"

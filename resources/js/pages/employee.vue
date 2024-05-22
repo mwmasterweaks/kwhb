@@ -344,6 +344,7 @@
 <script setup>
 import AddNewUserDrawer from '@/pages/user/list/AddNewUserDrawer.vue'
 import EditUserDrawer from '@/pages/user/list/EditUserDrawer.vue'
+import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
 import { useDivisionStore } from "@/store/divisionStore"
 import { useEmployeeStore } from "@/store/employeeStore"
 import { useEmploymentStore } from "@/store/employmentStore"

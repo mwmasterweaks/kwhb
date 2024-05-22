@@ -12,6 +12,7 @@ const theme = {
         'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || staticPrimaryColor,
         'on-primary': '#fff',
         'kwhb': '#001871',
+        'kwhb-waring': '#F7EDD9',
         'on-kwhb': '#fff',
         'secondary': '#A8AAAE',
         'on-secondary': '#fff',

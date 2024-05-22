@@ -94,17 +94,16 @@ const age = computed(() => {
           />
         </span>
       </p>
-      <VList class="card-list text-medium-emphasis">
+      <VList class="card-list text-medium-emphasis employee-card">
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Full Name:</span>
+            <span class="me-1 text-label">Full Name:</span>
             <span v-if="!edit_fields">{{ props.data.first_name }} {{ props.data.last_name }}</span>
             <span v-else>
               <AppTextField
@@ -125,13 +124,12 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Gender:</span>
+            <span class="me-1 text-label">Gender:</span>
             <span v-if="!edit_fields"> {{ props.data.gender }}  </span>
             <span v-else>
               <AppSelect
@@ -146,13 +144,12 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Pronouns:</span>
+            <span class="me-1 text-label">Pronouns:</span>
             <span v-if="!edit_fields">  {{ props.data.pronouns }} </span>
             <span v-else>
               <AppTextField
@@ -166,13 +163,12 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Indigenous:</span>
+            <span class="me-1 text-label">Indigenous:</span>
             <span v-if="!edit_fields">{{ props.data.indigenous }} </span>
             <span v-else>
               <AppTextField
@@ -186,19 +182,19 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">DOB:</span>
-            <span v-if="!edit_fields">{{ props.data.dob }} </span>
+            <span class="me-1 text-label">DOB:</span>
+            <span v-if="!edit_fields">{{ $formatDateDMY(props.data.dob) }} </span>
             <span v-else>
               <AppDateTimePicker
                 v-model="props.data.dob"
                 placeholder="Select Date of birth"
                 @change="updateRow('dob', props.data.dob)"
+                :config="{ dateFormat: 'd/m/Y' }"
               />
             </span>
           </VListItemTitle>
@@ -206,26 +202,24 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Age:</span>
+            <span class="me-1 text-label">Age:</span>
             <span>{{ age }} </span>
           </VListItemTitle>
         </VListItem>
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Address:</span>
+            <span class="me-1 text-label">Address:</span>
             <span v-if="!edit_fields"> <p style="white-space: pre-wrap;">{{ address }}</p> </span>
             <span v-else>
               
@@ -247,13 +241,12 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Personal Phone:</span>
+            <span class="me-1 text-label">Personal Phone:</span>
             <span v-if="!edit_fields">{{ props.data.personal_phone }} </span>
             <span v-else>
               <AppTextField
@@ -268,13 +261,12 @@ const age = computed(() => {
         <VListItem>
           <template #prepend>
             <VIcon
-              icon="tabler-minus-vertical"
               size="20"
               class="me-2"
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Personal Email:</span>
+            <span class="me-1 text-label">Personal Email:</span>
             <span v-if="!edit_fields">{{ props.data.personal_email }} </span>
             <span v-else>
               <AppTextField
@@ -291,8 +283,19 @@ const age = computed(() => {
   </VCard>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .card-list {
   --v-card-list-gap: 16px;
+}
+.text-label {
+  font-weight: 900;
+  color: black !important;
+
+}
+.employee-card {
+  border-left: 2px solid silver; border-radius: 0px; margin-left: 15px;
+}
+.employee-card > div {
+ margin-left: -15px;
 }
 </style>

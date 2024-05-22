@@ -1,7 +1,6 @@
 <script setup>
 import { ProfilePlaceHolder } from '@/plugins/profilePlaceHolder'
 import { useEmployeeStore } from "@/store/employeeStore"
-import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { getCurrentInstance, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -40,9 +39,10 @@ const initials = computed(() => {
 })
 
 const form = ref({
-  image_url: profileHeaderData.value.cover_image ? attachment_path + "cover_image/" +  profileHeaderData.value.cover_image.file_name : null,
+  image_url: profileHeaderData.value.cover_image ? profileHeaderData.value.cover_image.file_name : null,
   image_data: null,
-  profile_image_url: profileHeaderData.value.profile_image ? attachment_path + "profile_image/" +  profileHeaderData.value.profile_image.file_name
+  //profile_image_url: profileHeaderData.value.profile_image ? attachment_path + "profile_image/" +  profileHeaderData.value.profile_image.file_name
+  profile_image_url: profileHeaderData.value.profile_image ? profileHeaderData.value.profile_image.file_name
     : ProfilePlaceHolder(initials.value),
   profile_image_data: null,
   job_title: profileHeaderData.value.job_title ?? '',
@@ -168,6 +168,23 @@ const formatEmployeeNumber = num => {
   return String(num).padStart(5, '0')
 }
 
+const formatDateToMonthYear = (dateString) => {
+  // Create a new Date object from the input string
+  const date = new Date(dateString);
+  
+  // Define an array with the month names
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Get the month name and the year
+  const monthName = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  // Return the formatted string
+  return `${monthName} ${year}`;
+}
 
 const onMenuOpen = (value) => {
   console.log(value);
@@ -288,11 +305,21 @@ const onMenuOpen = (value) => {
                   <span class="d-flex">
                     <VIcon
                       size="20"
+                      icon="tabler-briefcase"
+                      class="me-1"
+                    />
+                    <span class="text-body-1" >
+                       {{ profileHeaderData?.division.name }}
+                    </span>
+                  </span>
+                  <span class="d-flex">
+                    <VIcon
+                      size="20"
                       icon="tabler-calendar"
                       class="me-1"
                     />
-                    <span class="text-body-1">
-                      {{ $formatDate(profileHeaderData.date_hired) }}
+                    <span class="text-body-1" v-if="profileHeaderData.date_hired != null">
+                      Joined {{ formatDateToMonthYear(profileHeaderData.date_hired) }}
                     </span>
                   </span>
                 </div>
@@ -331,12 +358,19 @@ const onMenuOpen = (value) => {
                     </VBtn>
                   </template>
                  <VCard>
-                    <VRow class="pa-1  ma-2">
+                    <!-- <VRow class="pa-1  ma-2">
                       <VCol cols="12">
                         <VueDatePicker v-model="selectedDate" inline auto-apply ref="datePickerRef"/>
                       </VCol>
-                    </VRow>
+                    </VRow> -->
+                    <div class="hide-input">
+                      <AppDateTimePicker
+                        v-model="selectedDate"
+                        :config="{ inline: true }"
+                      />
+                    </div>
                     
+
                     <VDivider />
                      <AppSelect
                       class="pa-3 ma-2"
@@ -371,7 +405,7 @@ const onMenuOpen = (value) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" >
 .user-profile-avatar {
   border: 5px solid rgb(var(--v-theme-surface));
   background-color: rgb(var(--v-theme-surface)) !important;
@@ -384,5 +418,23 @@ const onMenuOpen = (value) => {
   .v-picker-title .v-date-picker-header {
     display: none !important;
   }
+}
+.hide-input .v-input {
+  display: none !important;
+}
+.hide-input .flatpickr-calendar {
+  width: auto;
+}
+.hide-input .flatpickr-calendar .flatpickr-innerContainer {
+  width: auto;
+}
+.hide-input .flatpickr-calendar .flatpickr-innerContainer .flatpickr-rContainer{
+  width: auto;
+}
+.hide-input .flatpickr-calendar .flatpickr-innerContainer .flatpickr-rContainer .flatpickr-days{
+  width: auto;
+}
+.hide-input .flatpickr-calendar .flatpickr-innerContainer .flatpickr-rContainer .flatpickr-days .dayContainer{
+  width: auto;
 }
 </style>

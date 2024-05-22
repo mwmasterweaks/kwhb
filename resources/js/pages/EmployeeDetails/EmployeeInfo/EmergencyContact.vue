@@ -118,17 +118,16 @@ const onSubmitMed = () => {
         v-model="isFormValid"
         @submit.prevent="onSubmit"
       >
-        <VList class="card-list text-medium-emphasis">
+        <VList class="card-list text-medium-emphasis employee-card">
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Full Name:</span>
+              <span class="text-label me-1">Full Name:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.name }}</span>
               <span v-else>
                 <AppTextField
@@ -142,13 +141,12 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Address:</span>
+              <span class="text-label me-1">Address:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.address }}</span>
               <span v-else>
                 <AppTextField
@@ -162,13 +160,12 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Phone:</span>
+              <span class="text-label me-1">Phone:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.phone }}</span>
               <span v-else>
                 <AppTextField
@@ -182,18 +179,17 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Email:</span>
+              <span class="text-label me-1">Email:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.email }} </span>
               <span v-else>
                 <AppTextField
                   v-model="props.data.emergency_contact.email"
-                  :rules="[requiredValidator]"
+                  :rules="[requiredValidator, emailValidator]"
                   placeholder="Emergency contact Email address"
                 />
               </span>
@@ -202,13 +198,12 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Relationship:</span>
+              <span class="text-label me-1">Relationship:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.relationship }}</span>
               <span v-else>
                 <AppTextField
@@ -260,17 +255,16 @@ const onSubmitMed = () => {
         v-model="isFormValidMed"
         @submit.prevent="onSubmitMed"
       >
-        <VList class="card-list text-medium-emphasis">
+        <VList class="card-list text-medium-emphasis employee-card">
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Allergies:</span>
+              <span class="text-label me-1">Allergies:</span>
               <span v-if="!edit_fields_med">{{ props.data.medical.allergies }}</span>
               <span v-else>
                 <AppTextField
@@ -284,13 +278,12 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Medications:</span>
+              <span class="text-label me-1">Medications:</span>
               <span v-if="!edit_fields_med">{{ props.data.medical.medication }}</span>
               <span v-else>
                 <AppTextField
@@ -304,13 +297,12 @@ const onSubmitMed = () => {
           <VListItem>
             <template #prepend>
               <VIcon
-                icon="tabler-minus-vertical"
                 size="20"
                 class="me-2"
               />
             </template>
             <VListItemTitle>
-              <span class="font-weight-medium me-1">Condition:</span>
+              <span class="text-label me-1">Condition:</span>
               <span v-if="!edit_fields_med">{{ props.data.medical.condition }}</span>
               <span v-else>
                 <AppTextField
@@ -325,13 +317,12 @@ const onSubmitMed = () => {
             <VListItem>
             <template #prepend>
             <VIcon
-            icon="tabler-minus-vertical"
             size="20"
             class="me-2"
             />
             </template>
             <VListItemTitle>
-            <span class="font-weight-medium me-1">Diagnosis Date:</span>
+            <span class="text-label me-1">Diagnosis Date:</span>
             <span v-if="!edit_fields_med"> {{ props.data.medical.diagnosis_date }}</span>
             <span v-else>
             <AppDateTimePicker

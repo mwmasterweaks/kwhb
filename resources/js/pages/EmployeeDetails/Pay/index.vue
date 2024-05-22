@@ -50,7 +50,6 @@ const updateBankInfo = async (item) => {
             </span>
             <span class="cursor-pointer">
               <VBtn
-                prepend-icon="tabler-plus"
                 variant="outlined"
                 size="large"
                 color="secondary"
@@ -138,7 +137,7 @@ const updateBankInfo = async (item) => {
                     @click="item.edit_fields = true"
                     color="kwhb"
                     variant="tonal"
-                    v-if="!item.edit_fields">Edit
+                    v-if="!item.edit_fields"><b>Edit</b>
                     </VBtn>
                   <VBtn 
                     style="margin-left: 3px;" 
@@ -148,21 +147,21 @@ const updateBankInfo = async (item) => {
                     v-else>Cancel
                   </VBtn>
                   <VBtn style="margin-left: 3px;"
-                    color="warning"
+                    color="kwhb-waring"
                     variant="tonal"
                   >Delete</VBtn>
                 </p>
                 <p class="d-flex justify-space-between">
                   <AppSelect
-                    style="margin-left: 5px;"
+                    style="margin-left: 5px; background-color: white;"
                     v-model="item.pay_split"
                     label="Pay Split"
                     placeholder="Percentage %"
                     :items="['Percentage', 'Whole Number']"
                   />
                   <AppTextField
-                    v-model="item.pay_split_value"
-                    style="margin-left: 5px;"
+                    v-model="item.pay_split_value "
+                    style="margin-left: 5px; background-color: white;"
                     label="Enter Value"
                     placeholder="0%"
                   />

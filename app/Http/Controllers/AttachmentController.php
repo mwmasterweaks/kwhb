@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Auth;
 
 class AttachmentController extends Controller
@@ -169,18 +170,21 @@ class AttachmentController extends Controller
             $datetime = now();
             $fileName = $datetime->format('YmdHis') . '_' . $uuid . "." . $extension;
 
-            $directory = public_path() . "/attachments/" . $data->path;
-            if (!is_dir($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            $path = public_path() . "/attachments/" . $data->path . "/" . $fileName;
+            // $directory = public_path() . "/attachments/" . $data->path;
+            // if (!is_dir($directory)) {
+            //     mkdir($directory, 0777, true);
+            // }
+            // $path = $directory . "/" . $fileName;
 
-            file_put_contents($path, $decoded);
+            $path = Storage::disk('public')->putFileAs($data->path, $data->attachment, $fileName);
+
+            $fileUrl = asset('storage/' . $path);
+            //file_put_contents($path, $decoded);
             $attachment = $data->id > 0 ? Attachment::find($data->id) : new Attachment();
             $attachment->name = $data->name;
             $attachment->source = $data->source;
             $attachment->source_id = $data->source_id;
-            $attachment->file_name = $fileName;
+            $attachment->file_name = $fileUrl;
             $attachment->extension_name = $extension;
 
             $attachment->save();

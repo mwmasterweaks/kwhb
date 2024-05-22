@@ -46,7 +46,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Full Name:</span>
+            <span class="text-label me-1">Full Name:</span>
             <span>{{ props.data.first_name }} {{ props.data.last_name }}</span>
           </VListItemTitle>
         </VListItem>
@@ -59,7 +59,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Role:</span>
+            <span class="text-label me-1">Role:</span>
             <span v-if="props.data.user"> {{ props.data.user.roles[0].name }} </span>
           </VListItemTitle>
         </VListItem>
@@ -72,7 +72,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Manager:</span>
+            <span class="text-label me-1">Manager:</span>
             <span v-if="props.data.manager"> {{ props.data.manager.first_name + " " + props.data.manager.last_name }}</span>
           </VListItemTitle>
         </VListItem>
@@ -85,7 +85,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Division:</span>
+            <span class="text-label me-1">Division:</span>
             <span v-if="props.data.division">{{ props.data.division.name }} </span>
           </VListItemTitle>
         </VListItem>
@@ -101,7 +101,7 @@ const updateRow = async (row, data)=>{
           </template>
           
           <VListItemTitle>
-          <span class="font-weight-medium me-1">Group:</span>
+          <span class="text-label me-1">Group:</span>
           <span>(group name)</span>
           </VListItemTitle>
           
@@ -136,7 +136,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Work Phone:</span>
+            <span class="text-label me-1">Work Phone:</span>
             <span v-if="!edit_fields">{{ props.data.work_phone }}</span>
             <span v-else>
               <AppTextField
@@ -156,7 +156,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle>
-            <span class="font-weight-medium me-1">Work Email:</span>
+            <span class="text-label me-1">Work Email:</span>
             <span v-if="!edit_fields">{{ props.data.work_email }}</span>
             <span v-else>
               <AppTextField
@@ -176,7 +176,7 @@ const updateRow = async (row, data)=>{
             />
           </template>
           <VListItemTitle v-if="props.data.location">
-            <span class="font-weight-medium me-1">Location:</span>
+            <span class="text-label me-1">Location:</span>
             <span v-if="!edit_fields">{{ props.data.location.name }}</span>
             <AppSelect
               v-else
@@ -191,7 +191,8 @@ const updateRow = async (row, data)=>{
           </VListItemTitle>
         </VListItem>
       </VList>
-      <VDivider class="mt-8" />
+      <br>
+      <br>
       <VList class="card-list text-medium-emphasis mt-4">
         <VListItem>
           <template #prepend>
@@ -204,11 +205,11 @@ const updateRow = async (row, data)=>{
           <VListItemTitle>
             <span
               v-if="!edit_password"
-              class="font-weight-medium me-1"
+              class="text-label me-1"
             >Password:</span>
             <span
               v-if="edit_password"
-              class="font-weight-medium me-1"
+              class="text-label me-1"
             >New Password:</span>
             <span v-if="!edit_password">********</span>
             <AppTextField
@@ -232,7 +233,7 @@ const updateRow = async (row, data)=>{
           <VListItemTitle>
             <span
               v-if="edit_password"
-              class="font-weight-medium me-1"
+              class="text-label me-1"
             >Re-enter Password:</span>
             <AppTextField
               v-if="edit_password"
