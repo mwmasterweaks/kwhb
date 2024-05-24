@@ -9,6 +9,7 @@ use App\Models\UserRole;
 use App\Models\EmergencyContact;
 use App\Models\MedicalHistory;
 use App\Models\Address;
+use App\Events\NotificationCreated;
 use App\Models\Attachment;
 use App\Models\EmployeeStatusHistory;
 use Illuminate\Http\Request;
@@ -270,6 +271,7 @@ class EmployeeController extends Controller
 
             $dataResponse->data = $this->getEmployees();
             $dataResponse->message = 'Success';
+            event(new NotificationCreated("test broadcasting"));
             DB::commit();
             return response()->json($dataResponse, 200);
         } catch (\Exception $ex) {

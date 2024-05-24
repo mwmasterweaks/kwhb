@@ -61,7 +61,7 @@ export const useEmployeeStore = defineStore('employees', {
   },
   actions: {
     async setActiveTab(tab) {
-      console.log('emp store - set active tab', tab)
+      //console.log('emp store - set active tab', tab)
       this.data.routeTab = tab
     },
     async addEmployee(employee) {

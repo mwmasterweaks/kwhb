@@ -1,7 +1,7 @@
 <script setup>
-import LeaveCalendar from '@/pages/LeaveManagement/leave-calendar.vue'
-import LeaveRequest from '@/pages/LeaveManagement/leave-request.vue'
-
+import LeaveCalendar from '@/pages/LeaveManagement/leave-calendar.vue';
+import LeaveRequest from '@/pages/LeaveManagement/leave-request.vue';
+import Pusher from 'pusher-js';
 
 //const employeeStore = useEmployeeStore();
 
@@ -19,6 +19,20 @@ import LeaveRequest from '@/pages/LeaveManagement/leave-request.vue'
 
 // console.log("route.params.tab", route.params.tab)
 
+const message = ref('message');
+// const APP_KEY = import.meta.env.VUE_PUSHER_APP_KEY;
+// const APP_CLUSTER = import.meta.env.VUE_PUSHER_APP_CLUSTER;
+const APP_KEY = "5051424ca173d93a9c01";
+const APP_CLUSTER = "ap1";
+// console.log("APP_KEY", APP_KEY);
+// console.log("APP_CLUSTER", APP_CLUSTER);
+const pusher = new Pusher(APP_KEY, {
+  cluster: APP_CLUSTER,
+});
+const handleNewMessage = (data) => {
+  console.log(data);
+  message.value = data;
+};
 
 const routeTab = ref('LeaveRequest')
 
@@ -46,6 +60,15 @@ const tabs = [
 // {
 //   router.push("employee")
 // }
+
+onMounted(() => {
+  const channel = pusher.subscribe('my-channel');
+  channel.bind('update-notification', handleNewMessage);
+});
+
+onBeforeUnmount(() => {
+  pusher.unsubscribe('my-channel');
+});
 </script>
 
 <template>

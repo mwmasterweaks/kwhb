@@ -15,6 +15,10 @@ let edit_fields = ref(false)
 let address = ref('')
 
 const updateRow = async (row, data)=>{
+  if(row == 'dob') {
+    const [day, month, year] = data.split('/');
+    data = `${year}-${month}-${day}`;
+  }
   var update = await employeeStore.updateRow({
     id: props.data.id,
     data,
@@ -44,6 +48,16 @@ const updateAddress = async ()=>{
   }
 }
 
+const parseDate = (dateString) => {
+  // If the date is in the format 'YYYY-MM-DD'
+  if (dateString.includes('-')) {
+    return new Date(dateString);
+  }
+
+  // If the date is in the format 'd/m/Y'
+  const [day, month, year] = dateString.split('/');
+  return new Date(`${year}-${month}-${day}`);
+};
 onMounted(() => {
   //console.log(props.data);
   if (props.data.address.length > 0) {
@@ -52,10 +66,13 @@ onMounted(() => {
 })
 
 const age = computed(() => {
+  console.log("props.data.dob", props.data.dob);
   const dob = props.data.dob
   if (!dob) return '' // Handle case where DOB is not provided
 
-  const dobDate = new Date(dob)
+  const dobDate = parseDate(dob);
+
+  if (isNaN(dobDate)) return '';
   const currentDate = new Date()
   const ageDiff = currentDate.getFullYear() - dobDate.getFullYear()
 
