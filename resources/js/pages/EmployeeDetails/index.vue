@@ -22,13 +22,13 @@ const activeTab = computed({
 
 watch(activeTab, (newValue, oldValue) => {
   //console.log('activeTab changed from', oldValue, 'to', newValue)
-  c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#051C73/g, "fill:#000000");
-  c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#051C73/g, "fill:#000000");
+  c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#051C73/g, "fill:#383E59");
+  c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#051C73/g, "fill:#383E59");
 
   if(newValue == "Leave")
-    c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#000000/g, "fill:#051C73")
+    c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#383E59/g, "fill:#051C73")
   if(newValue == "Pay")
-    c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#000000/g, "fill:#051C73")
+    c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#383E59/g, "fill:#051C73")
 })
 
 const tabs = [

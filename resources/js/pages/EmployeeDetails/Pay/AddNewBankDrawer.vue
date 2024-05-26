@@ -22,6 +22,7 @@ const emit = defineEmits([
 const isFormValid = ref(false)
 const refForm = ref()
 const bsb = ref('')
+const account_name = ref('')
 const account = ref('')
 const primary = ref(false)
 const reimbursement = ref(false)
@@ -40,6 +41,7 @@ const onSubmit = () => {
     if (valid) {
       emit('userData', {
         bsb:bsb.value,
+        account_name:account_name.value,
         account:account.value,
         primary:primary.value,
         reimbursement:reimbursement.value,
@@ -82,7 +84,14 @@ const handleDrawerModelValueUpdate = val => {
             @submit.prevent="onSubmit"
           >
             <VRow>
-             
+             <VCol cols="12">
+                <AppTextField
+                  v-model="account_name"
+                  :rules="[requiredValidator]"
+                  label="Account Name"
+                  placeholder="John Doe"
+                />
+              </VCol>
               <VCol cols="12">
                 <AppTextField
                   v-model="bsb"
@@ -91,6 +100,7 @@ const handleDrawerModelValueUpdate = val => {
                   placeholder="123-234"
                 />
               </VCol>
+              
               <VCol cols="12">
                 <AppTextField
                   v-model="account"

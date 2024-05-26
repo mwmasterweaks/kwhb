@@ -72,7 +72,7 @@ class BankInformationController extends Controller
 
     public function show($emp_id)
     {
-        $tbl = BankInformation::where('employee_id', $emp_id)->get();
+        $tbl = BankInformation::where('employee_id', $emp_id)->orderBy('primary', 'Desc')->get();
         return $tbl;
     }
 

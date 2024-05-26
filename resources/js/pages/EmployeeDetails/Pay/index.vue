@@ -2,7 +2,7 @@
 import { useEmployeeStore } from "@/store/employeeStore";
 import { toast } from 'vue3-toastify';
 import AddNewBankDrawer from "./AddNewBankDrawer.vue";
-//import TaxFileNumber from './TaxFileNumber.vue';
+import SuperInformation from './SuperInformation.vue';
 
 
 const employeeStore = useEmployeeStore();
@@ -60,26 +60,29 @@ const updateBankInfo = async (item) => {
             </span>
           </p>
 
-          <div class="pa-2 bg-var-theme-background rounded"
+          <div class="pa-2 pay-theme-background rounded"
             style="margin-top: 12px;"
             v-for="item in employeeStore.data.employee_selected.bank_info"
             :key="item.id"
           >
             <VRow>
-              <VCol md="6" cols="12">
-                <p class="text-lg">
-                  {{ profileTabData.first_name }} {{ profileTabData.last_name }} 
+              <VCol md="7" cols="12">
+                <p class="text-lg mt-4">
+                  {{ item.account_name }}
+                  <!-- {{ profileTabData.first_name }} {{ profileTabData.last_name }}  -->
                   <VChip
+                  class="pa-2 ml-3"
                     label
                     v-if="item.primary"
                     color="success"
-                    size="small"
+                    size="large"
                   >
                     Primary
                   </VChip>
                 </p>
-                <p class="d-flex flex-wrap">
-                  <span class="flex-1-0">
+                <table>
+                  <tr>
+                  <td style="padding: 10px;">
                     <b>BSB:</b> 
                     <span v-if="!item.edit_fields">{{ item.bsb }} </span>
                     <span v-else>
@@ -89,8 +92,8 @@ const updateBankInfo = async (item) => {
                           placeholder="123-234"
                         />
                     </span>
-                  </span>
-                  <span class="flex-1-0">
+                  </td>
+                  <td>
                     <b>Account:</b>
                     <span v-if="!item.edit_fields">
                       {{ item.account }}
@@ -102,9 +105,9 @@ const updateBankInfo = async (item) => {
                           placeholder="0864 54343"
                         />
                     </span>
-                  </span>
-
-                </p>
+                  </td>
+                  </tr>
+                </table>
                
                 <span>
                   <VCheckbox
@@ -130,25 +133,24 @@ const updateBankInfo = async (item) => {
                   </VBtn>
                 </span>
               </VCol>
-              <VCol md="6" cols="12">
-                <p>
+              <VCol md="5" cols="12">
+                <p class="text-right mt-4 mr 2" >
                   <VBtn 
-                    style="margin-left: 3px;" 
+                    style="margin-right: 10px; padding: 5px;" 
                     @click="item.edit_fields = true"
                     color="kwhb"
                     variant="tonal"
                     v-if="!item.edit_fields"><b>Edit</b>
                     </VBtn>
                   <VBtn 
-                    style="margin-left: 3px;" 
+                    style="margin-left: 2px; padding: 5px;"  
                     color="kwhb"
                     variant="tonal"
                     @click="item.edit_fields = false"
                     v-else>Cancel
                   </VBtn>
-                  <VBtn style="margin-left: 3px;"
+                  <VBtn style="margin-left: 2px; padding: 5px;"
                     color="kwhb-waring"
-                    variant="tonal"
                   >Delete</VBtn>
                 </p>
                 <p class="d-flex justify-space-between">
@@ -163,7 +165,7 @@ const updateBankInfo = async (item) => {
                     v-model="item.pay_split_value "
                     style="margin-left: 5px; background-color: white;"
                     label="Enter Value"
-                    placeholder="0%"
+                    :placeholder="item.pay_split == 'Percentage'? '0%': '$0'"
                   />
                 </p>
               </VCol>
@@ -178,7 +180,12 @@ const updateBankInfo = async (item) => {
       cols="12"
       md="6"
     >
-      <!-- <TaxFileNumber :data="profileTabData" /> -->
+      <SuperInformation :data="profileTabData" />
     </VCol>
   </VRow> 
 </template>
+<style lang="scss">
+.pay-theme-background {
+  background-color: #F8F8F9;
+}
+</style>

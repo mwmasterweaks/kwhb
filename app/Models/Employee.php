@@ -33,7 +33,7 @@ class Employee extends Model
     }
     public function bank_info()
     {
-        return $this->hasMany(BankInformation::class);
+        return $this->hasMany(BankInformation::class)->orderBy('primary', 'Desc');
     }
     public function profile_image()
     {
