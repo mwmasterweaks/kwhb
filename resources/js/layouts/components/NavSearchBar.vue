@@ -1,15 +1,18 @@
 <script setup>
 import routeItems from '@/navigation/vertical/index'
+import { useEmployeeStore } from "@/store/employeeStore"
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import Shepherd from 'shepherd.js'
 import { useRouter } from 'vue-router'
 
 const { appContentLayoutNav } = useThemeConfig()
+const employeeStore = useEmployeeStore()
 
 defineOptions({ inheritAttrs: false })
 
 // 👉 Is App Search Bar Visible
 const isAppSearchBarVisible = ref(false)
+const employees = ref([])
 
 const suggestionGroups = [
   {
@@ -175,8 +178,9 @@ const noDataSuggestions = [
 const searchQuery = ref('')
 const searchResult = ref([])
 const router = useRouter()
+const currentRoute = useRoute()
 
-const handlerAppBarSearch = searchQuery => {
+const handlerAppBarSearch = async searchQuery => {
   const queryLowered = (searchQuery ?? '').toString().toLowerCase()
   const filteredSearchData = []
 
@@ -195,8 +199,42 @@ const handlerAppBarSearch = searchQuery => {
       })
     }
   })
+  
+  const memberResults = await searchMember(queryLowered)
+
+  memberResults.forEach(item => {
+    filteredSearchData.push({ ...item })
+  })
+
+  /* memberResults.then(function(result){
+    console.log('hey', result)
+    result.forEach(item => {
+      filteredSearchData.push({ ...item })
+    })
+  }) */
+
+  console.log('handlerAppBarSearch - filteredSearchData', filteredSearchData)
 
   return filteredSearchData
+}
+
+const searchMember = async searchQuery => {
+  const memberResults = []
+  if(searchQuery.length > 0) {
+    employees.value = await employeeStore.fetch_employee_by_name({ name: searchQuery })
+    console.log('test', employees.value)
+
+    employees.value.forEach(member => {
+      memberResults.push({
+        title: member.first_name + " " + member.last_name,
+        to: { name: 'EmployeeDetails', params: { tab: 'EmployeeInfo' } },
+        category: 'Members',
+        item: member,
+      })
+    })
+  }
+
+  return memberResults
 }
 
 // 👉 fetch search result API
@@ -209,12 +247,20 @@ watchEffect(async () => {
 
   console.log('watch effect', searchQuery.value)
   console.log('handlerAppBarSearch', handlerAppBarSearch(searchQuery.value))
-  searchResult.value = handlerAppBarSearch(searchQuery.value)
+  searchResult.value = await handlerAppBarSearch(searchQuery.value)
 })
 
 const redirectToSuggestedOrSearchedPage = selected => {
-  console.log('redirect to searched page', selected.to)
-  router.push(selected.to)
+
+  if (selected.category == 'Members') {
+    employeeStore.data.employee_selected = selected.item
+    if (router.currentRoute.value.name == 'EmployeeDetails') {
+      router.push({ path: '/temporary-route' }).then(() => {
+        router.push(selected.to)
+      })
+    } else router.push(selected.to)
+  } else router.push(selected.to)
+
   isAppSearchBarVisible.value = false
   searchQuery.value = ''
 }
