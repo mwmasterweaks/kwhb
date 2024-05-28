@@ -269,17 +269,21 @@
               >
                 <VList>
                   <VListItem>
-                    <btn
+                    <Btn
                       style="margin-right: 50px; color: #818493; cursor: pointer;"
                       @click="viewClick(item)"
-                    >View</btn>
+                    >
+                      View
+                    </Btn>
                   </VListItem>
                   <VListItem>
-                    <btn
+                    <Btn
                       href="#"
                       style="margin-right: 50px; color: #818493;  cursor: pointer;"
                       @click="editClick(item)"
-                    >Edit</btn>
+                    >
+                      Edit
+                    </Btn>
                   </VListItem>
                 </VList>
               </VMenu>
@@ -381,7 +385,7 @@ const totalEmployees = ref(0)
 const page = ref(1)
 const orderBy = ref()
 
-const updateOptions = async  options =>  {
+const updateOptions = async options =>  {
   itemsPerPage.value = options.itemsPerPage
   page.value = options.page
   sortBy.value = options.sortBy[0]?.key
@@ -529,6 +533,7 @@ const addNewUser = async userData => {
     await reloadTable()
   } 
 }
+
 const UpdateEmployee = async updateData => {
   //const initials = userData.first_name.charAt(0).toUpperCase() + userData.last_name.charAt(0).toUpperCase()
 
@@ -564,14 +569,14 @@ const viewClick = item => {
 
 const editClick = item => {
 
-  const itemCopy = _.cloneDeep(item);
+  const itemCopy = _.cloneDeep(item)
 
   if(itemCopy.user.roles.length > 0)
     itemCopy.access_id = itemCopy.user.roles[0].id
   else
-    itemCopy.access_id = null;
+    itemCopy.access_id = null
   editEmployee.value = itemCopy
-  console.log(editEmployee.value);
+  console.log(editEmployee.value)
   isEditUserDrawerVisible.value = true
 }
 
@@ -763,10 +768,24 @@ const sortItems = () => {
     return
   }
 
+  let sortKey = sortBy
+  if (sortBy == 'access') {
+    sortKey = 'user.roles[0].name'
+  }
+
+  console.log('sortItems', items.value)
+
   items.value.sort((a, b) => {
     let result = 0
-    var aValue = a[sortBy]
-    var bValue = b[sortBy]
+    let aValue = getNestedValue(a, sortKey)
+    let bValue = getNestedValue(b, sortKey)
+
+    if (aValue === undefined || aValue === null || aValue === '') {
+      return sortDesc ? 1 : -1
+    }
+    if (bValue === undefined || bValue === null || bValue === '') {
+      return sortDesc ? -1 : 1
+    }
 
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase()
@@ -787,6 +806,20 @@ const sortItems = () => {
 
     return sortDesc ? -result : result
   })
+}
+
+const getNestedValue = (obj, path) => {
+  return path.split('.').reduce((acc, part) => {
+    const match = part.match(/(\w+)\[(\d+)\]/)
+    if (match) {
+      const arrayPart = match[1]
+      const index = parseInt(match[2], 10)
+      
+      return acc && acc[arrayPart] && acc[arrayPart][index] !== undefined ? acc[arrayPart][index] : undefined
+    } else {
+      return acc && acc[part] !== undefined ? acc[part] : undefined
+    }
+  }, obj)
 }
 </script>
 
