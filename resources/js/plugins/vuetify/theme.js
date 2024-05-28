@@ -24,7 +24,7 @@ const theme = {
         'warning': '#FF9F43',
         'on-warning': '#fff',
         'error': '#EA5455',
-        'background': '#F8F7FA',
+        'background': '#fff',
         'on-background': '#000000',
         'on-surface': '#000000',
         'grey-50': '#FAFAFA',

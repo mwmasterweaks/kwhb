@@ -74,7 +74,7 @@ const onSubmitMed = () => {
           allergies: props.data.medical.allergies,
           medication: props.data.medical.medication,
           condition: props.data.medical.condition,
-          diagnosis_date: props.data.medical.diagnosis_date,
+          diagnosis_date: "2020-01-01"//props.data.medical.diagnosis_date,
         },
       )
       if(!result)  toast("Error please try again!")

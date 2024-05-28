@@ -19,6 +19,7 @@ const {
 } = useThemeConfig()
 
 const { global } = useTheme()
+const isDataLoad = ref(false)
 
 // ℹ️ Sync current theme with initial loader theme
 syncInitialLoaderTheme()
@@ -40,16 +41,38 @@ onMounted( async() => {
   await divisionStore.setDivisions();
   await roleStore.setRoles();
   await locationStore.setLocations();
-  await employmentStore.setEmployments();}
+  await employmentStore.setEmployments();
+  
+    isDataLoad.value = true
+  }
+  else
+   isDataLoad.value = true
 })
 </script>
 
 <template>
   <VLocaleProvider :rtl="isAppRtl">
     <!-- ℹ️ This is required to set the background color of active nav link based on currently active global theme's primary -->
-    <VApp :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`">
+    <VApp :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`" v-if="isDataLoad">
       <RouterView />
       <ScrollToTop />
     </VApp>
   </VLocaleProvider>
 </template>
+
+<style lang="scss">
+.v-overlay-container {
+  .v-overlay {
+    .app-inner-list {
+      .v-list {
+        .v-list-item--active {
+          .v-list-item__content
+          {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+</style>

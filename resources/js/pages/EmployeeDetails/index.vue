@@ -22,13 +22,13 @@ const activeTab = computed({
 
 watch(activeTab, (newValue, oldValue) => {
   //console.log('activeTab changed from', oldValue, 'to', newValue)
-  c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#051C73/g, "fill:#383E59");
-  c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#051C73/g, "fill:#383E59");
+  c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#051C73/g, "fill:#808494");
+  c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#051C73/g, "fill:#808494");
 
   if(newValue == "Leave")
-    c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#383E59/g, "fill:#051C73")
+    c_leave_tab_icon = c_leave_tab_icon.replace(/fill:#808494/g, "fill:#051C73")
   if(newValue == "Pay")
-    c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#383E59/g, "fill:#051C73")
+    c_pay_tab_icon = c_pay_tab_icon.replace(/fill:#808494/g, "fill:#051C73")
 })
 
 const tabs = [
@@ -61,7 +61,7 @@ const tabs = [
     <UserProfileHeader class="mb-5" />
     <VTabs
       v-model="activeTab"
-      class="v-tabs"
+      class="v-tabs custom-tabs"
       color="#051c73"
     >
       <VTab
@@ -112,5 +112,14 @@ const tabs = [
 .custom-active-tab {
   background-color: #007bff !important; /* Set your desired background color */
   color: #fff !important; /* Set your desired text color */
+}
+.custom-tabs .v-btn__content:not(.v-tab--selected) {
+  color: #808494;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.custom-tabs .v-tab--selected .v-btn__content  {
+  color: #051C73; 
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
