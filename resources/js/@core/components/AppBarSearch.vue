@@ -1,11 +1,4 @@
 <script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import {
-  VList,
-  VListItem,
-  VListSubheader,
-} from 'vuetify/components/VList'
-
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,
@@ -47,12 +40,16 @@ const refSearchList = ref()
 const searchQuery = ref(structuredClone(toRaw(props.searchQuery)))
 const refSearchInput = ref()
 const isLocalDialogVisible = ref(structuredClone(toRaw(props.isDialogVisible)))
-const searchResults = ref(structuredClone(toRaw(props.searchResults)))
+
+// const searchResults = ref(structuredClone(toRaw(props.searchResults)))
+const searchResults = ref(JSON.parse(JSON.stringify(toRaw(props.searchResults))))
 
 // 👉 Watching props change
 watch(props, () => {
   isLocalDialogVisible.value = structuredClone(toRaw(props.isDialogVisible))
-  searchResults.value = structuredClone(toRaw(props.searchResults))
+
+  // searchResults.value = structuredClone(toRaw(props.searchResults))
+  searchResults.value = JSON.parse(JSON.stringify(toRaw(props.searchResults)))
   searchQuery.value = structuredClone(toRaw(props.searchQuery))
 })
 watch([
@@ -170,9 +167,10 @@ const resolveCategories = val => {
           </template>
         </VTextField>
       </VCardText>
-
+    </VCard>
+    <VCard class="mt-1">
       <!-- 👉 Divider -->
-      <VDivider />
+      <!-- <VDivider /> -->
 
       <!-- 👉 Perfect Scrollbar -->
       <PerfectScrollbar
@@ -180,57 +178,95 @@ const resolveCategories = val => {
         class="h-100"
       >
         <!-- 👉 Search List -->
-        <VList
+        <div
           v-show="searchQuery.length && !!searchResults.length"
-          ref="refSearchList"
-          density="compact"
-          class="app-bar-search-list"
+          class="h-100"
         >
-          <!-- 👉 list Item /List Sub header -->
-          <template
-            v-for="item in searchResults"
-            :key="item.title"
-          >
-            <VListSubheader
-              v-if="'header' in item"
-              class="text-disabled"
+          <VCardText class="app-bar-search-suggestions h-100 pa-0">
+            <VRow
+              v-if="props.suggestions"
+              class="gap-y-3"
             >
-              {{ resolveCategories(item.title) }}
-            </VListSubheader>
-
-            <template v-else>
-              <slot
-                name="searchResult"
-                :item="item"
+              <VCol
+                v-for="suggestion in props.suggestions"
+                :key="suggestion.title"
+                cols="12"
+                sm="12"
+                class="pa-6"
+                style="padding-left: -10px !important;"
               >
-                <VListItem
-                  link
-                  @click="$emit('itemSelected', item)"
+                <p
+                  class="text-md text-disabled text-none"
+                  style="color: #655af3 !important;"
                 >
-                  <template #prepend>
-                    <VIcon
-                      size="20"
-                      :icon="item.icon"
-                      class="me-3"
-                    />
-                  </template>
+                  {{ suggestion.title }}
+                </p>
+                <VList
+                  v-show="searchQuery.length && !!searchResults.length"
+                  ref="refSearchList"
+                  density="compact"
+                  class="app-bar-search-list"
+                >
+                  <!-- 👉 list Item /List Sub header -->
+                  <template
+                    v-for="item in searchResults"
+                    :key="item.title"
+                  >
+                    <VListSubheader
+                      v-if="'header' in item"
+                      class="text-disabled"
+                    >
+                      {{ resolveCategories(item.title) }}
+                    </VListSubheader> 
 
-                  <template #append>
-                    <VIcon
-                      size="20"
-                      icon="tabler-corner-down-left"
-                      class="enter-icon text-disabled"
-                    />
-                  </template>
+                    <template v-else>
+                      <slot
+                        name="searchResult"
+                        :item="item"
+                      >
+                        <VList class="card-list">
+                          <VListItem
+                            v-if="suggestion.title == item.category"
+                            link
+                            @click="$emit('itemSelected', item)"
+                          >
+                            <template #prepend>
+                              <VAvatar
+                                v-if="item.item && item.item.profile_image"
+                                color="primary"
+                                variant="tonal"
+                              >
+                                <VImg :src="'/attachments/profile_image/' + item.profile_image?.file_name" />
+                              </VAvatar>
+                              <VIcon
+                                v-else
+                                size="20"
+                                :icon="item.icon ? item.icon.icon : item.icon"
+                                class="me-3"
+                              />
+                            </template>
 
-                  <VListItemTitle>
-                    {{ item.title }}
-                  </VListItemTitle>
-                </VListItem>
-              </slot>
-            </template>
-          </template>
-        </VList>
+                            <template #append>
+                              <VIcon
+                                size="20"
+                                icon="tabler-corner-down-left"
+                                class="enter-icon text-disabled"
+                              />
+                            </template>
+
+                            <VListItemTitle>
+                              {{ item.title }}
+                            </VListItemTitle>
+                          </VListItem>
+                        </VList>
+                      </slot>
+                    </template>
+                  </template>
+                </VList>
+              </VCol>
+            </VRow>
+          </VCardText> 
+        </div>
 
         <!-- 👉 Suggestions -->
         <div
@@ -238,10 +274,10 @@ const resolveCategories = val => {
           class="h-100"
         >
           <slot name="suggestions">
-            <VCardText class="app-bar-search-suggestions h-100 pa-5">
+            <VCardText class="app-bar-search-suggestions h-100 pa-0">
               <VRow
                 v-if="props.suggestions"
-                class="gap-y-4"
+                class="gap-y-3 pt-5 pb-5"
               >
                 <VCol
                   v-for="suggestion in props.suggestions"
@@ -264,6 +300,7 @@ const resolveCategories = val => {
                       link
                       :title="item.title"
                       class="app-bar-search-suggestion"
+                      style="padding: 10px !important; border-radius: 0 !important;"
                       @click="$emit('itemSelected', item)"
                     >
                       <template #prepend>
@@ -331,7 +368,7 @@ const resolveCategories = val => {
             <VCardText class="app-bar-search-suggestions h-100 pa-5">
               <VRow
                 v-if="props.suggestions"
-                class="gap-y-4"
+                class="gap-y-3"
               >
                 <VCol
                   v-for="suggestion in props.suggestions"
@@ -359,7 +396,7 @@ const resolveCategories = val => {
                       <template #prepend>
                         <VIcon
                           size="20"
-                          icon="tabler-file-x"
+                          icon="tabler-exclamation-circle"
                         />
                       </template>
                     </VListItem>
@@ -377,8 +414,12 @@ const resolveCategories = val => {
 <style lang="scss">
 .app-bar-search-suggestions {
   .app-bar-search-suggestion {
-    &:hover {
+    /* &:hover {
       color: rgb(var(--v-theme-primary));
+    } */
+    &:hover {
+      border-radius: 0 !important;
+      background-color: #00000005;
     }
   }
 }
