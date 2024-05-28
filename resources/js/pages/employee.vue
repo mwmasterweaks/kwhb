@@ -188,7 +188,10 @@
                   :key="item.title"
                   class="custom-header"
                 >
-                  <span @click="toggleSort(item)">
+                  <span
+                    v-if="item.title != 'Employee'"
+                    @click="toggleSort(item)"
+                  >
                     <span>{{ item.title }}</span>
                     <template v-if="isSorted(item)">
                       <VIcon
@@ -204,6 +207,9 @@
                         tabler-chevron-up
                       </VIcon>
                     </template>
+                  </span>
+                  <span v-else>
+                    {{ item.title }}
                   </span>
                 </th>
               </template>
