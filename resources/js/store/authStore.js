@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
 
         localStorage.setItem('user', JSON.stringify(response))
         localStorage.setItem('is_logged_in', true)
-          
+        return this.is_logged_in
         //alert("login");
           
       } catch (error) {

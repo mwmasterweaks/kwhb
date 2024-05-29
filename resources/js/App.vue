@@ -10,7 +10,6 @@ import { useThemeConfig } from '@core/composable/useThemeConfig';
 import { hexToRgb } from '@layouts/utils';
 import { useTheme } from 'vuetify';
 
-
 const {
   syncInitialLoaderTheme,
   syncVuetifyThemeWithTheme: syncConfigThemeWithVuetifyTheme,
@@ -33,6 +32,7 @@ const roleStore = useRoleStore();
 const locationStore = useLocationStore();
 const employmentStore = useEmploymentStore();
 onMounted( async() => {
+  console.log("isDataLoad", isDataLoad);
   const loggedIn = localStorage.getItem('is_logged_in') ?? false
   if(loggedIn){
   await leaveTypeStore.setLeaveTypes();
@@ -42,7 +42,7 @@ onMounted( async() => {
   await roleStore.setRoles();
   await locationStore.setLocations();
   await employmentStore.setEmployments();
-  
+     console.log("isDataLoad: 1");
     isDataLoad.value = true
   }
   else
@@ -54,7 +54,7 @@ onMounted( async() => {
   <VLocaleProvider :rtl="isAppRtl">
     <!-- ℹ️ This is required to set the background color of active nav link based on currently active global theme's primary -->
     <VApp :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`" v-if="isDataLoad">
-      <RouterView />
+      <RouterView/>
       <ScrollToTop />
     </VApp>
   </VLocaleProvider>

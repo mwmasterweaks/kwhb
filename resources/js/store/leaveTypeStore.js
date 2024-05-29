@@ -2,7 +2,7 @@
 
 space
  */
-import { fetchLeaveTypes } from '@/api/leaveType/leaveType';
+import api from '@/api/leaveType/leaveType';
 import { defineStore } from 'pinia';
 
 export const useLeaveTypeStore = defineStore('leave_types', {
@@ -17,7 +17,7 @@ export const useLeaveTypeStore = defineStore('leave_types', {
         },
         async setLeaveTypes() {
           try {
-              const response = await fetchLeaveTypes();
+              const response = await api.fetchLeaveTypes();
               this.data.leave_types = response;
           } catch (error) {
               console.error("Error fetching leave_types:", error);

@@ -1,19 +1,34 @@
 <script setup>
-import router from '@/router'
-import { useAuthStore } from "@/store/authStore"
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import bg_img from '@images/pages/admin_login.png'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import authV2MaskDark from '@images/pages/misc-mask-dark.png'
-import authV2MaskLight from '@images/pages/misc-mask-light.png'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
-import { toast } from 'vue3-toastify'
-import { VForm } from 'vuetify/components/VForm'
+import router from '@/router';
+import { useAuthStore } from "@/store/authStore";
+import { useDivisionStore } from "@/store/divisionStore";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { useEmploymentStore } from "@/store/employmentStore";
+import { useLeaveTypeStore } from "@/store/leaveTypeStore";
+import { useLocationStore } from "@/store/locationStore";
+import { useRoleStore } from "@/store/roleStore";
+import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant';
+import bg_img from '@images/pages/admin_login.png';
+import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png';
+import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png';
+import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png';
+import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png';
+import authV2MaskDark from '@images/pages/misc-mask-dark.png';
+import authV2MaskLight from '@images/pages/misc-mask-light.png';
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
 
+import { toast } from 'vue3-toastify';
+import { VForm } from 'vuetify/components/VForm';
+
+
+
+const leaveTypeStore = useLeaveTypeStore();
+const employeeStore = useEmployeeStore();
+const divisionStore = useDivisionStore();
+const roleStore = useRoleStore();
+const locationStore = useLocationStore();
+const employmentStore = useEmploymentStore();
 
 const authStore = useAuthStore();
 
@@ -26,15 +41,21 @@ const password = ref('')
 const rememberMe = ref(false)
 
 const onSubmit = async() => {
+  debugger
   const res = await authStore.login({username: username.value, password: password.value})
   console.log("authStore.is_logged_in", authStore.is_logged_in);
   if(!authStore.is_logged_in){
     toast(res)
   }
   else {
-    console.log("asdfghjk")
+    await leaveTypeStore.setLeaveTypes();
+    await employeeStore.setEmployees();
+    await employeeStore.fetchWidgetData();
+    await divisionStore.setDivisions();
+    await roleStore.setRoles();
+    await locationStore.setLocations();
+    await employmentStore.setEmployments();
     router.push("employee")
-
   }
 
 }

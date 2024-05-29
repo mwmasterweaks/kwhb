@@ -191,22 +191,31 @@
                   <span
                     v-if="item.title != 'Employee'"
                     @click="toggleSort(item)"
+                     style="display: inline-flex; align-items: center;"
                   >
-                    <span>{{ item.title }}</span>
-                    <template v-if="isSorted(item)">
+                    <span style="white-space: nowrap;">{{ item.title }}</span>
+                     <span v-if="isSorted(item)">
                       <VIcon
                         v-if="sortDesc"
-                        style="margin-left: 5px; font-size: medium;"
+                        style="font-size: medium;"
                       >
                         tabler-chevron-down
                       </VIcon>
                       <VIcon
                         v-else
-                        style="margin-left: 5px; font-size: medium;"
+                        style="font-size: medium;"
                       >
                         tabler-chevron-up
                       </VIcon>
-                    </template>
+                    </span> 
+                  
+                      <VIcon v-else
+                        style="font-size: medium;"
+                      >
+                         tabler-selector
+                      </VIcon>
+                     
+                   
                   </span>
                   <span v-else>
                     {{ item.title }}
