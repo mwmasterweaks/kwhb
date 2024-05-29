@@ -18,9 +18,9 @@ const isPasswordVisible2 = ref(false)
 
 let edit_fields = ref(false)
 let edit_password = ref(false)
+const isFormValid = ref(false)
 
-const updateRow = async (row, data)=>{
-
+const updateRow = async (row, data) => {
   var update = await employeeStore.updateRow({
     id: props.data.id,
     data,
@@ -79,7 +79,10 @@ const updateRow = async (row, data)=>{
         </VListItem>
         <VListItem>
           <template #prepend>
-            <div class="custom-svg-icon" v-html="division_icon"></div>
+            <div
+              class="custom-svg-icon"
+              v-html="division_icon"
+            />
           </template>
           <VListItemTitle>
             <span class="text-label me-1 ml-1">Division:</span>
@@ -122,72 +125,81 @@ const updateRow = async (row, data)=>{
           />
         </span>
       </p>
-      
-      <VList class="card-list text-medium-emphasis">
-        <VListItem>
-          <template #prepend>
-            <VIcon
-              icon="tabler-phone-call"
-              size="20"
-              class="me-2"
-            />
-          </template>
-          <VListItemTitle>
-            <span class="text-label me-1">Work Phone:</span>
-            <span v-if="!edit_fields">{{ props.data.work_phone }}</span>
-            <span v-else>
-              <AppTextField
-                v-model="props.data.work_phone"
-                :rules="[requiredValidator]"
-                @keyup.enter="updateRow('work_phone', props.data.work_phone)"
+      <VForm
+        ref="refForm"
+        v-model="isFormValid"
+        @submit.prevent="updateRow('contact', props.data)"
+      >
+        <VList class="card-list text-medium-emphasis">
+          <VListItem>
+            <template #prepend>
+              <VIcon
+                icon="tabler-phone-call"
+                size="20"
+                class="me-2"
               />
-            </span>
-          </VListItemTitle>
-        </VListItem>
-        <VListItem>
-          <template #prepend>
-            <VIcon
-              icon="tabler-mail"
-              size="20"
-              class="me-2"
-            />
-          </template>
-          <VListItemTitle>
-            <span class="text-label me-1">Work Email:</span>
-            <span v-if="!edit_fields">{{ props.data.work_email }}</span>
-            <span v-else>
-              <AppTextField
-                v-model="props.data.work_email"
-                :rules="[requiredValidator]"
-                @keyup.enter="updateRow('work_email', props.data.work_email)"
+            </template>
+            <VListItemTitle>
+              <span class="text-label me-1">Work Phone:</span>
+              <span v-if="!edit_fields">{{ props.data.work_phone }}</span>
+              <span v-else>
+                <AppTextField
+                  v-model="props.data.work_phone"
+                  :rules="[requiredValidator]"
+                />
+              </span>
+            </VListItemTitle>
+          </VListItem>
+          <VListItem>
+            <template #prepend>
+              <VIcon
+                icon="tabler-mail"
+                size="20"
+                class="me-2"
               />
-            </span>
-          </VListItemTitle>
-        </VListItem>
-        <VListItem>
-          <template #prepend>
-            <VIcon
-              icon="tabler-map-pin"
-              size="20"
-              class="me-2"
-            />
-          </template>
-          <VListItemTitle v-if="props.data.location">
-            <span class="text-label me-1">Location:</span>
-            <span v-if="!edit_fields">{{ props.data.location.name }}</span>
-            <AppSelect
-              v-else
-              v-model="props.data.location_id"
-              placeholder="Select Location"
-              item-title="name"
-              item-value="id"
-              :rules="[requiredValidator]"
-              :items="locationStore.data.locations"
-              @update:modelValue="updateRow('location_id', props.data.location_id)"
-            />
-          </VListItemTitle>
-        </VListItem>
-      </VList>
+            </template>
+            <VListItemTitle>
+              <span class="text-label me-1">Work Email:</span>
+              <span v-if="!edit_fields">{{ props.data.work_email }}</span>
+              <span v-else>
+                <AppTextField
+                  v-model="props.data.work_email"
+                  :rules="[requiredValidator]"
+                />
+              </span>
+            </VListItemTitle>
+          </VListItem>
+          <VListItem>
+            <template #prepend>
+              <VIcon
+                icon="tabler-map-pin"
+                size="20"
+                class="me-2"
+              />
+            </template>
+            <VListItemTitle v-if="props.data.location">
+              <span class="text-label me-1">Location:</span>
+              <span v-if="!edit_fields">{{ props.data.location.name }}</span>
+              <AppSelect
+                v-else
+                v-model="props.data.location_id"
+                placeholder="Select Location"
+                item-title="name"
+                item-value="id"
+                :rules="[requiredValidator]"
+                :items="locationStore.data.locations"
+              />
+            </VListItemTitle>
+          </VListItem>
+          <VBtn
+            v-if="edit_fields"
+            type="submit"
+            class="me-3"
+          >
+            Save
+          </VBtn>
+        </VList>
+      </VForm>
       <br>
       <br>
       <VList class="card-list text-medium-emphasis mt-4">
