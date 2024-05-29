@@ -227,6 +227,7 @@ class EmployeeController extends Controller
 
     public function update_row(Request $request)
     {
+
         $user_cred = Auth::user();
         $dataResponse = new DataResponse();
 
@@ -250,11 +251,34 @@ class EmployeeController extends Controller
 
             if ($request->row == 'password') {
                 $this->reset_password($request->id, $request->data);
-            } else {
+            } else if ($request->row == 'contact') {
+                $data = (object) $request->data;
                 $tbl = Employee::where("id", $request->id);
-                $oldData = $tbl->select($request->row)->get();
-                $update = $tbl->update([$request->row => $request->data]);
-                $newData = $tbl->select($request->row)->get();
+                $oldData = $tbl->get();
+                Employee::where('id', $request->id)->update([
+                    'work_phone' => $data->work_phone,
+                    'work_email' => $data->work_email,
+                    'location_id' => $data->location_id,
+                    'updated_at' => Carbon::now()
+                ]);
+                $newData = $tbl->get();
+            } else if ($request->row == 'personal_details') {
+                $data = (object) $request->data;
+                $tbl = Employee::where("id", $request->id);
+                $oldData = $tbl->get();
+                Employee::where('id', $request->id)->update([
+                    'first_name' => $data->first_name,
+                    'last_name' => $data->last_name,
+                    'gender' => $data->gender,
+                    'pronouns' => $data->pronouns,
+                    'indigenous' => $data->pronouns,
+                    'dob' => $data->dob,
+                    'address' => $data->address,
+                    'personal_phone' => $data->personal_phone,
+                    'personal_email' => $data->personal_email,
+                    'updated_at' => Carbon::now()
+                ]);
+                $newData = $tbl->get();
             }
 
             DB::table('logs')->insert([
