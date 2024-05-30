@@ -222,6 +222,30 @@ const formatDate = dateStr => {
   // return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`
   return `${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`
 }
+
+
+const dropdownVisible = ref(false);
+
+const toggleDropdown = () => {
+  console.log(dropdownVisible.value);
+  dropdownVisible.value = !dropdownVisible.value;
+};
+
+const handleClickOutside = (event) => {
+  const dropdownWrapper = ref('dropdownWrapper');
+  if (dropdownWrapper.value && !dropdownWrapper.value.contains(event.target)) {
+    dropdownVisible.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+
 </script>
 
 <template>
@@ -393,12 +417,18 @@ const formatDate = dateStr => {
                     
 
                     <VDivider />
-                    <AppSelect
-                      v-model="statusSelected"
-                      class="pa-3 ma-2"
-                      placeholder="Active"
-                      :items="employeeStore.data.statuses"
-                    />
+                    <div ref="dropdownWrapper" class="dropdown-wrapper" @click.stop>
+                      <AppSelect
+                        v-model="statusSelected"
+                        class="pa-3 ma-2"
+                        placeholder="Active"
+                        :items="employeeStore.data.statuses"
+                        @click="toggleDropdown"
+                        :visible="dropdownVisible"
+                        
+                  :close-on-content-click="false"
+                      />
+                    </div>
                     <VRow class="pa-3  ma-2">
                       <VCol cols="9">
                         Active Until: {{ $formatDate(selectedDate) }}
@@ -407,7 +437,7 @@ const formatDate = dateStr => {
                         <VBtn
                           variant="tonal"
                           color="success"
-                          @click=" updateRow('status',statusSelected)"
+                          @click="updateRow('status',statusSelected)"
                         >
                           Save
                         </VBtn>

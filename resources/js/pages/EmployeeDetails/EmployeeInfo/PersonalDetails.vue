@@ -133,6 +133,7 @@ const age = computed(() => {
               <span v-if="!edit_fields">{{ props.data.first_name }} {{ props.data.last_name }}</span>
               <span v-else>
                 <AppTextField
+                 class="mb-3"
                   v-model="props.data.first_name"
                   :rules="[requiredValidator]"
                   placeholder="John"
@@ -159,7 +160,7 @@ const age = computed(() => {
                 <AppSelect
                   v-model="props.data.gender"
                   placeholder="Select Gender"
-                  :items="['Male', 'Female']"
+                  :items="['Male', 'Female', 'Non-Binary', 'Prefer not to say', 'Other']"
                 />
               </span>
             </VListItemTitle>
@@ -175,9 +176,10 @@ const age = computed(() => {
               <span class="me-1 text-label">Pronouns:</span>
               <span v-if="!edit_fields">  {{ props.data.pronouns }} </span>
               <span v-else>
-                <AppTextField
+                <AppSelect
                   v-model="props.data.pronouns"
                   placeholder="pronouns"
+                  :items="['She/Her', 'He/Him', 'They/Them', 'Ze/Hir', 'Xe/Xem', 'Prefer not to say', 'Other']"
                 />
               </span>
             </VListItemTitle>
@@ -193,9 +195,10 @@ const age = computed(() => {
               <span class="me-1 text-label">Indigenous:</span>
               <span v-if="!edit_fields">{{ props.data.indigenous }} </span>
               <span v-else>
-                <AppTextField
+                <AppSelect
                   v-model="props.data.indigenous"
                   placeholder="indigenous"
+                  :items="['Aboriginal', 'Torres Strait Islander', 'Both Aboriginal and Torres Strait Islander', 'Neither Aboriginal nor Torres Strait Islander', 'Prefer not to say',]"
                 />
               </span>
             </VListItemTitle>
@@ -296,13 +299,15 @@ const age = computed(() => {
               </span>
             </VListItemTitle>
           </VListItem>
-          <VBtn
-            v-if="edit_fields"
-            type="submit"
-            class="me-3"
-          >
-            Save
-          </VBtn>
+            <VBtn
+              style="margin-inline-start: 25px;"
+              v-if="edit_fields"
+              type="submit"
+              class="me-3"
+            >
+              Save
+            </VBtn>
+          
         </VList>
       </VForm>
     </VCardText>

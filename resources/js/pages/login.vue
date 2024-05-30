@@ -41,7 +41,6 @@ const password = ref('')
 const rememberMe = ref(false)
 
 const onSubmit = async() => {
-  debugger
   const res = await authStore.login({username: username.value, password: password.value})
   console.log("authStore.is_logged_in", authStore.is_logged_in);
   if(!authStore.is_logged_in){

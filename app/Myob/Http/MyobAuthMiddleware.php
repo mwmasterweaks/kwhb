@@ -68,6 +68,40 @@ class MyobAuthMiddleware
 
 		return $this->httpClient;
 	}
+	public function postHttpClient($body): HttpClient
+	{
+		if ($this->httpClient instanceof HttpClient) {
+			return $this->httpClient;
+		}
+
+		// $verify = $this->settings->caBundle;
+		// if ( $verify === null ) {
+		// $verify = $this->settings->tlsVerifyPeers;
+		// if ( $verify && $this->settings->caBundlePath !== null ) {
+		// $verify = $this->settings->caBundlePath;
+		// }
+		// }
+
+		// $this->httpClient = new HttpClient(
+		// array(
+		// 'verify' => $verify,
+		// )
+		// );
+		$headers = [
+			'x-myobapi-key'		 =>  $this->settings->key,
+			'x-myobapi-version'  =>  $this->settings->version,
+			'Accept-Encoding'    => 'gzip,deflate',
+			'x-myobapi-cftoken'  =>  $this->settings->cftoken,
+			'Authorization'		 => "Bearer " . $this->settings->code
+		];
+		$this->httpClient = new HttpClient([
+			'base_uri' => $this->settings->uri,
+			'headers' => $headers,
+			'body' => $body
+		]);
+
+		return $this->httpClient;
+	}
 
 	public function refreshToken()
 	{

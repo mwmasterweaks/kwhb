@@ -1,4 +1,5 @@
 <script setup>
+import { cross_icon } from '@/plugins/svg_handlers.js'
 import { useEmployeeStore } from "@/store/employeeStore"
 import { toast } from 'vue3-toastify'
 
@@ -96,12 +97,16 @@ const onSubmitMed = () => {
   <VCard class="mb-4">
     <VCardText>
       <p class="text-lg d-flex justify-space-between">
-        <VIcon
+        <span>
+          <VIcon
           icon="tabler-phone"
           size="30"
           class="me-2"
-        />
-        <b>Emergency Contact</b>
+          />
+          <b>Emergency Contact</b>
+        </span>
+        
+        
         <span
           class="cursor-pointer"
           @click="edit_fields = !edit_fields"
@@ -215,6 +220,7 @@ const onSubmitMed = () => {
             </VListItemTitle>
           </VListItem>
           <VBtn
+            style="margin-inline-start: 25px;"
             v-if="edit_fields"
             type="submit"
             class="me-3"
@@ -231,57 +237,7 @@ const onSubmitMed = () => {
     <VCardText>
       <p class="text-lg d-flex justify-space-between">
         <span>
-          <svg
-            id="svg1"
-            width="24"
-            height="24"
-            viewBox="0 0 192.52462 192.52861"
-            version="1.1"
-            inkscape:export-filename="kwhb_employee_division.svg"
-            inkscape:export-xdpi="96"
-            inkscape:export-ydpi="96"
-            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-            xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:svg="http://www.w3.org/2000/svg"
-            class="me-2"
-          >
-            <sodipodi:namedview
-              id="namedview1"
-              pagecolor="#ffffff"
-              bordercolor="#000000"
-              borderopacity="0.25"
-              inkscape:showpageshadow="2"
-              inkscape:pageopacity="0.0"
-              inkscape:pagecheckerboard="0"
-              inkscape:deskcolor="#d1d1d1"
-              inkscape:document-units="mm"
-            />
-            <defs id="defs1" />
-            <g
-              id="layer1"
-              inkscape:label="Layer 1"
-              inkscape:groupmode="layer"
-              transform="translate(-13.28609,-43.29803)"
-            >
-              <path
-                id="path95"
-                d="m 197.08124,121.33181 v -8.73114 H 136.50281 V 52.02884 c 0,-2.2935 -0.9273,-4.54014 -2.5542,-6.17001 -1.6236,-1.6302 -3.87453,-2.5608 -6.17595,-2.5608 H 91.31888 c -2.3001,0 -4.54707,0.9306 -6.17595,2.5608 -1.6236,1.6302 -2.5542,3.87684 -2.5542,6.17001 v 60.57183 H 22.01558 c -2.3001,0 -4.5474,0.9306 -6.17529,2.5608 -1.6269,1.617 -2.5542,3.86496 -2.5542,6.17001 v 36.4617 c 0,2.2935 0.9273,4.54014 2.5542,6.17001 1.6269,1.6302 3.8742,2.5608 6.17529,2.5608 h 60.57315 v 60.5715 c 0,2.2935 0.9339,4.55202 2.5542,6.17034 1.6269,1.6302 3.87453,2.5608 6.17595,2.5608 h 36.45246 c 2.3001,0 4.55301,-0.9306 6.17595,-2.5608 1.6302,-1.617 2.5542,-3.87684 2.5542,-6.17034 v -60.5715 h 60.57843 c 2.2968,0 4.5474,-0.9306 6.17001,-2.5608 1.6302,-1.6302 2.5608,-3.87651 2.5608,-6.17001 v -36.4617 c 0,-2.3067 -0.9339,-4.55202 -2.5608,-6.17001 -1.6236,-1.6302 -3.8742,-2.5608 -6.17001,-2.5608 v 8.73114 h -8.73114 v 27.73056 h -60.57876 c -2.2968,0 -4.54707,0.9306 -6.17001,2.5476 -1.6302,1.6302 -2.5608,3.87684 -2.5608,6.18189 v 60.5715 h -18.98985 v -60.5715 c 0,-2.3067 -0.9339,-4.55202 -2.5608,-6.18189 -1.6236,-1.617 -3.8742,-2.5476 -6.17133,-2.5476 H 30.74441 v -18.99942 h 60.57282 c 2.2968,0 4.5474,-0.9306 6.17133,-2.5608 1.6269,-1.617 2.5608,-3.87651 2.5608,-6.17001 v -60.5715 h 18.98985 v 60.5715 c 0,2.2935 0.9339,4.55169 2.5608,6.17001 1.6236,1.6302 3.87453,2.5608 6.17001,2.5608 h 69.3099 v -8.73114 h -8.73114 8.73114"
-                style="fill: #726f7b;fill-opacity: 1;fill-rule: nonzero;stroke: none;stroke-width: 1.16416;"
-                inkscape:export-filename="path95.svg"
-                inkscape:export-xdpi="96"
-                inkscape:export-ydpi="96"
-              />
-            </g>
-          </svg>
-
-          <!--
-            <VIcon
-            icon="tabler-nurse"
-            size="35"
-            class="me-2"
-            /> 
-          -->
+          <span class="custom-svg-icon" v-html="cross_icon" style="margin: 3px;"></span>
           <b>Medical</b>
         </span>
         <span
@@ -381,6 +337,7 @@ const onSubmitMed = () => {
             </VListItem>
           -->
           <VBtn
+            style="margin-inline-start: 25px;"
             v-if="edit_fields_med"
             type="submit"
             class="me-3"

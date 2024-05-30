@@ -109,7 +109,7 @@
         
 
         <VCardText class="d-flex flex-wrap py-4 gap-4">
-          <div class="me-3 d-flex gap-3">
+          <div class="app-select me-3 d-flex gap-3">
             <AppSelect
               :model-value="itemsPerPage"
               :items="[
@@ -128,7 +128,7 @@
 
           <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
             <!-- 👉 Search  -->
-            <div style="inline-size: 10rem;">
+            <div class="app-select" style="inline-size: 10rem;">
               <AppTextField
                 v-model="searchQuery"
                 placeholder="Search"
@@ -844,5 +844,9 @@ const getNestedValue = (obj, path) => {
   font-family: Oswald !important;
   font-size: large;
   font-weight: 400 !important;
+}
+
+.app-select {
+  color: #808494;
 }
 </style>

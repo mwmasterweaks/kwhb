@@ -20,6 +20,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
+use App\Myob\Services\Employee\EmployeeServices;
 
 class EmployeeController extends Controller
 {
@@ -227,7 +228,6 @@ class EmployeeController extends Controller
 
     public function update_row(Request $request)
     {
-
         $user_cred = Auth::user();
         $dataResponse = new DataResponse();
 
@@ -235,10 +235,33 @@ class EmployeeController extends Controller
             DB::beginTransaction();
             $oldData = "";
             $newData = "";
+            $myobemp = "";
+            $tbl = Employee::with(['employment'])->where("id", $request->id);
             if ($request->row == 'status') {
                 $dateSelected = Carbon::now();
-                if (isset($request->dateSelected))
+                if (isset($request->dateSelected)) {
                     $dateSelected = $request->dateSelected;
+                    $emp = $tbl->first();
+                    if ($emp->date_hired == null && $request->data == "active") {
+                        $tbl->update(['date_hired' => $dateSelected]);
+                        $myobEmployee = new EmployeeServices();
+                        $param = [
+                            'DisplayID' => "EMP" . $emp->id,
+                            'firstName' => $emp->first_name,
+                            'lastName' => $emp->last_name,
+                            'email' => $emp->personal_email ?? null,
+
+                            'employmentDetails' =>
+                            [
+                                'startDate' => $dateSelected,
+                                'employmentBasis' => $emp->employment->name,
+                                'classification' => 'Employee',
+                            ],
+                        ];
+                        $myobemp = $myobEmployee->store($param);
+                    }
+                }
+
                 EmployeeStatusHistory::insert([
                     'status' => $request->data,
                     'employee_id' => $request->id,
@@ -289,7 +312,7 @@ class EmployeeController extends Controller
                 'action' => 'Update Employee ' . $request->row,
                 'ip_address' => Helper::instance()->getIp(),
                 'data' => "update Employee id " . $request->id . "\nRow: " . $request->row .
-                    "\nFrom: " . $oldData . "\nTo: " . $newData,
+                    "\nFrom: " . $oldData . "\nTo: " . $newData . "\nmyobemp:" . $myobemp,
                 'created_at' => Carbon::now(),
             ]);
 

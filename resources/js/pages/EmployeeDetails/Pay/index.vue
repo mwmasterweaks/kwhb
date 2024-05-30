@@ -42,7 +42,7 @@ const updateBankInfo = async (item) => {
   <VRow v-if="profileTabData">
     <VCol md="6" cols="12">
     
-      <VCard class="mb-4">
+      <VCard class="mb-4 bank-info-card">
         <VCardText>
           <p class="text-lg d-flex justify-space-between">
             <span>
@@ -83,8 +83,8 @@ const updateBankInfo = async (item) => {
                 <table>
                   <tr>
                   <td style="padding: 10px;">
-                    <b>BSB:</b> 
-                    <span v-if="!item.edit_fields">{{ item.bsb }} </span>
+                    <b>BSB: </b> 
+                    <span v-if="!item.edit_fields"> {{ item.bsb }} </span>
                     <span v-else>
                       <AppTextField
                           v-model="item.bsb"
@@ -94,7 +94,7 @@ const updateBankInfo = async (item) => {
                     </span>
                   </td>
                   <td>
-                    <b>Account:</b>
+                    <b>Account: </b>
                     <span v-if="!item.edit_fields">
                       {{ item.account }}
                     </span>
@@ -165,7 +165,7 @@ const updateBankInfo = async (item) => {
                     v-model="item.pay_split_value "
                     style="margin-left: 5px; background-color: white;"
                     label="Enter Value"
-                    :placeholder="item.pay_split == 'Percentage'? '0%': '$0'"
+                    :placeholder="item.pay_split == 'Whole Number'? '$0': '0%'"
                   />
                 </p>
               </VCol>
@@ -187,5 +187,9 @@ const updateBankInfo = async (item) => {
 <style lang="scss">
 .pay-theme-background {
   background-color: #F8F8F9;
+}
+.bank-info-card {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #383E59;
 }
 </style>

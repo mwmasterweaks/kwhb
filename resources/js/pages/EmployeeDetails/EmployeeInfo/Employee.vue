@@ -192,6 +192,7 @@ const updateRow = async (row, data) => {
             </VListItemTitle>
           </VListItem>
           <VBtn
+            style="margin-inline-start: 25px;"
             v-if="edit_fields"
             type="submit"
             class="me-3"

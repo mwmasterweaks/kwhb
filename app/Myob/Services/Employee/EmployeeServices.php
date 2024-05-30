@@ -20,6 +20,7 @@ class EmployeeServices
 	{
 		$entity = (new Employee(array()))->getAll();
 		return $entity;
+		return "list"; //test
 	}
 
 	public function get($entity_id)
@@ -28,9 +29,9 @@ class EmployeeServices
 		return $this->repository->getByID('contact', $entity_id, $entity); // true to return all fields
 	}
 
-	public function store()
+	public function store($params)
 	{
-		$params = $this->params->all();
+		//$params = $this->params->all();
 		$entity = (new Employee($params))->Create();
 		return $this->repository->create($entity);
 	}
