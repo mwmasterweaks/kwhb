@@ -26,7 +26,15 @@ class EmployeeServices
 	public function get($entity_id)
 	{
 		$entity = (new Employee(array()))->getData();
-		return $this->repository->getByID('contact', $entity_id, $entity); // true to return all fields
+		return $entity;
+		//return $this->repository->getByID('contact', $entity_id, $entity); // true to return all fields
+	}
+
+	public function fetchEmployeeByDisplayID($displayID)
+	{
+		$entity = (new Employee(array()))->fetchEmployeeByDisplayID($displayID);
+		return $entity;
+		//return $this->repository->getByID('contact', $entity_id, $entity); // true to return all fields
 	}
 
 	public function store($params)

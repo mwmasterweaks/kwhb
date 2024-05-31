@@ -76,5 +76,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['prefix' => 'myob'], function () {
         Route::get('contact/employee', [EmployeeServices::class, 'list']);
+        Route::get('fetch_employee_by_display_id/{displayID}', [EmployeeServices::class, 'fetchEmployeeByDisplayID']);
     });
 });

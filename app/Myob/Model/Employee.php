@@ -116,4 +116,37 @@ class Employee
 
 		//return $data;
 	}
+
+	public function fetchEmployeeByDisplayID($displayID)
+	{
+
+		try {
+
+			$setting = new MyobSettings();
+			$http = new http($setting);
+
+			$http->refreshToken();
+
+			$httpClient = $http->getHttpClient();
+
+			$endpoint = $setting->postEndpointURI('Contact/Employee?$filter=DisplayID eq \'EMP00101\'');
+			//return $endpoint;
+			$ret = $httpClient->get($endpoint);
+			if ($ret->getStatusCode() == 200) {
+				$data = json_decode($ret->getBody(), true);
+				return response()->json($data);
+			} else {
+				return response()->json(['error' => 'Failed to fetch employee'], $ret->getStatusCode());
+			}
+		} catch (RequestException $e) {
+			if ($e->hasResponse()) {
+				$responseBody = $e->getResponse()->getBody()->getContents();
+				// Handle error response
+				throw new \Exception('Error fetching employee: ' . $responseBody);
+			} else {
+				// Handle other errors
+				throw new \Exception('Error fetching employee: ' . $e->getMessage());
+			}
+		}
+	}
 }

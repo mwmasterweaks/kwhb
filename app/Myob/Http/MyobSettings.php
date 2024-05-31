@@ -35,4 +35,8 @@ class MyobSettings
 	{
 		return trim($this->uri, '/') . '/' . $end_point . '/' . $guid;
 	}
+	public function postEndpointURI($end_point): string
+	{
+		return trim($this->uri, '/') . '/' . $end_point;
+	}
 }
