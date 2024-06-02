@@ -28,9 +28,9 @@ class Employee
 	public function __construct(array $request)
 	{
 		$this->uid = $request['uid'] ?? null;
-		$this->displayID = $request['displayID'] ?? null;
-		$this->firstName = $request['firstname'] ?? null;
-		$this->lastName = $request['lastname'] ?? null;
+		$this->displayID = $request['DisplayID'] ?? null;
+		$this->firstName = $request['firstName'] ?? null;
+		$this->lastName = $request['lastName'] ?? null;
 		$this->addresses = $request['addresses'] ?? null;
 		$this->email = $request['email'] ?? null;
 		$this->employmentDetails = $request['employmentDetails'] ?? null;
@@ -69,8 +69,10 @@ class Employee
 		$http->refreshToken();
 
 		$httpClient = $http->postHttpClient(json_encode($employeeData));
-		$endpoint = $setting->getEndpointURI('Contact/Employee');
-		$ret = $httpClient->post($endpoint);
+		$endpoint = $setting->postEndpointURI('Contact/Employee');
+		$ret = $httpClient->post($endpoint, [
+			'body' => json_encode($employeeData)
+		]);
 
 		return $ret;
 	}

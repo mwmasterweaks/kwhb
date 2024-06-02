@@ -107,6 +107,7 @@ export const useEmployeeStore = defineStore('employees', {
     
     async updateRow(data)
     {
+      console.log('update row data', data)
       try {
         const response = await api.updateRow(data)
 
