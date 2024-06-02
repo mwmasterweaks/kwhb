@@ -243,10 +243,10 @@ class EmployeeController extends Controller
                     $dateSelected = $request->dateSelected;
                     $emp = $tbl->first();
                     if ($emp->date_hired == null && $request->data == "active") {
-                        $tbl->update(['date_hired' => $dateSelected]);
+                        $tbl->update(['status' => $request->data, 'date_hired' => $dateSelected, 'updated_at' => Carbon::now()]);
                         $myobEmployee = new EmployeeServices();
                         $param = [
-                            'DisplayID' => "EMP" . $emp->id,
+                            'DisplayID' => "EMP" . sprintf('%06d', $emp->id),
                             'firstName' => $emp->first_name,
                             'lastName' => $emp->last_name,
                             'email' => $emp->personal_email ?? null,

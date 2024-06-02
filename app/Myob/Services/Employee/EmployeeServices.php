@@ -13,7 +13,7 @@ class EmployeeServices
 
 	public function __construct()
 	{
-		//$this->repository = new BaseRepository();
+		// $this->repository = new BaseRepository();
 	}
 
 	public function list()
@@ -41,7 +41,7 @@ class EmployeeServices
 	{
 		//$params = $this->params->all();
 		$entity = (new Employee($params))->Create();
-		return $this->repository->create($entity);
+		// return $this->repository->create($entity);
 	}
 
 	public function modify($entity_id)
