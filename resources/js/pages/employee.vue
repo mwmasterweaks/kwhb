@@ -128,7 +128,10 @@
 
           <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
             <!-- 👉 Search  -->
-            <div class="app-select" style="inline-size: 10rem;">
+            <div
+              class="app-select"
+              style="inline-size: 10rem;"
+            >
               <AppTextField
                 v-model="searchQuery"
                 placeholder="Search"
@@ -190,11 +193,11 @@
                 >
                   <span
                     v-if="item.title != 'Employee'"
+                    style="display: inline-flex; align-items: center;"
                     @click="toggleSort(item)"
-                     style="display: inline-flex; align-items: center;"
                   >
                     <span style="white-space: nowrap;">{{ item.title }}</span>
-                     <span v-if="isSorted(item)">
+                    <span v-if="isSorted(item)">
                       <VIcon
                         v-if="sortDesc"
                         style="font-size: medium;"
@@ -209,11 +212,12 @@
                       </VIcon>
                     </span> 
                   
-                      <VIcon v-else
-                        style="font-size: medium;"
-                      >
-                         tabler-selector
-                      </VIcon>
+                    <VIcon
+                      v-else
+                      style="font-size: medium;"
+                    >
+                      tabler-selector
+                    </VIcon>
                      
                    
                   </span>

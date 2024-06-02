@@ -32,7 +32,8 @@ class EmployeeServices
 
 	public function fetchEmployeeByDisplayID($displayID)
 	{
-		$entity = (new Employee(array()))->fetchEmployeeByDisplayID($displayID);
+		$id = strlen($displayID) == 6 ? $displayID : "EMP" . sprintf('%06d', $displayID);
+		$entity = (new Employee(array()))->fetchEmployeeByDisplayID($id);
 		return $entity;
 		//return $this->repository->getByID('contact', $entity_id, $entity); // true to return all fields
 	}
@@ -41,6 +42,7 @@ class EmployeeServices
 	{
 		//$params = $this->params->all();
 		$entity = (new Employee($params))->Create();
+		return $entity;
 		// return $this->repository->create($entity);
 	}
 

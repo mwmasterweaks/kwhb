@@ -121,7 +121,6 @@ class Employee
 
 	public function fetchEmployeeByDisplayID($displayID)
 	{
-
 		try {
 
 			$setting = new MyobSettings();
@@ -131,12 +130,17 @@ class Employee
 
 			$httpClient = $http->getHttpClient();
 
-			$endpoint = $setting->postEndpointURI('Contact/Employee?$filter=DisplayID eq \'EMP00101\'');
+			$endpoint = $setting->postEndpointURI('Contact/Employee?$filter=DisplayID eq \'' . $displayID . '\'');
 			//return $endpoint;
 			$ret = $httpClient->get($endpoint);
 			if ($ret->getStatusCode() == 200) {
 				$data = json_decode($ret->getBody(), true);
-				return response()->json($data);
+				foreach ($data['Items'] as $item) {
+					$employeePaymentDetails = $item['EmployeePayrollDetails'];
+					$ret2 = $httpClient->get($employeePaymentDetails['URI']);
+					$data2 = json_decode($ret2->getBody(), true);
+					return $data2;
+				}
 			} else {
 				return response()->json(['error' => 'Failed to fetch employee'], $ret->getStatusCode());
 			}
