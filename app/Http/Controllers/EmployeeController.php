@@ -294,13 +294,23 @@ class EmployeeController extends Controller
                     'last_name' => $data->last_name,
                     'gender' => $data->gender,
                     'pronouns' => $data->pronouns,
-                    'indigenous' => $data->pronouns,
-                    'dob' => $data->dob,
-                    'address' => $data->address,
+                    'indigenous' => $data->indigenous,
+                    'dob' => $data->dob2,
                     'personal_phone' => $data->personal_phone,
                     'personal_email' => $data->personal_email,
                     'updated_at' => Carbon::now()
                 ]);
+                if ($data->address2 != null)
+                    Address::updateOrCreate(
+                        ["employee_id" => $request->id],
+                        [
+                            "name" => "Employee details address",
+                            "label" => "home",
+                            "address" => $data->address2,
+                            "is_default" => true,
+                            "is_active" => true,
+                        ]
+                    );
                 $newData = $tbl->get();
             }
 

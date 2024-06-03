@@ -18,15 +18,20 @@ const isFormValid = ref(false)
 const updateRow = async (row, data) => {
   const [day, month, year] = data.dob.split('/')
 
-  data.dob = `${year}-${month}-${day}`
+  data.dob2 = `${year}-${month}-${day}`
+  data.address2 = address.value;
   console.log(data)
   var update = await employeeStore.updateRow({
     id: props.data.id,
     data,
     row,
   })
-  toast("Updated!")
-  console.log(update)
+  if(!update )  
+    toast("Error please try again!")
+  else  {
+    toast("Updated!")
+    edit_fields.value = false
+  }
 }
 
 const updateAddress = async ()=>{
@@ -39,14 +44,14 @@ const updateAddress = async ()=>{
     is_active: true,
   }
 
-  var result = await employeeStore.updateAddress(param)
+  // var result = await employeeStore.updateAddress(param)
   
-  console.log(result)
-  if(!result)  toast("Error please try again!")
-  else  {
-    toast("Updated!")
-    edit_fields.value = false
-  }
+  // console.log(result)
+  // if(!result)  toast("Error please try again!")
+  // else  {
+  //   toast("Updated!")
+  //   edit_fields.value = false
+  // }
 }
 
 const parseDate = dateString => {
@@ -275,7 +280,7 @@ const age = computed(() => {
                 <AppTextField
                   v-model="props.data.personal_phone"
                   :rules="[requiredValidator]"
-                  placeholder="personal_phone"
+                  placeholder="Personal Phone"
                 />
               </span>
             </VListItemTitle>
@@ -294,7 +299,7 @@ const age = computed(() => {
                 <AppTextField
                   v-model="props.data.personal_email"
                   :rules="[requiredValidator]"
-                  placeholder="personal_email"
+                  placeholder="Personal Email"
                 />
               </span>
             </VListItemTitle>

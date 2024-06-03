@@ -148,10 +148,10 @@ class Employee
 			if ($e->hasResponse()) {
 				$responseBody = $e->getResponse()->getBody()->getContents();
 				// Handle error response
-				throw new \Exception('Error fetching employee: ' . $responseBody);
+				return ('Error fetching employee: ' . $responseBody);
 			} else {
 				// Handle other errors
-				throw new \Exception('Error fetching employee: ' . $e->getMessage());
+				return ('Error fetching employee: ' . $e->getMessage());
 			}
 		}
 	}

@@ -26,8 +26,12 @@ const updateRow = async (row, data) => {
     data,
     row,
   })
-  toast("Updated!")
-  console.log(update)
+  if(!update )  
+    toast("Error please try again!")
+  else  {
+    toast("Updated!")
+    edit_fields.value = false
+  }
 }
 </script>
 

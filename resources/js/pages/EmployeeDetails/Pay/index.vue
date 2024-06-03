@@ -155,6 +155,7 @@ const updateBankInfo = async (item) => {
                 </p>
                 <p class="d-flex justify-space-between">
                   <AppSelect
+                    :disabled="!item.edit_fields"
                     style="margin-left: 5px; background-color: white;"
                     v-model="item.pay_split"
                     label="Pay Split"
@@ -162,6 +163,7 @@ const updateBankInfo = async (item) => {
                     :items="['Percentage', 'Whole Number']"
                   />
                   <AppTextField
+                    :disabled="!item.edit_fields"
                     v-model="item.pay_split_value "
                     style="margin-left: 5px; background-color: white;"
                     label="Enter Value"

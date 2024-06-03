@@ -187,7 +187,7 @@ const formatDateToMonthYear = (dateString) => {
 
 const onMenuOpen = (value) => {
   console.log(value);
-  if (value) {
+ /*  if (value) {
     setTimeout(async () => {
       await nextTick()
       console.log(datePickerRef.value)
@@ -199,7 +199,7 @@ const onMenuOpen = (value) => {
         datePickerElement.classList.remove('dp__flex_display')
       }
     }, 100) // Adjust the delay as needed
-  }
+  } */
 }
 
 const formatDate = dateStr => {
@@ -232,10 +232,10 @@ const toggleDropdown = () => {
 };
 
 const handleClickOutside = (event) => {
-  const dropdownWrapper = ref('dropdownWrapper');
+ /*  const dropdownWrapper = ref('dropdownWrapper');
   if (dropdownWrapper.value && !dropdownWrapper.value.contains(event.target)) {
     dropdownVisible.value = false;
-  }
+  } */
 };
 
 onMounted(() => {
@@ -320,50 +320,11 @@ onBeforeUnmount(() => {
             >
 
             <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
-              <h5 class="text-h5 text-center text-sm-start font-weight-medium mb-3">
-                {{ profileHeaderData?.first_name }} {{ profileHeaderData?.last_name }}
-              </h5>
-
-              <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
-                <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-4">
-                  <span class="d-flex">
-                    <VIcon
-                      size="20"
-                      icon="tabler-color-swatch"
-                      class="me-1"
-                    />
-                    <span class="text-body-1">
-                      {{ profileHeaderData?.job_title }}
-                    </span>
-                  </span>
-                  <span class="d-flex">
-                    <VIcon
-                      size="20"
-                      icon="tabler-map-pin"
-                      class="me-1"
-                    />
-                    <span class="text-body-1">
-                      {{ profileHeaderData?.location.name }}
-                    </span>
-                  </span>
-                  <span class="d-flex">
-                    <span class="custom-svg-icon" v-html="brief_case_icon"></span>
-                    <span class="text-body-1 ml-2">
-                      {{ profileHeaderData?.division.name }}
-                    </span>
-                  </span>
-                  <span class="d-flex">
-                    <VIcon
-                      size="20"
-                      icon="tabler-calendar"
-                      class="me-1"
-                    />
-                    <span class="text-body-1" v-if="profileHeaderData.date_hired != null">
-                      Joined {{ formatDateToMonthYear(profileHeaderData.date_hired) }}
-                    </span>
-                  </span>
-                </div>
-
+              <div class="d-flex flex-wrap gap-4">
+                <h5 class="text-h5 text-center text-sm-start font-weight-medium mb-3 me-auto">
+                  {{ profileHeaderData?.first_name }} {{ profileHeaderData?.last_name }}
+                </h5>
+                
                 <div
                   v-if="form.image_data || form.profile_image_data"
                   class="top-button"
@@ -445,6 +406,47 @@ onBeforeUnmount(() => {
                     </VRow>
                   </VCard>
                 </VMenu>
+              </div>
+              <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
+                <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-4">
+                  <span class="d-flex">
+                    <VIcon
+                      size="20"
+                      icon="tabler-color-swatch"
+                      class="me-1"
+                    />
+                    <span class="text-body-1">
+                      {{ profileHeaderData?.job_title }}
+                    </span>
+                  </span>
+                  <span class="d-flex">
+                    <VIcon
+                      size="20"
+                      icon="tabler-map-pin"
+                      class="me-1"
+                    />
+                    <span class="text-body-1">
+                      {{ profileHeaderData?.location.name }}
+                    </span>
+                  </span>
+                  <span class="d-flex">
+                    <span class="custom-svg-icon" v-html="brief_case_icon"></span>
+                    <span class="text-body-1 ml-2">
+                      {{ profileHeaderData?.division.name }}
+                    </span>
+                  </span>
+                  <span class="d-flex">
+                    <VIcon
+                      size="20"
+                      icon="tabler-calendar"
+                      class="me-1"
+                    />
+                    <span class="text-body-1" v-if="profileHeaderData.date_hired != null">
+                      Joined {{ formatDateToMonthYear(profileHeaderData.date_hired) }}
+                    </span>
+                  </span>
+                </div>
+
               </div>
             </div>
           </VCardText>

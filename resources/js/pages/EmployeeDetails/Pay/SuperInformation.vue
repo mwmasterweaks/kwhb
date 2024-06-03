@@ -15,11 +15,38 @@ const employeeStore = useEmployeeStore()
 let edit_tfn = ref(false)
 let edit_abn = ref(false)
 let edit_status = ref(false)
-
+const Superannuation = {
+  EmployeeMembershipNumber: "34534535345",
+  SuperannuationCategories: [
+    {
+      Name: "Superannuation Guarantee",
+      Type: "Superannuation",
+      UID:  "aa4572d0-fbd8-4b76-af15-cceff605f105",
+    }
+  ],
+  SuperannuationFund : {
+    UID: "a32f4edf-9dd0-4fe4-af77-0f8be1ed89d8",
+    Name: "C+BUS - Construction and Building Union Superannuation"
+  }
+}
+const myob_data = ref({
+  EmployeeMembershipNumber: "",
+  SuperannuationCategories: [
+    {
+      Name: "",
+      Type: "",
+      UID:  "",
+    }
+  ],
+  SuperannuationFund : {
+    UID: "",
+    Name: ""
+  }
+});
 onMounted( async() => {
-  let myob_data = await myob_emp.fetchEmployeeByDisplayID(props.data.id)
+  myob_data.value = await myob_emp.fetchEmployeeByDisplayID(props.data.id)
   
-  console.log('super information data', myob_data)
+  console.log('super information data', myob_data.value)
 })
 
 const updateRow = async (row, data)=>{
@@ -77,7 +104,10 @@ const updateRow = async (row, data)=>{
                 </span>
               </p>
               <p>{{ props.data.first_name + " " + props.data.last_name }}</p>
-              <p><b>Account Number: </b>{{ myob_data }}</p>
+              <p><b>Account Number: </b>
+                <span v-if="myob_data.Superannuation != null">
+                  {{ myob_data.Superannuation.EmployeeMembershipNumber }}
+                </span></p>
             </div>
           </VListItemTitle>
         </VListItem>
