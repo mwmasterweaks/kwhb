@@ -35,6 +35,7 @@ const updateRow = async (row, data)=>{
 
 const isFormValid = ref(false)
 const refForm = ref()
+let address = ref('')
 
 const onSubmit = () => {
   refForm.value?.validate().then( async({ valid }) => {
@@ -154,9 +155,13 @@ const onSubmitMed = () => {
               <span class="text-label me-1">Address:</span>
               <span v-if="!edit_fields"> {{ props.data.emergency_contact.address }}</span>
               <span v-else>
-                <AppTextField
+                <!-- <AppTextField
                   v-model="props.data.emergency_contact.address"
                   :rules="[requiredValidator]"
+                  
+                /> -->
+                <Autocomplete 
+                  v-model="props.data.emergency_contact.address"
                   placeholder="Emergency contact address"
                 />
               </span>

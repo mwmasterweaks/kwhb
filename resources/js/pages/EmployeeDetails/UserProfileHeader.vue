@@ -392,7 +392,9 @@ onBeforeUnmount(() => {
                     </div>
                     <VRow class="pa-3  ma-2">
                       <VCol cols="9">
-                        Active Until: {{ $formatDate(selectedDate) }}
+                        {{$capFirst(statusSelected)}} 
+                        <span v-if="statusSelected == 'active'">from</span>
+                        <span v-else>from</span>: {{ $formatDateDMY(selectedDate) }}
                       </VCol>
                       <VCol cols="2">
                         <VBtn

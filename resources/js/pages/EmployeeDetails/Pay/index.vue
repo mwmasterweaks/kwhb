@@ -80,13 +80,14 @@ const updateBankInfo = async (item) => {
                     Primary
                   </VChip>
                 </p>
-                <table>
+                <table style="width: 100%">
                   <tr>
                   <td style="padding: 10px;">
                     <b>BSB: </b> 
                     <span v-if="!item.edit_fields"> {{ item.bsb }} </span>
                     <span v-else>
                       <AppTextField
+                      style="width: auto;"
                           v-model="item.bsb"
                           :rules="[requiredValidator]"
                           placeholder="123-234"
@@ -100,6 +101,7 @@ const updateBankInfo = async (item) => {
                     </span>
                     <span v-else>
                       <AppTextField
+                      style="width: auto;"
                           v-model="item.account"
                           :rules="[requiredValidator]"
                           placeholder="0864 54343"

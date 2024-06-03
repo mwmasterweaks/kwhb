@@ -8,7 +8,7 @@ use App\Models\Role;
 use App\Models\UserRole;
 use App\Models\EmergencyContact;
 use App\Models\MedicalHistory;
-use App\Models\Address;
+use App\Models\address;
 use App\Events\NotificationCreated;
 use App\Models\Attachment;
 use App\Models\EmployeeStatusHistory;
@@ -301,7 +301,7 @@ class EmployeeController extends Controller
                     'updated_at' => Carbon::now()
                 ]);
                 if ($data->address2 != null)
-                    Address::updateOrCreate(
+                    address::updateOrCreate(
                         ["employee_id" => $request->id],
                         [
                             "name" => "Employee details address",
@@ -435,9 +435,9 @@ class EmployeeController extends Controller
         $user_cred = Auth::user();
         $dataResponse = new DataResponse();
         try {
-            $oldData = Address::where("employee_id", $request->employee_id)->first();
+            $oldData = address::where("employee_id", $request->employee_id)->first();
 
-            $newData = Address::updateOrCreate(
+            $newData = address::updateOrCreate(
                 ["employee_id" => $request->employee_id],
                 $request->all()
             );
