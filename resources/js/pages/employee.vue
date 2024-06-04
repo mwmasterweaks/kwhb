@@ -380,6 +380,8 @@ import JsonCSV from 'vue-json-csv'
 import { useRouter } from 'vue-router'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
+import { toast } from 'vue3-toastify'
+
 
 const router = useRouter()
 const employeeStore = useEmployeeStore()
@@ -541,7 +543,6 @@ const addNewUser = async userData => {
   console.log(initials)
   userData.profile = ProfilePlaceHolder(initials)
   console.log(userData)
-
   const addEmp = await employeeStore.addEmployee(userData)
 
   items.value = addEmp
